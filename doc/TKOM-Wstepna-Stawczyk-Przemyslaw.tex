@@ -67,7 +67,7 @@ Projekt zakłada wykonanie interpretera prostego języka z obsługą wbudowanego
 	\item
 		Na typach liczbowych można definiować wyrażenia arytmetyczne za pomocą operatorów: \textsl{+ - * / ( )} z uwzględnieniem ich priorytetu i łączności.
 	\item
-		Wykonywanie operacji na wektorach : iloczynu skalarnego oraz wektorowego.
+		Wykonywanie operacji na wektorach : iloczynu skalarnego oraz wektorowego. \textsl{z użyciem wbudowanych funkcji}
 	\item
 		Na typach \textsl{vec} i liczbowych można użyć operatorów przyrównania \textsl{== !=} oraz łączyć w wyrażenia za pomocą \textsl{|| \&\& ( )}.
 	\item 
@@ -82,6 +82,15 @@ Projekt zakłada wykonanie interpretera prostego języka z obsługą wbudowanego
 		Program zaczyna wykonanie od bezparametrycznej funkcji \textsl{main()}
 	\item 
 		Wartości logiczne sa reprezentowane przez liczby gdzie 0=fałsz, !0 = prawda. Każdy wektor jest ewaluowany do prawdy.
+	\item
+		Język wspierać ma operację \textsl{print(...)} przyjmująca oprócz typów numerycznych stałe tekstowe \textsl{[w cudzysłowach " "]} istniejące wyłącznie na potrzeby \textsl{print}.
+\end{itemize}
+\subsection{Funkcje Biblioteczne}
+\begin{itemize}
+	\item fun \textbf{product3}(vec1, vec2) - \textit{iloczyn wektorowy wektorów wymiaru 3}
+	\item fun \textbf{product2}(vec1, vec2) - \textit{iloczyn wektorowy wektorów wymiaru 2}
+	\item fun \textbf{scalar3}(vec1, vec2) - \textit{iloczyn skalarny wektorów wymiaru 3}
+	\item fun \textbf{scalar2}(vec1, vec2) - \textit{iloczyn skalarny wektorów wymiaru 2}
 \end{itemize}
 
 \section{Opis Struktury Języka}
@@ -89,7 +98,7 @@ Projekt zakłada wykonanie interpretera prostego języka z obsługą wbudowanego
 TODO
 
 \section{Założenia Implementacyjne}
-Projekt miałby zostać zaimplementowany w języku \textit{C++} z użyciem biblioteki \textit{boost} do testów jednostkowych oraz narzędzia \textit{CMake} do zarządzania procesem budowania.
+Projekt miałby zostać zaimplementowany w języku \textit{C++} z użyciem biblioteki \textit{boost} do testów jednostkowych \textit{boost::unit\_test} oraz parsowania argumentów \textit{boost::program\_options}. Całość korzystać ma z narzędzia \textit{CMake} do zarządzania procesem budowania.
 \paragraph{}
 Program miałby składać się z następujących modułów : 
 \begin{itemize}
@@ -97,26 +106,56 @@ Program miałby składać się z następujących modułów :
 	\item analizator składniowy
 	\item interpreter
 \end{itemize}
-\paragraph{}
-Finalny program ma być konsolowa aplikacja uruchamianą wraz z parametrem reprezentującym ścieżkę do pliku do interpretacji. Wynik poszczególnych etapów analizy pliku oraz samego wyniku interpretacji końcowej i wykonania będzie wyświetlany na standardowym wyjściu. W zależności od ogólnego wyniku analizy, na standardowe wyjście mogą być zgłaszane błędy: leksykalne, składniowe, semantyczne lub wynik wykonania skryptu.
+\subsection{Produkt Końcowy}
+Finalny program ma być konsolowa aplikacja uruchamianą wraz z parametrem reprezentującym ścieżkę do pliku do interpretacji oraz poziomem wypisywanych informacji. Wynik poszczególnych etapów analizy pliku oraz samego wyniku interpretacji końcowej i wykonania będzie wyświetlany na standardowym wyjściu. W zależności od ogólnego wyniku analizy, na standardowe wyjście mogą być zgłaszane błędy: leksykalne, składniowe, semantyczne lub wynik wykonania skryptu.
 
 \section{Przykłady}
 
+\paragraph{Przykład 1}
 \begin{verbatim}
-	function fun(a) {
-	  a = a * 2;   
-	  if (a < 10) {      
-	    fun(a);   
-	  }    		 
-	  return a;  	
-	}  				
+fun licz(a) {
+    a = a * 2;   
+    if (a < 10) {      
+        fun(a);   
+    }    		 
+    return a;  	
+}  				
 	
-	function main() {
-	  if(11){
-	  	print(fun(2));
-	  }
+fun main() {
+    if(11){
+        print(fun(2));
+    }
 	  
-	}					
+}					
+\end{verbatim}
+
+\paragraph{Przykład 2}
+\begin{verbatim}
+fun printAndRet3(a) {
+   print(a);
+   return 3;
+}
+
+fun main() {
+   var a = 0;
+   if(a == 0) {
+      print("a=";
+      print(a);
+   }
+
+   print(vec(1,2));
+   print(vec(1,2,3));
+
+   var b = a;
+   while(b < 10) {
+      b = b + 1;
+   }
+   
+   print("b= ", b);
+   
+   fun(1);
+   fun(fun(2));
+}   
 \end{verbatim}
 
 

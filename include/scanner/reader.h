@@ -19,12 +19,14 @@ namespace vecc {
         unsigned char peek();
         const Position &getCurrentPos() const;
 
+        // waht else?
+        // TODO : interface, more tests & implement
     private:
-        std::istream &stream_; //<! stream cannot be changed as Reader holds position in code
+        std::istream &stream_;       //!< stream cannot be changed as Reader holds position in code
 
         unsigned char symbol_ = 0x00;
         Position position_;
-        unsigned char lastSymbol_ = 0x00;
+        unsigned char lastSymbol_ = 0x00; //!< to detect different line endings
     };
 
 }

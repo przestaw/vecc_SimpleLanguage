@@ -45,5 +45,5 @@ add_dependencies(${LIBRARY} ${CHECK})
 
 #Program executable
 add_executable(${EXECUTABLE} main.cpp)
-add_dependencies(${EXECUTABLE} ${CHECK} ${LIBRARY})
+add_dependencies(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${LIBRARY} ${EXTERNAL_LIBS})
