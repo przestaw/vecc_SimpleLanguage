@@ -4,6 +4,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "scanner/scanner.h"
+
 BOOST_AUTO_TEST_SUITE(Lexer_Test_Suite)
 
 BOOST_AUTO_TEST_CASE(Dummy_Test) {

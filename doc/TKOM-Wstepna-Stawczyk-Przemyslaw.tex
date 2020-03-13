@@ -86,6 +86,7 @@ Projekt zakłada wykonanie interpretera prostego języka z obsługą wbudowanego
 		Język wspierać ma operację \textsl{print(...)} przyjmująca oprócz typów numerycznych stałe tekstowe \textsl{[w cudzysłowach " "]} istniejące wyłącznie na potrzeby \textsl{print}.
 \end{itemize}
 \subsection{Funkcje Biblioteczne}
+Funkcje biblioteczne miały być ładowane przed właściwym programem.
 \begin{itemize}
 	\item fun \textbf{product3}(vec1, vec2) - \textit{iloczyn wektorowy wektorów wymiaru 3}
 	\item fun \textbf{product2}(vec1, vec2) - \textit{iloczyn wektorowy wektorów wymiaru 2}
@@ -111,7 +112,7 @@ Finalny program ma być konsolowa aplikacja uruchamianą wraz z parametrem repre
 
 \section{Przykłady}
 
-\paragraph{Przykład 1}
+\paragraph{Przykład 1 funkcja}
 \begin{verbatim}
 fun licz(a) {
     a = a * 2;   
@@ -129,7 +130,7 @@ fun main() {
 }					
 \end{verbatim}
 
-\paragraph{Przykład 2}
+\paragraph{Przykład 2 zmienne}
 \begin{verbatim}
 fun printAndRet3(a) {
    print(a);
@@ -158,5 +159,20 @@ fun main() {
 }   
 \end{verbatim}
 
+\paragraph{Przykład 3 funkcje biblioteczne}
+\begin{verbatim}
+fun main() {
+    var a = vec(1,2);
+    var b = vec(3,4);
+    print("a = ", a);
+    print("b = ", b);
+    print("a + b = ", a+b);
+    print("a * b = ", a*b);
+    print("a * b = ", scalar2(a, b));
+    print("a o b = ", product2(a, b));
+    print("2 * a = ", 2*a);    	
+    print("a * 2 = ", a*2);
+}   
+\end{verbatim}
 
 \end{document}

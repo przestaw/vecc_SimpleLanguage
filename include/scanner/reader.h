@@ -6,7 +6,7 @@
 #define PROJECT_READER_H
 
 #include <iostream>
-#include "position.h"
+#include "scanner/position.h"
 
 namespace vecc {
 

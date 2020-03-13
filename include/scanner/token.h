@@ -5,7 +5,7 @@
 #ifndef VECC_LANG_TOKEN_H
 #define VECC_LANG_TOKEN_H
 
-#include "position.h"
+#include "scanner/position.h"
 
 namespace vecc {
     class Token{
