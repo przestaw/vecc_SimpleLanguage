@@ -9,16 +9,16 @@
 using namespace vecc;
 
 Position::Position()
-        : lineNumber(1),
-          signNumber(0),
-          linePosition(linePosition),
-          signPosition(signPosition) {}
+        : lineNo(1),
+          symbolNo(0),
+          linePos(),
+          symbolPos() {}
 
 bool Position::operator==(const Position &rhs) const {
-    return lineNumber == rhs.lineNumber &&
-           signNumber == rhs.signNumber &&
-           linePosition == rhs.linePosition &&
-           signPosition == rhs.signPosition;
+    return lineNo == rhs.lineNo &&
+           symbolNo == rhs.symbolNo &&
+           linePos == rhs.linePos &&
+           symbolPos == rhs.symbolPos;
 }
 
 bool Position::operator!=(const Position &rhs) const {
@@ -26,11 +26,11 @@ bool Position::operator!=(const Position &rhs) const {
 }
 
 bool Position::operator<(const Position &rhs) const {
-    if (lineNumber < rhs.lineNumber)
+    if (lineNo < rhs.lineNo)
         return true;
-    if (rhs.lineNumber < lineNumber)
+    if (rhs.lineNo < lineNo)
         return false;
-    return signNumber < rhs.signNumber;
+    return symbolNo < rhs.symbolNo;
 }
 
 bool Position::operator>(const Position &rhs) const {

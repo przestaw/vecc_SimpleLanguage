@@ -6,16 +6,15 @@
 
 using namespace vecc;
 
-Reader::Reader() : stream_(nullptr) {}
-
-Reader::Reader(std::istream *input) : stream_(input) {}
+Reader::Reader(std::istream &input) : stream_(input) {}
 
 unsigned char Reader::get() const {
+    //TODO read next, calc position
     return symbol_;
 }
 
 unsigned char Reader::peek() {
-    return stream_->peek();
+    return stream_.peek();
 }
 
 const Position &Reader::getCurrentPos() const {

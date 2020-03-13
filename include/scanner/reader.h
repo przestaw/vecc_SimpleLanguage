@@ -13,21 +13,18 @@ namespace vecc {
     class Reader {
     public:
         Reader();
-        Reader(std::istream *input);
+        Reader(std::istream &input);
 
         unsigned char get() const;
         unsigned char peek();
         const Position &getCurrentPos() const;
 
     private:
-        /**
-         * Pointer to allow changing stream during execution
-         */
-        std::istream *stream_;
+        std::istream &stream_; //<! stream cannot be changed as Reader holds position in code
 
-        unsigned char symbol_ = 0;
+        unsigned char symbol_ = 0x00;
         Position position_;
-        unsigned char lastSymbol_ = 0;
+        unsigned char lastSymbol_ = 0x00;
     };
 
 }

@@ -10,9 +10,7 @@
 
 namespace vecc {
 
-    class Position {
-
-    public:
+    struct Position {
         Position();
         Position(const Position& other) = default;
 
@@ -24,21 +22,21 @@ namespace vecc {
         bool operator<=(const Position &rhs) const;
         bool operator>=(const Position &rhs) const;
 
-        //private or make as a struct
-        unsigned int lineNumber;
-        unsigned int signNumber;
-        std::streampos linePosition;
-        std::streampos signPosition;
+        //private ? make class ?
+        unsigned int lineNo;
+        unsigned int symbolNo;
+        std::streampos linePos;
+        std::streampos symbolPos;
 
         friend std::ostream &operator<<(std::ostream &os, const Position &position);
         inline std::string toString() const{
-            return "line number : " + std::to_string(this->lineNumber) + ", position : " + std::to_string(this->signNumber);
+            return "line number : " + std::to_string(this->lineNo) + ", position : " + std::to_string(this->symbolNo);
         }
     };
 
     inline std::ostream &operator<<(std::ostream &os, const Position &position) {
-        os << BOLD("line number : ") << position.lineNumber
-           << ", " BOLD("position : ") << position.signNumber;
+        os << BOLD("line number : ") << position.lineNo
+           << ", " BOLD("position : ") << position.symbolNo;
         return os;
     }
 }

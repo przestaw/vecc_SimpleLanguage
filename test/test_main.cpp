@@ -6,6 +6,6 @@
 #  define BOOST_TEST_DYN_LINK
 #endif
 #define BOOST_TEST_MAIN
-#define BOOST_TEST_MODULE aal_solver_test
+#define BOOST_TEST_MODULE vecc_tests
 
 #include <boost/test/unit_test.hpp>

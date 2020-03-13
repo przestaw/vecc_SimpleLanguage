@@ -1,4 +1,4 @@
 
 file(GLOB SCANNER_INC "${PROJECT_SOURCE_DIR}/include/scanner/*.h")
 
-set(LIB_INC ${LIB_INC} ${SCANNER_INC})
+set(LIB_INC ${LIB_INC} ${SCANNER_INC} PARENT_SCOPE)

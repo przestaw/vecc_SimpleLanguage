@@ -1,9 +1,5 @@
-//
-// Created by przemek on 13.03.2020.
-//
-
-#ifndef GENERAL_DEFINES_H
-#define GENERAL_DEFINES_H
+#ifndef PRZESTAW_GENERAL_DEFINES_H
+#define PRZESTAW_GENERAL_DEFINES_H
 
 #ifndef CONSOLE_COLORS_POSIX
 #if ( defined(WIN32) || defined(__WIN32__) || defined(_WIN32) || defined(_MSC_VER) )
@@ -99,4 +95,4 @@
 
 #endif
 
-#endif //GENERAL_DEFINES_H
+#endif //PRZESTAW_GENERAL_DEFINES_H
