@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(Project)
+project(vecc_lang)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -27,6 +27,7 @@ set(EXTERNAL_LIBS "Boost::program_options")
 include_directories("${PROJECT_SOURCE_DIR}/include" ${BOOST_INCLUDE_DIR})
 
 #Include src and test for library and test-check
+add_subdirectory("include")
 add_subdirectory("src")
 add_subdirectory("test")
 
