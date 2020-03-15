@@ -70,7 +70,9 @@ Projekt zakłada wykonanie interpretera prostego języka z obsługą wbudowanego
 		Wykonywanie operacji na wektorach : iloczynu skalarnego oraz wektorowego. \textsl{z użyciem wbudowanych funkcji}
 	\item
 		Na typach \textsl{vec} i liczbowych można użyć operatorów przyrównania \textsl{== !=} oraz łączyć w wyrażenia za pomocą \textsl{|| \&\& ( )}.
-	\item 
+	\item
+		Możliwy jest dostęp indeksowy do zawartości zmiennej np \textsl{ zmienna[1]} daje dostęp do wartości 2 wymiaru wektora. 
+	\item
 		Można definiować instrukcje warunkowe za pomocą konstrukcji \textsl{if()} oraz \textsl{else}.
 	\item
 		Można tworzyć pętle korzystając z konstrukcji \textsl{while()}.
@@ -96,9 +98,60 @@ Funkcje biblioteczne miały być ładowane przed właściwym programem.
 
 \section{Opis Struktury Języka}
 
-TODO
+\textbf{program} = \{ functionDef \} ;\\
+\textbf{functionDef} = ''fun'' identifier parameters statementBlock ;\\
+\textbf{parameters} = ''('' [ identifier \{ '','' identifier \} ] '')'' ;\\
+\\
+\textbf{statementBlock} = ''\{'' \{ initStatement | assignStatement | returnStatement |
+ifStatement | whileStatement | functionCall '';'' |  printStatement | statementBlock \} ''\}'' ;\\
+\textbf{returnStatement} = ''return'' expression '';'' ;\\
+\\
+\textbf{initStatement} = ''var'' identifier [ ''='' expression ] '';'' ;\\
+\textbf{assignStatement} = variable ''='' expression '';'' ;\\
+\textbf{ifStatement} = ''if'' ''('' expression '')'' statementBlock [ ''else'' statementBlock ] ;\\
+\textbf{whileStatement} = ''while'' ''('' expression '')'' statementBlock ;\\
+\textbf{functionCall} = identifier arguments ;\\
+\textbf{arguments} = ''('' [ expression \{ '','' expression \} ] '')'' ;\\
+\\
+\textbf{printStatement} = ''print'' ''('' (charString | expression) \{'','' (charString | expression)\} '')'' '';'';\\
+\\
+\textbf{parentExpr} = ''('' expression '')'' ;\\
+\textbf{expression} = andExpr \{ orOp andExpr \} ;\\
+\textbf{andExpr} = relationalExpr \{ andOp relationalExpr \} ;\\
+\textbf{relationalExpr} = baseLogicExpr [ relationOp baseLogicExpr ] ;\\
+\textbf{baseLogicExpr} = [ unaryNegation ] mathExpr ;\\
+\\
+\textbf{mathExpr} = multiplyExpr \{ additiveOp multiplyExpr \} ;\\
+\textbf{multiplyExpr} = baseMathExpr \{ multiplyOp baseMathExpr \} ;\\
+\textbf{baseMathExpr} = [unaryMinus ] (value | parentExpr) ;\\
+\\
+\textbf{value} = numberString | vectorValue | variable | functionCall ;\\
+\\
+\textbf{additiveOp} = ''+'' | ''-­'' ;\\
+\textbf{multiplyOp} = ''*'' | ''/'' | ''\%'' ;\\
+\textbf{orOp} = ''||'' ;\\
+\textbf{andOp} = ''\&\&'' ;\\
+\textbf{unaryMinus} = ''-'' ;\\
+\textbf{unaryNegation} = ''!'' ;\\
+\textbf{relationOp} = ''=='' | ''!='' | ''<'' | ''>'' | ''<='' | ''>='' ;\\
+\\
+\textbf{identifier} = letter \{ letter | digit | underscore \} ;\\
+\textbf{variable} = identifier [ index ] ;\\
+\textbf{index} = ''['' numberString '']'' ;\\
+\\
+\textbf{vectorValue} = ''vec'' ''('' numberString '','' numberString ['','' numberString] '')'' ;\\ 
+\textbf{numberString} = digit \{ digit \} ;\\
+\textbf{charString} = '''' \{ allCharacters – '''' \} '''' ;\\
+\\
+\textbf{digit} = ''0''..''9'';\\
+\textbf{underscore} = ''\_'';\\
+\textbf{letter} = ''a''..''z'' | ''A''..''Z'' ;\\
+\textbf{allCharacters} = ? all visible characters ? ;\\
 
 \section{Założenia Implementacyjne}
+\subsection{Produkt Końcowy}
+Finalny program ma być konsolowa aplikacja uruchamianą wraz z parametrem reprezentującym ścieżkę do pliku do interpretacji. Wynik działania skryptu będzie wypisywane na standardowe wyjście \textsl{stdout}. W przypadku błędów kompilacji lub wykonania będą one wypisywane na standardowe wyjście błędów \textsl{stderr}. Umożliwi to łatwe przekierowanie poszczególnych wyjść do pliku/innej konsoli etc.
+\subsection{Struktura i Narzędzia}
 Projekt miałby zostać zaimplementowany w języku \textit{C++} z użyciem biblioteki \textit{boost} do testów jednostkowych \textit{boost::unit\_test} oraz parsowania argumentów \textit{boost::program\_options}. Całość korzystać ma z narzędzia \textit{CMake} do zarządzania procesem budowania.
 \paragraph{}
 Program miałby składać się z następujących modułów : 
@@ -107,12 +160,10 @@ Program miałby składać się z następujących modułów :
 	\item analizator składniowy
 	\item interpreter
 \end{itemize}
-\subsection{Produkt Końcowy}
-Finalny program ma być konsolowa aplikacja uruchamianą wraz z parametrem reprezentującym ścieżkę do pliku do interpretacji oraz poziomem wypisywanych informacji. Wynik poszczególnych etapów analizy pliku oraz samego wyniku interpretacji końcowej i wykonania będzie wyświetlany na standardowym wyjściu. W zależności od ogólnego wyniku analizy, na standardowe wyjście mogą być zgłaszane błędy: leksykalne, składniowe, semantyczne lub wynik wykonania skryptu.
 
 \section{Przykłady}
 
-\paragraph{Przykład 1 funkcja}
+\paragraph{Przykład 1 funkcja z rekurencją}
 \begin{verbatim}
 fun licz(a) {
     a = a * 2;   
@@ -126,40 +177,10 @@ fun main() {
     if(11){
         print(fun(2));
     }
-	  
 }					
 \end{verbatim}
 
-\paragraph{Przykład 2 zmienne}
-\begin{verbatim}
-fun printAndRet3(a) {
-   print(a);
-   return 3;
-}
-
-fun main() {
-   var a = 0;
-   if(a == 0) {
-      print("a=";
-      print(a);
-   }
-
-   print(vec(1,2));
-   print(vec(1,2,3));
-
-   var b = a;
-   while(b < 10) {
-      b = b + 1;
-   }
-   
-   print("b= ", b);
-   
-   fun(1);
-   fun(fun(2));
-}   
-\end{verbatim}
-
-\paragraph{Przykład 3 funkcje biblioteczne}
+\paragraph{Przykład 2 funkcje biblioteczne}
 \begin{verbatim}
 fun main() {
     var a = vec(1,2);
@@ -167,11 +188,38 @@ fun main() {
     print("a = ", a);
     print("b = ", b);
     print("a + b = ", a+b);
-    print("a * b = ", a*b);
     print("a * b = ", scalar2(a, b));
     print("a o b = ", product2(a, b));
     print("2 * a = ", 2*a);    	
     print("a * 2 = ", a*2);
+}   
+\end{verbatim}
+
+\paragraph{Przykład 3 zmienne}
+\begin{verbatim}
+fun printAndRet(a) {
+    print(a);
+    return a+1;
+}
+
+fun main() {
+    var a = 0;
+    if(a == 0) {
+        print("a");
+        print(a);
+    }
+
+    print(vec(1,2));
+    print(vec(1,2,3));
+
+    var b = a;
+    while(b < 10) {
+        b = b + 1;
+    }
+    print("b = ", b);
+
+    fun(1);
+    fun(fun(2));
 }   
 \end{verbatim}
 

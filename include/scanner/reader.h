@@ -13,7 +13,7 @@ namespace vecc {
     class Reader {
     public:
         Reader();
-        Reader(std::istream &input);
+        Reader(std::istream &input, const std::string &source = "unknown");
 
         unsigned char get() const;
         unsigned char peek();
@@ -23,6 +23,7 @@ namespace vecc {
         // TODO : interface, more tests & implement
     private:
         std::istream &stream_;       //!< stream cannot be changed as Reader holds position in code
+        std::string sourceName;      //!< identifer of the source
 
         unsigned char symbol_ = 0x00;
         Position position_;

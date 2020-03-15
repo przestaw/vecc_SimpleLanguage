@@ -6,7 +6,7 @@
 
 using namespace vecc;
 
-Reader::Reader(std::istream &input) : stream_(input) {}
+Reader::Reader(std::istream &input, const std::string &source) : stream_(input), sourceName(source) {}
 
 unsigned char Reader::get() const {
     //TODO read next, calc position
