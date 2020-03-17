@@ -49,7 +49,8 @@ int main(int argc, char *argv[]) {
     if(params.run){
         //TODO
         std::cout << FGRN(BOLD("RUN\n"));
+
+        std::cout << FRED(BOLD("END\n"));
     }
-    std::cout << FRED(BOLD("END\n"));
     return 0;
 }

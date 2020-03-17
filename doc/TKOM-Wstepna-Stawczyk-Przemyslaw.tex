@@ -51,7 +51,7 @@
 %\end{abstract}
 
 \section{Opis Projektu}
-Projekt zakłada wykonanie interpretera prostego języka z obsługą wbudowanego typu \textsl{wektora} o \textsl{dim = \{1,2\}}. Język ten ma obsługiwać : zmienne z zasięgiem, instrukcje wykonywane na żądanie \textsl{funkcje}, instrukcje wykonywane nie zawsze \textsl{warunkowe}, wyrażenia matematyczne oraz operatory wraz z priorytetami.
+Projekt zakłada wykonanie interpretera prostego języka z obsługą wbudowanego typu \textsl{wektora} o \textsl{dim = \{2, 3\}}. Język ten ma obsługiwać : zmienne z zasięgiem, instrukcje wykonywane na żądanie \textsl{funkcje}, instrukcje wykonywane nie zawsze \textsl{warunkowe}, wyrażenia matematyczne oraz operatory wraz z priorytetami.
 \subsection{Ogólne założenia}
 \begin{itemize}
 	\item 
@@ -62,10 +62,10 @@ Projekt zakłada wykonanie interpretera prostego języka z obsługą wbudowanego
 			\item 
 				Typ liczbowy \textsl{skalar}.
 			\item
-				Typ wektorowy \textsl{vec} o \textsl{dim = \{1,2\}}\\ np. \textsl{vec(1,2), vec(4,5,6)}.
+				Typ wektorowy \textsl{vec} o \textsl{dim = \{2,3\}}\\ np. \textsl{vec(1,2), vec(4,5,6)}.
 		\end{itemize}
 	\item
-		Na typach liczbowych można definiować wyrażenia arytmetyczne za pomocą operatorów: \textsl{+ - * / ( )} z uwzględnieniem ich priorytetu i łączności.
+		Na typach liczbowych można definiować wyrażenia arytmetyczne za pomocą operatorów: \textsl{+ - * / ( )} z uwzględnieniem ich priorytetów.
 	\item
 		Wykonywanie operacji na wektorach : iloczynu skalarnego oraz wektorowego. \textsl{z użyciem wbudowanych funkcji}
 	\item
@@ -83,7 +83,7 @@ Projekt zakłada wykonanie interpretera prostego języka z obsługą wbudowanego
 	\item
 		Program zaczyna wykonanie od bezparametrycznej funkcji \textsl{main()}
 	\item 
-		Wartości logiczne sa reprezentowane przez liczby gdzie 0=fałsz, !0 = prawda. Każdy wektor jest ewaluowany do prawdy.
+		Wartości logiczne sa reprezentowane przez liczby gdzie 0 = fałsz, !0 = prawda. Każdy wektor niezerowy jest ewaluowany do prawdy.
 	\item
 		Język wspierać ma operację \textsl{print(...)} przyjmująca oprócz typów numerycznych stałe tekstowe \textsl{[w cudzysłowach " "]} istniejące wyłącznie na potrzeby \textsl{print}.
 \end{itemize}

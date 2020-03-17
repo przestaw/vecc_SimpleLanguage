@@ -12,12 +12,13 @@ namespace vecc {
 
     class Reader {
     public:
-        Reader();
         Reader(std::istream &input, const std::string &source = "unknown");
 
-        unsigned char get() const;
-        unsigned char peek();
+        char get();
+        char peek();
         const Position &getCurrentPos() const;
+
+        bool isEoF() const;
 
         // waht else?
         // TODO : interface, more tests & implement
@@ -25,9 +26,9 @@ namespace vecc {
         std::istream &stream_;       //!< stream cannot be changed as Reader holds position in code
         std::string sourceName;      //!< identifer of the source
 
-        unsigned char symbol_ = 0x00;
+        char symbol_ = 0x00;
         Position position_;
-        unsigned char lastSymbol_ = 0x00; //!< to detect different line endings
+        char lastSymbol_ = 0x00; //!< to detect different line endings
     };
 
 }

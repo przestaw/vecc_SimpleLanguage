@@ -8,11 +8,17 @@
 
 BOOST_AUTO_TEST_SUITE(Lexer_Test_Suite)
 
-BOOST_AUTO_TEST_CASE(Dummy_Test) {
+    BOOST_AUTO_TEST_CASE(ScannerWithoutReader_Throws1) {
+        vecc::Scanner scanner;
+        //BOOST_CHECK_THROW(scanner.getToken());
+    }
 
-        BOOST_CHECK_EQUAL(12, 12);
-        BOOST_CHECK(297 == (3*99));
-        BOOST_CHECK_NE(10, 20);
-}
+    BOOST_AUTO_TEST_CASE(ScannerWithoutReader_Throws2) {
+        std::stringstream stream;
+
+        vecc::Scanner scanner(std::make_unique<vecc::Reader>(stream));
+        scanner.setReader(nullptr);
+        //BOOST_CHECK_THROW(scanner.getToken());
+    }
 
 BOOST_AUTO_TEST_SUITE_END()
