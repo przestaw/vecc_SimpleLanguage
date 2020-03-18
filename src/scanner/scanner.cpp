@@ -38,19 +38,18 @@ void Scanner::tryToken(Token &newToken) {
     if(reader_->isEoF()){
         newToken.setType(Token::Type::EoF);
     } else if (isdigit(reader_->peek())) {
-        tryNumberString(newToken); //TODO
+        tryNumberString(newToken);
     } else if (reader_->peek() == '"') {
-        tryCharString(newToken); //TODO
-        // Note : throw if eof before second " ?
+        tryCharString(newToken);
+        // FIXME  : throw if eof before second " ???
     } else if (isalnum(reader_->peek())) {
         tryKeyword(newToken);
+        // if not keyword it is Identifier
         if(newToken.getType() == Token::Type::NaT){
             newToken.setType(Token::Type::Identifier);
         }
     } else {
-        //Try operator or bracket
         tryOperatorOrBracket(newToken);
-        // TODO
     }
 }
 
@@ -64,13 +63,49 @@ void Scanner::tryKeyword(Token &newToken) {
 }
 
 void Scanner::tryCharString(Token &newToken) {
-    (void)newToken;
-    //TODO
+    reader_->get(); // consume first ' " '
+    std::string buf;
+
+    while ((std::isprint(reader_->peek()) || std::isspace(reader_->peek()))
+           && reader_->peek() != '"'
+           && !reader_->isEoF()) {
+        if (reader_->peek() == '\\') {
+            reader_->get();
+            // check for escaped ' " ' character -> \"
+            if (reader_->peek() == '"') {
+                // consume escaped ' " '
+                buf.push_back(reader_->get());
+            } else {
+                // push back ' \ ' character
+                buf.push_back('\\');
+            }
+        } else {
+            buf.push_back(reader_->get());
+        }
+    }
+
+    // check for closing ' " '
+    if (reader_->peek() == '"') {
+        // consume last ' " '
+        reader_->get();
+        newToken.setType(Token::Type::CharacterString);
+    } else {
+        // not properly closed
+        newToken.setType(Token::Type::NaT);
+    }
+    newToken.setLiteral(buf);
 }
 
 void Scanner::tryNumberString(Token &newToken) {
-    (void)newToken;
-    //TODO
+    std::string buf;
+    buf.push_back(reader_->get());
+
+    while (std::isdigit(reader_->peek())) {
+        buf.push_back(reader_->get());
+    }
+
+    newToken.setType(Token::Type::NumberString);
+    newToken.setLiteral(buf);
 }
 
 void Scanner::tryOperatorOrBracket(Token &newToken) {

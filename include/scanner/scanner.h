@@ -17,7 +17,8 @@ namespace vecc {
 
         Scanner(std::unique_ptr<Reader> reader);
 
-        Token getToken(); // NOTE : Token might be "state" -> void getNext() & Token getCurrent()
+        Token getToken(); // TODO : Token might be "state" -> void getNext() & Token getCurrent()
+                          // think of what will be needed in Parser
 
 
         // I assume that diffrent readers will be used only to load error-free libraries

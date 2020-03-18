@@ -96,6 +96,68 @@ Funkcje biblioteczne miały być ładowane przed właściwym programem.
 	\item fun \textbf{scalar2}(vec1, vec2) - \textit{iloczyn skalarny wektorów wymiaru 2}
 \end{itemize}
 
+\section{Przykłady}
+
+\paragraph{Przykład 1 funkcja z rekurencją}
+\begin{verbatim}
+fun licz(a) {
+a = a * 2;   
+if (a < 10) {      
+fun(a);   
+}    		 
+return a;  	
+}  				
+
+fun main() {
+if(11){
+print(fun(2));
+}
+}					
+\end{verbatim}
+
+\paragraph{Przykład 2 funkcje biblioteczne}
+\begin{verbatim}
+fun main() {
+var a = vec(1,2);
+var b = vec(3,4);
+print("a = ", a);
+print("b = ", b);
+print("a + b = ", a+b);
+print("a * b = ", scalar2(a, b));
+print("a o b = ", product2(a, b));
+print("2 * a = ", 2*a);    	
+print("a * 2 = ", a*2);
+}   
+\end{verbatim}
+
+\paragraph{Przykład 3 zmienne}
+\begin{verbatim}
+fun printAndRet(a) {
+print(a);
+return a+1;
+}
+
+fun main() {
+var a = 0;
+if(a == 0) {
+print("a");
+print(a);
+}
+
+print(vec(1,2));
+print(vec(1,2,3));
+
+var b = a;
+while(b < 10) {
+b = b + 1;
+}
+print("b = ", b);
+
+fun(1);
+fun(fun(2));
+}   
+\end{verbatim}
+
 \section{Opis Struktury Języka}
 
 \textbf{program} = \{ functionDef \} ;\\
@@ -103,13 +165,14 @@ Funkcje biblioteczne miały być ładowane przed właściwym programem.
 \textbf{parameters} = ''('' [ identifier \{ '','' identifier \} ] '')'' ;\\
 \\
 \textbf{statementBlock} = ''\{'' \{ initStatement | assignStatement | returnStatement |
-ifStatement | whileStatement | functionCall '';'' |  printStatement | statementBlock \} ''\}'' ;\\
+ifStatement | whileStatement | functionCallStatement |  printStatement | statementBlock \} ''\}'' ;\\
 \textbf{returnStatement} = ''return'' expression '';'' ;\\
 \\
 \textbf{initStatement} = ''var'' identifier [ ''='' expression ] '';'' ;\\
 \textbf{assignStatement} = variable ''='' expression '';'' ;\\
 \textbf{ifStatement} = ''if'' ''('' expression '')'' statementBlock [ ''else'' statementBlock ] ;\\
 \textbf{whileStatement} = ''while'' ''('' expression '')'' statementBlock ;\\
+\textbf{functionCallStatement} =  functionCall '';''
 \textbf{functionCall} = identifier arguments ;\\
 \textbf{arguments} = ''('' [ expression \{ '','' expression \} ] '')'' ;\\
 \\
@@ -160,67 +223,5 @@ Program miałby składać się z następujących modułów :
 	\item analizator składniowy
 	\item interpreter
 \end{itemize}
-
-\section{Przykłady}
-
-\paragraph{Przykład 1 funkcja z rekurencją}
-\begin{verbatim}
-fun licz(a) {
-    a = a * 2;   
-    if (a < 10) {      
-        fun(a);   
-    }    		 
-    return a;  	
-}  				
-	
-fun main() {
-    if(11){
-        print(fun(2));
-    }
-}					
-\end{verbatim}
-
-\paragraph{Przykład 2 funkcje biblioteczne}
-\begin{verbatim}
-fun main() {
-    var a = vec(1,2);
-    var b = vec(3,4);
-    print("a = ", a);
-    print("b = ", b);
-    print("a + b = ", a+b);
-    print("a * b = ", scalar2(a, b));
-    print("a o b = ", product2(a, b));
-    print("2 * a = ", 2*a);    	
-    print("a * 2 = ", a*2);
-}   
-\end{verbatim}
-
-\paragraph{Przykład 3 zmienne}
-\begin{verbatim}
-fun printAndRet(a) {
-    print(a);
-    return a+1;
-}
-
-fun main() {
-    var a = 0;
-    if(a == 0) {
-        print("a");
-        print(a);
-    }
-
-    print(vec(1,2));
-    print(vec(1,2,3));
-
-    var b = a;
-    while(b < 10) {
-        b = b + 1;
-    }
-    print("b = ", b);
-
-    fun(1);
-    fun(fun(2));
-}   
-\end{verbatim}
 
 \end{document}
