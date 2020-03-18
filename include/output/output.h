@@ -13,6 +13,7 @@
 
 namespace vecc {
 
+    // NOTE: FIXME : Is this class needed at all
     class Output{
     public:
         Output &getInstance();
