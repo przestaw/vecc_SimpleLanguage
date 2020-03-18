@@ -12,8 +12,6 @@ const std::unordered_map<Token::Type, std::string> Token::typeDescription = {
         {Token::Type::While,             "While"},
         {Token::Type::Else,              "Else"},
         {Token::Type::Return,            "Return"},
-
-        {Token::Type::Continue,          "Continue"},
         {Token::Type::Break,             "Break"},
 
         {Token::Type::Var,               "Var"},
@@ -61,7 +59,6 @@ const std::unordered_map<std::string, Token::Type> Token::keywords = {
         {"while",    Token::Type::While},
         {"else",     Token::Type::Else},
         {"return",   Token::Type::Return},
-        {"continue", Token::Type::Continue},
         {"break",    Token::Type::Break},
         {"var",      Token::Type::Var},
         {"vec",      Token::Type::Vec},
