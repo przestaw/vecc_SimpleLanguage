@@ -56,7 +56,7 @@ const std::unordered_map<Token::Type, std::string> Token::typeDescription = {
 };
 
 const std::unordered_map<std::string, Token::Type> Token::keywords = {
-        {"function", Token::Type::Function},
+        {"fun",      Token::Type::Function},
         {"if",       Token::Type::If},
         {"while",    Token::Type::While},
         {"else",     Token::Type::Else},
