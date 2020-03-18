@@ -3,7 +3,7 @@
 //
 
 #include <scanner/scanner.h>
-#include <exeception.h>
+#include <vecc_exeception.h>
 
 using namespace vecc;
 
@@ -23,7 +23,7 @@ Token Scanner::getToken() {
             throw vecc::Exception("invalid"); // TODO : invalid token
         }
     } else {
-        throw std::exception(); // TODO : no reader attached
+        throw vecc::NoInputStream(); // TODO : no reader attached
     }
 }
 
@@ -64,10 +64,12 @@ void Scanner::tryKeyword(Token &newToken) {
 }
 
 void Scanner::tryCharString(Token &newToken) {
+    (void)newToken;
     //TODO
 }
 
 void Scanner::tryNumberString(Token &newToken) {
+    (void)newToken;
     //TODO
 }
 

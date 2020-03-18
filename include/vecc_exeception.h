@@ -2,8 +2,8 @@
 // Created by przemek on 18.03.2020.
 //
 
-#ifndef VECC_LANG_EXECEPTION_H
-#define VECC_LANG_EXECEPTION_H
+#ifndef VECC_LANG_VECC_EXECEPTION_H
+#define VECC_LANG_VECC_EXECEPTION_H
 
 #include <iostream>
 #include <stdexcept>
@@ -21,6 +21,11 @@ namespace vecc {
     public:
         explicit NotAToken(const Token& token) : Exception("Unknown token : " + token.toString()) {}
     };
+
+    class NoInputStream : public Exception {
+    public:
+        explicit NoInputStream() : Exception("No input stream to read - " FRED("nullptr")) {}
+    };
 }
 
-#endif //VECC_LANG_EXECEPTION_H
+#endif //VECC_LANG_VECC_EXECEPTION_H

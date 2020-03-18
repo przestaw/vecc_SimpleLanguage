@@ -50,6 +50,7 @@ BOOST_AUTO_TEST_SUITE(Reader_Test_Suite)
         BOOST_CHECK(!reader.isEoF());
         for (auto &val : example){
             reader.get();
+            (void)val;
         }
         //try to read next
         reader.peek();
