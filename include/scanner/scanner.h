@@ -32,6 +32,11 @@ namespace vecc {
 
         inline void tryToken(Token &newToken);
 
+        inline void tryKeyword(Token &newToken);
+        inline void tryCharString(Token &newToken);
+        inline void tryNumberString(Token &newToken);
+        inline void tryOperatorOrBracket(Token &newToken);
+
         std::unique_ptr<Reader> reader_;
     };
 }

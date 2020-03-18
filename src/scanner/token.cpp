@@ -54,15 +54,17 @@ const std::unordered_map<Token::Type, std::string> Token::typeDescription = {
 };
 
 const std::unordered_map<std::string, Token::Type> Token::keywords = {
-        {"fun",      Token::Type::Function},
-        {"if",       Token::Type::If},
-        {"while",    Token::Type::While},
-        {"else",     Token::Type::Else},
-        {"return",   Token::Type::Return},
-        {"break",    Token::Type::Break},
-        {"var",      Token::Type::Var},
-        {"vec",      Token::Type::Vec},
-        {"print",    Token::Type::Print}
+        {"fun",    Token::Type::Function},
+        {"if",     Token::Type::If},
+        {"while",  Token::Type::While},
+        {"else",   Token::Type::Else},
+        {"return", Token::Type::Return},
+        {"and",    Token::Type::And},
+        {"or",     Token::Type::Or},
+        {"break",  Token::Type::Break},
+        {"var",    Token::Type::Var},
+        {"vec",    Token::Type::Vec},
+        {"print",  Token::Type::Print}
 };
 
 const std::unordered_map<char, Token::Type> Token::specialCharacters = {
@@ -77,6 +79,8 @@ const std::unordered_map<char, Token::Type> Token::specialCharacters = {
         {';', Token::Type::Semicolon},
 
         {'=', Token::Type::Assignment},
+        {'>', Token::Type::Greater},
+        {'<', Token::Type::Less},
 
         {'!', Token::Type::Negation},
         {'+', Token::Type::Plus},
@@ -86,17 +90,32 @@ const std::unordered_map<char, Token::Type> Token::specialCharacters = {
         {'%', Token::Type::Modulo}
 };
 
+const std::unordered_map<char, std::function<Token::Type(const char &)>> Token::twoCharOperators = {
+        {'=', [](const char &got) { return checkSymbol(got, '=', Token::Type::Equality); }},
+        {'<', [](const char &got) { return checkSymbol(got, '=', Token::Type::LessOrEqual); }},
+        {'>', [](const char &got) { return checkSymbol(got, '=', Token::Type::GreaterOrEqual); }},
+        {'!', [](const char &got) { return checkSymbol(got, '=', Token::Type::Inequality); }}
+};
+
 Token::Type Token::findKeywordType(const std::string &literal) {
     auto type = keywords.find(literal);
     return type == keywords.end() ? Token::Type::NaT : type->second;
 }
 
-Token::Type Token::findSymbolType(const unsigned char &literal) {
+Token::Type Token::findSymbolType(const char &literal) {
     auto type = specialCharacters.find(literal);
     return type == specialCharacters.end() ? Token::Type::NaT : type->second;
 }
 
-std::string Token::typeName() {
+Token::Type Token::checkSecondSecond(const char &first, const char &second) {
+    if (twoCharOperators.count(first)) {
+        return twoCharOperators.at(first)(second);
+    } else {
+        return Token::Type::NaT;
+    }
+}
+
+std::string Token::typeName() const {
     return typeDescription.at(this->type_);
 }
 
@@ -120,4 +139,8 @@ Token::Type Token::getType() const {
 
 const std::string &Token::getLiteral() const {
     return literal_;
+}
+
+std::string Token::toString() const {
+    return "Token " + typeName() + ", \"" + literal_ + "\", \n at " + tokenPos_.toString();
 }
