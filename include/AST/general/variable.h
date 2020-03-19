@@ -17,10 +17,44 @@ namespace vecc {
         Variable(const Variable &) = default;
         Variable &operator=(const Variable &rhs) = default;
 
-        //TODO
+        int& operator[](int idx);
+        const int& operator[](int idx) const;
+        std::vector<int>& operator*();
+
+        int& at(unsigned idx);
+        const int& at(unsigned idx) const;
+        unsigned size() const;
+
+        Variable operator==(const Variable &rhs) const;
+        Variable operator!=(const Variable &rhs) const;
+
+        Variable operator<(const Variable &rhs) const;
+        Variable operator>(const Variable &rhs) const;
+        Variable operator<=(const Variable &rhs) const;
+        Variable operator>=(const Variable &rhs) const;
+
+        Variable operator+() const;
+        Variable operator-() const;
+
+        Variable operator+(const Variable &rhs) const;
+        Variable operator-(const Variable &rhs) const;
+        Variable operator*(const Variable &rhs) const;
+        Variable operator/(const Variable &rhs) const;
+        Variable operator%(const Variable &rhs) const;
+
+        Variable operator!() const;
+        Variable operator&&(const Variable &rhs) const;
+        Variable operator||(const Variable &rhs) const;
+
+        explicit operator bool() const;
+
+        std::string toString() const;
     private:
         std::vector<int> values_; //!< can store normal value or 2,3(with possibility for more) dim vec
-        Token connectedToken;     // FIXME : maybe just vecc::Position
+        Position currentPosition;
+
+        static const Variable retTrue;
+        static const Variable retFalse;
     };
 }
 

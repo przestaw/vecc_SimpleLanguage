@@ -2,4 +2,6 @@ file(GLOB AST_INC "${PROJECT_SOURCE_DIR}/include/AST/general/*.h")
 file(GLOB AST_STATEMENT_INC "${PROJECT_SOURCE_DIR}/include/AST/statement/*.h")
 file(GLOB AST_EXPRESSION_INC "${PROJECT_SOURCE_DIR}/include/AST/expression/*.h")
 
+include_directories("expression" "general" "statement")
+
 set(LIB_INC ${LIB_INC} ${AST_INC} ${AST_STATEMENT_INC} ${AST_EXPRESSION_INC} PARENT_SCOPE)

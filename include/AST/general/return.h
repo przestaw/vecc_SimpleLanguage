@@ -5,6 +5,8 @@
 #ifndef VECC_LANG_RETURN_H
 #define VECC_LANG_RETURN_H
 
+#include "variable.h"
+
 namespace vecc {
 
     struct Return {
@@ -12,6 +14,13 @@ namespace vecc {
             noting,
             value
         };
+
+        explicit Return(const Type &type = Type::noting) : type(type) {}
+
+        explicit Return(const Type &type, const Variable& variable) : type(type), variable(variable) {}
+
+        Type type;
+        Variable variable;
     };
 }
 

@@ -4,4 +4,6 @@ file(GLOB ERROR_INC "${PROJECT_SOURCE_DIR}/include/error/*.h")
 
 add_subdirectory("AST")
 
-set(LIB_INC ${LIB_INC} ${SCANNER_INC} ${PARSER_INC} ${ERROR_INC} PARENT_SCOPE)
+include_directories("AST" "error" "scanner" "parser")
+
+set(LIB_INC ${LIB_INC} ${PARSER_INC} ${SCANNER_INC} ${ERROR_INC} PARENT_SCOPE)

@@ -29,7 +29,7 @@ namespace vecc {
         std::streampos symbolPos;
 
         inline std::string toString() const{
-            return BOLD("line number : ") + std::to_string(lineNo) + ", " BOLD("position : ") + std::to_string(symbolNo);
+            return BOLD("line number : ") + std::to_string(lineNo) + ", " BOLD("position : ") + std::to_string(symbolNo) + '\n';
         }
 
         inline std::ostream &operator<<(std::ostream &os) {
