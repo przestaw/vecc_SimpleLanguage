@@ -144,3 +144,7 @@ const std::string &Token::getLiteral() const {
 std::string Token::toString() const {
     return "Token " + typeName() + ", \"" + literal_ + "\", \n at " + tokenPos_.toString();
 }
+
+std::string Token::getTypeName(const Token::Type &type) {
+    return typeDescription.at(type);
+}
