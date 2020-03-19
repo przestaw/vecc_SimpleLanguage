@@ -3,7 +3,7 @@
 //
 
 #include <scanner/scanner.h>
-#include <vecc_exeception.h>
+#include <error/exeception.h>
 
 using namespace vecc;
 

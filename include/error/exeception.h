@@ -2,8 +2,8 @@
 // Created by przemek on 18.03.2020.
 //
 
-#ifndef VECC_LANG_VECC_EXECEPTION_H
-#define VECC_LANG_VECC_EXECEPTION_H
+#ifndef VECC_LANG_EXECEPTION_H
+#define VECC_LANG_EXECEPTION_H
 
 #include <iostream>
 #include <stdexcept>
@@ -29,4 +29,4 @@ namespace vecc {
     };
 }
 
-#endif //VECC_LANG_VECC_EXECEPTION_H
+#endif //VECC_LANG_EXECEPTION_H

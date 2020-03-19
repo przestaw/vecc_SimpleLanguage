@@ -5,7 +5,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "scanner/scanner.h"
-#include "vecc_exeception.h"
+#include "error/exeception.h"
 
 BOOST_AUTO_TEST_SUITE(Lexer_Test_Suite)
 
