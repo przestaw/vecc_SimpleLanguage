@@ -31,14 +31,14 @@ namespace vecc {
 
     class UnexpectedToken : public Exception {
     public:
-        explicit UnexpectedToken(const Token &token, const std::list<Token> &expected = std::list<Token>()) : Exception(
+        explicit UnexpectedToken(const Token &token, const std::list<Token::Type> &expected = std::list<Token::Type>()) : Exception(
                 [&](){
                     std::string buf = FRED(BOLD("Unexpected Token ERROR : \n"));
                     buf.append("Got " + token.typeName());
                     if(!expected.empty()){
                         buf.append("but expected : \n");
                         for(auto &it: expected){
-                            buf.append("\t" + it.typeName() + "\n");
+                            buf.append("\t" + Token::getTypeName(it) + "\n");
                         }
                     }
                     return buf;
