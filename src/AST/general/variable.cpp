@@ -21,7 +21,7 @@ std::vector<int> &Variable::operator*() {
 }
 
 int &Variable::at(unsigned idx) {
-    if (0 <= idx && idx < values_.size()) {
+    if (idx < values_.size()) {
         return values_.at(idx);
     } else {
         throw RangeException("index out of range on " +
@@ -31,7 +31,7 @@ int &Variable::at(unsigned idx) {
 }
 
 const int &Variable::at(unsigned idx) const {
-    if (0 <= idx && idx < values_.size()) {
+    if (idx < values_.size()) {
         return values_.at(idx);
     } else {
         throw RangeException("index out of range on " +

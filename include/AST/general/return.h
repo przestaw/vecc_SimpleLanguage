@@ -15,12 +15,12 @@ namespace vecc {
             value
         };
 
-        explicit Return(const Type &type = Type::noting) : type(type) {}
+        explicit Return(const Type &type = Type::noting) : type_(type) {}
 
-        explicit Return(const Type &type, const Variable& variable) : type(type), variable(variable) {}
+        explicit Return(const Type &type, const Variable& variable) : type_(type), variable_(variable) {}
 
-        Type type;
-        Variable variable;
+        Type type_;
+        Variable variable_;
     };
 }
 

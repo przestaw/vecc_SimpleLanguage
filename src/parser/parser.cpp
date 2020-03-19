@@ -6,9 +6,9 @@
 
 using namespace vecc;
 
-Parser::Parser() : Parser(nullptr){}
+Parser::Parser(std::ostream &out) : out_(out), Parser(nullptr){}
 
-Parser::Parser(std::unique_ptr<Reader> source) : scanner_(std::make_unique<Scanner>(std::move(source))) {}
+Parser::Parser(std::unique_ptr<Reader> source, std::ostream &out) : out_(out), scanner_(std::make_unique<Scanner>(std::move(source))) {}
 
 void Parser::setSource(std::unique_ptr<Reader> source) {
     scanner_->setReader(std::move(source));

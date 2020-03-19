@@ -14,8 +14,8 @@
 namespace vecc {
     class Parser{
     public:
-        Parser();
-        Parser(std::unique_ptr<Reader> source);
+        explicit Parser(std::ostream &out = std::cout);
+        explicit Parser(std::unique_ptr<Reader> source, std::ostream &out = std::cout);
         //Parser(Scanner scan); // FIXME : is it needed? will i change scanner for any reason
         //void setlexer(Scanner scan);
         void setSource(std::unique_ptr<Reader> source);
@@ -28,6 +28,7 @@ namespace vecc {
         void cleanParser(); // to clean AST tree / new program
 
     private:
+        std::ostream &out_;
         std::unique_ptr<Scanner> scanner_;
         std::unique_ptr<Program> currentProgram;
 
