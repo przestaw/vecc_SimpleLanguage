@@ -12,9 +12,10 @@
 namespace vecc {
     class Exception : public std::runtime_error {
     public:
-        explicit Exception(const std::string& desc) : runtime_error(desc) {
-            std::cerr << desc;
-        }
+        explicit Exception(const std::string& desc) : runtime_error(desc), value(desc) {}
+        virtual const std::string &getMessage() {return value;}
+    protected:
+        std::string value;
     };
 
     class NotAToken : public Exception {

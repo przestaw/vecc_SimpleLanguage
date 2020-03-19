@@ -11,58 +11,62 @@ Scanner::Scanner() : reader_(nullptr) {}
 
 Scanner::Scanner(std::unique_ptr<Reader> reader) : reader_(std::move(reader)){}
 
-Token Scanner::getToken() {
+Token Scanner::parseToken() {
     if(canRead()){
-        Token newToken(reader_->getCurrentPos());
+        currentToken = Token(reader_->getCurrentPos());
 
-        tryToken(newToken); // Note:  Handles EOF as first possible case
+        tryToken(); // Note:  Handles EOF as first possible case
 
-        if(newToken.getType() != Token::Type::NaT){
-            return newToken;
+        if(currentToken.getType() != Token::Type::NaT){
+            return currentToken;
         } else {
-            throw vecc::Exception("invalid"); // TODO : invalid token
+            throw vecc::NotAToken(currentToken); // TODO : invalid token
         }
     } else {
         throw vecc::NoInputStream(); // TODO : no reader attached
     }
 }
 
+Token Scanner::getToken() {
+    return currentToken;
+}
+
 void Scanner::setReader(std::unique_ptr<Reader> reader) {
     reader_ = std::move(reader);
 }
 
-void Scanner::tryToken(Token &newToken) {
+void Scanner::tryToken() {
     while (std::isspace(reader_->peek()) && !reader_->isEoF())
         reader_->get();
 
     if(reader_->isEoF()){
-        newToken.setType(Token::Type::EoF);
+        currentToken.setType(Token::Type::EoF);
     } else if (isdigit(reader_->peek())) {
-        tryNumberString(newToken);
+        tryNumberString();
     } else if (reader_->peek() == '"') {
-        tryCharString(newToken);
+        tryCharString();
         // FIXME  : throw if eof before second " ???
     } else if (isalnum(reader_->peek())) {
-        tryKeyword(newToken);
+        tryKeyword();
         // if not keyword it is Identifier
-        if(newToken.getType() == Token::Type::NaT){
-            newToken.setType(Token::Type::Identifier);
+        if(currentToken.getType() == Token::Type::NaT){
+            currentToken.setType(Token::Type::Identifier);
         }
     } else {
-        tryOperatorOrBracket(newToken);
+        tryOperatorOrBracket();
     }
 }
 
-void Scanner::tryKeyword(Token &newToken) {
+void Scanner::tryKeyword() {
     std::string buf;
     while (!reader_->isEoF() && (std::isalnum(reader_->peek()) || reader_->peek() == '_')) {
         buf.push_back(reader_->get());
     }
-    newToken.setLiteral(buf);
-    newToken.setType(Token::findKeywordType(buf));
+    currentToken.setLiteral(buf);
+    currentToken.setType(Token::findKeywordType(buf));
 }
 
-void Scanner::tryCharString(Token &newToken) {
+void Scanner::tryCharString() {
     reader_->get(); // consume first ' " '
     std::string buf;
 
@@ -88,15 +92,15 @@ void Scanner::tryCharString(Token &newToken) {
     if (reader_->peek() == '"') {
         // consume last ' " '
         reader_->get();
-        newToken.setType(Token::Type::CharacterString);
+        currentToken.setType(Token::Type::CharacterString);
     } else {
         // not properly closed
-        newToken.setType(Token::Type::NaT);
+        currentToken.setType(Token::Type::NaT);
     }
-    newToken.setLiteral(buf);
+    currentToken.setLiteral(buf);
 }
 
-void Scanner::tryNumberString(Token &newToken) {
+void Scanner::tryNumberString() {
     std::string buf;
     buf.push_back(reader_->get());
 
@@ -104,20 +108,20 @@ void Scanner::tryNumberString(Token &newToken) {
         buf.push_back(reader_->get());
     }
 
-    newToken.setType(Token::Type::NumberString);
-    newToken.setLiteral(buf);
+    currentToken.setType(Token::Type::NumberString);
+    currentToken.setLiteral(buf);
 }
 
-void Scanner::tryOperatorOrBracket(Token &newToken) {
+void Scanner::tryOperatorOrBracket() {
     std::string buf;
     buf.push_back(reader_->get());
-    newToken.setType(Token::findSymbolType(buf.front()));
-    if(newToken.getType() != Token::Type::NaT){
+    currentToken.setType(Token::findSymbolType(buf.front()));
+    if(currentToken.getType() != Token::Type::NaT){
         Token::Type testForTwoSymbol = Token::checkSecondSecond(buf.front(), reader_->peek());
         if(testForTwoSymbol != Token::Type::NaT){
             buf.push_back(reader_->get());
-            newToken.setType(testForTwoSymbol);
+            currentToken.setType(testForTwoSymbol);
         } // orginal one-symbol type untouched, reader in same pos
-        newToken.setLiteral(buf);
     } // else invalid operator
+    currentToken.setLiteral(buf);
 }

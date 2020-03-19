@@ -17,9 +17,8 @@ namespace vecc {
 
         Scanner(std::unique_ptr<Reader> reader);
 
-        Token getToken(); // TODO : Token might be "state" -> void getNext() & Token getCurrent()
-                          // think of what will be needed in Parser
-
+        Token getToken();
+        Token parseToken();
 
         // I assume that diffrent readers will be used only to load error-free libraries
         // Hence that errors that occur will be conected only with single input file
@@ -28,15 +27,16 @@ namespace vecc {
         //  in Exceptions (reader or position with origin info - file/lib)
         void setReader(std::unique_ptr<Reader> reader);
     private:
+        Token currentToken;
         // use built-in std::unique_ptr check if ptr is "valid" (!= nullptr)
         inline bool canRead() { return static_cast<bool>(reader_); }
 
-        inline void tryToken(Token &newToken);
+        inline void tryToken();
 
-        inline void tryKeyword(Token &newToken);
-        inline void tryCharString(Token &newToken);
-        inline void tryNumberString(Token &newToken);
-        inline void tryOperatorOrBracket(Token &newToken);
+        inline void tryKeyword();
+        inline void tryCharString();
+        inline void tryNumberString();
+        inline void tryOperatorOrBracket();
 
         std::unique_ptr<Reader> reader_;
     };
