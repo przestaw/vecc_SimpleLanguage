@@ -101,77 +101,77 @@ Funkcje biblioteczne miały być ładowane przed właściwym programem.
 \paragraph{Przykład 1 funkcja z rekurencją}
 \begin{verbatim}
 fun licz(a) {
-a = a * 2;   
-if (a < 10) {      
-fun(a);   
-}    		 
-return a;  	
+    a = a * 2;
+    if (a < 10) {
+        fun(a);
+    }
+    return a;
 }  				
 
 fun main() {
-if(11){
-print(fun(2));
-}
+    if(11){
+        print(fun(2));
+    }
 }					
 \end{verbatim}
 
 \paragraph{Przykład 2 funkcje biblioteczne}
 \begin{verbatim}
 fun main() {
-var a = vec(1,2);
-var b = vec(3,4);
-print("a = ", a);
-print("b = ", b);
-print("a + b = ", a+b);
-print("a * b = ", scalar2(a, b));
-print("a o b = ", product2(a, b));
-print("2 * a = ", 2*a);    	
-print("a * 2 = ", a*2);
+    var a = vec(1,2);
+    var b = vec(3,4);
+    print("a = ", a);
+    print("b = ", b);
+    print("a + b = ", a+b);
+    print("a * b = ", scalar2(a, b));
+    print("a o b = ", product2(a, b));
+    print("2 * a = ", 2*a);
+    print("a * 2 = ", a*2);
 }   
 \end{verbatim}
 
 \paragraph{Przykład 3 zmienne}
 \begin{verbatim}
 fun printAndRet(a) {
-print(a);
-return a+1;
+    print(a);
+    return a+1;
 }
 
 fun main() {
-var a = 0;
-if(a == 0) {
-print("a");
-print(a);
-}
+    var a = 0;
+    if(a == 0) {
+        print("a");
+        print(a);
+    }
 
-print(vec(1,2));
-print(vec(1,2,3));
+    print(vec(1,2));
+    print(vec(1,2,3));
 
-var b = a;
-while(b < 10) {
-b = b + 1;
-}
-print("b = ", b);
+    var b = a;
+    while(b < 10) {
+        b = b + 1;
+    }
+    print("b = ", b);
 
-fun(1);
-fun(fun(2));
+    fun(1);
+    fun(fun(2));
 }   
 \end{verbatim}
 
 \paragraph{Product3}
 \begin{verbatim}
 fun product3(vec1, vec2) {
-var res=vec(0,0,0);
-res[0]=vec1[1]*vec2[2] - vec1[2]*vec2[1];
-res[1]=vec1[2]*vec2[0] - vec1[0]*vec2[2];
-res[2]=vec1[0]*vec2[1] - vec1[1]*vec2[0];
-return res;
+    var res=vec(0,0,0);
+    res[0]=vec1[1]*vec2[2] - vec1[2]*vec2[1];
+    res[1]=vec1[2]*vec2[0] - vec1[0]*vec2[2];
+    res[2]=vec1[0]*vec2[1] - vec1[1]*vec2[0];
+    return res;
 }
 \end{verbatim}
 
 \section{Opis Struktury Języka}
 
-\textbf{program} = \{ functionDef \} ;\\
+\textsl{\textbf{program} = \{ functionDef \} ;\\
 \textbf{functionDef} = ''fun'' identifier parameters statementBlock ;\\
 \textbf{parameters} = ''('' [ identifier \{ '','' identifier \} ] '')'' ;\\
 \\
@@ -183,7 +183,7 @@ ifStatement | whileStatement | functionCallStatement |  printStatement | stateme
 \textbf{assignStatement} = variable ''='' expression '';'' ;\\
 \textbf{ifStatement} = ''if'' ''('' expression '')'' statementBlock [ ''else'' statementBlock ] ;\\
 \textbf{whileStatement} = ''while'' ''('' expression '')'' statementBlock ;\\
-\textbf{functionCallStatement} =  functionCall '';''
+\textbf{functionCallStatement} =  functionCall '';''\\
 \textbf{functionCall} = identifier arguments ;\\
 \textbf{arguments} = ''('' [ expression \{ '','' expression \} ] '')'' ;\\
 \\
@@ -193,9 +193,9 @@ ifStatement | whileStatement | functionCallStatement |  printStatement | stateme
 \textbf{expression} = andExpr \{ orOp andExpr \} ;\\
 \textbf{andExpr} = relationalExpr \{ andOp relationalExpr \} ;\\
 \textbf{relationalExpr} = baseLogicExpr [ relationOp baseLogicExpr ] ;\\
-\textbf{baseLogicExpr} = [ unaryNegation ] mathExpr ;\\
+\textbf{baseLogicExpr} = [ unaryNegation ] additiveExpr ;\\
 \\
-\textbf{mathExpr} = multiplyExpr \{ additiveOp multiplyExpr \} ;\\
+\textbf{additiveExpr} = multiplyExpr \{ additiveOp multiplyExpr \} ;\\
 \textbf{multiplyExpr} = baseMathExpr \{ multiplyOp baseMathExpr \} ;\\
 \textbf{baseMathExpr} = [unaryMinus ] (value | parentExpr) ;\\
 \\
@@ -221,7 +221,7 @@ ifStatement | whileStatement | functionCallStatement |  printStatement | stateme
 \textbf{underscore} = ''\_'';\\
 \textbf{letter} = ''a''..''z'' | ''A''..''Z'' ;\\
 \textbf{allCharacters} = ? all visible characters ? ;\\
-
+}
 \section{Założenia Implementacyjne}
 \subsection{Produkt Końcowy}
 Finalny program ma być konsolowa aplikacja uruchamianą wraz z parametrem reprezentującym ścieżkę do pliku do interpretacji. Wynik działania skryptu będzie wypisywane na standardowe wyjście \textsl{stdout}. W przypadku błędów kompilacji lub wykonania będą one wypisywane na standardowe wyjście błędów \textsl{stderr}. Umożliwi to łatwe przekierowanie poszczególnych wyjść do pliku/innej konsoli etc.
