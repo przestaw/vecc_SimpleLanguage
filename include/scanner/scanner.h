@@ -29,7 +29,7 @@ namespace vecc {
     private:
         Token currentToken;
         // use built-in std::unique_ptr check if ptr is "valid" (!= nullptr)
-        inline bool canRead() { return static_cast<bool>(reader_); }
+        inline bool canRead();
 
         inline void tryToken();
 

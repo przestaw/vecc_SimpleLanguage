@@ -20,12 +20,12 @@ namespace vecc {
 
     class NotAToken : public Exception {
     public:
-        explicit NotAToken(const Token& token) : Exception("Unknown token : " + token.toString()) {}
+        explicit NotAToken(const Token &token) : Exception(FMAG(BOLD("Token ERROR : \n")) "Unknown token : " + token.toString()) {}
     };
 
     class NoInputStream : public Exception {
     public:
-        explicit NoInputStream() : Exception("No input stream to read - " FRED("nullptr")) {}
+        explicit NoInputStream() : Exception(FMAG(BOLD("Stream ERROR : \n")) "No input stream to read - " FRED("nullptr")) {}
     };
 }
 

@@ -11,6 +11,10 @@ Scanner::Scanner() : reader_(nullptr) {}
 
 Scanner::Scanner(std::unique_ptr<Reader> reader) : reader_(std::move(reader)){}
 
+bool Scanner::canRead() {
+    return static_cast<bool>(reader_);
+}
+
 Token Scanner::parseToken() {
     if(canRead()){
         currentToken = Token(reader_->getCurrentPos());

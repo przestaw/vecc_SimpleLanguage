@@ -1,5 +1,9 @@
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
 
+file(GLOB TEST_SCANNER "${PROJECT_SOURCE_DIR}/test/scanner/*.cpp")
+
+set(TEST_SRC ${TEST_SRC} ${TEST_SCANNER})
+
 add_executable(${TEST} ${TEST_SRC} ${LIB_SRC} ${LIB_SRC})
 target_link_libraries(${TEST} ${EXTERNAL_LIBS} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 

@@ -1,13 +1,16 @@
 #include "general_defines.h"
 #include <iostream>
 #include <boost/program_options.hpp>
+#include <scanner/scanner.h>
+#include <fstream>
+#include <vecc_exeception.h>
 #include "scanner/reader.h"
 
 using namespace boost::program_options;
 
 struct Params {
     bool run = false;
-    std::string file;
+    std::string file = "";
     uint8_t verbosity = 0;
 };
 
@@ -29,8 +32,11 @@ inline Params parseParams(int argc, char *argv[]){
         if (vm.count("help")) {
             std::cout << desc << '\n';
         } else {
-            //TODO : parse option
-
+            if(vm.count("input") > 0){
+                params.run = true;
+                params.file = vm["input"].as<std::string>();
+                params.verbosity = vm["verbosity"].as<uint8_t>();
+            }
         }
     } catch (const error &ex) {
         std::cerr << ex.what() << " !\n";
@@ -47,8 +53,22 @@ int main(int argc, char *argv[]) {
     Params params = parseParams(argc, argv);
     params.run = true;
     if(params.run){
-        //TODO
-        std::cout << FGRN(BOLD("RUN\n"));
+        std::cout << FGRN(BOLD("START\n"));
+        std::ifstream file;
+        file.open(params.file);
+        vecc::Scanner scanner(std::make_unique<vecc::Reader>(file, params.file));
+        vecc::Token token;
+
+        try{
+            do{
+                token = scanner.parseToken();
+                std::cout << INV("Token read") " : " <<  token.toString() << '\n';
+            }while(token.getType() != vecc::Token::Type::NaT && token.getType() != vecc::Token::Type::EoF);
+        } catch (vecc::Exception &error){
+            std::cerr << error.what();
+        }
+
+        file.close();
 
         std::cout << FRED(BOLD("END\n"));
     }
