@@ -13,7 +13,7 @@ namespace vecc {
         virtual ~Expression() = default;
 
         virtual Variable calculate() const = 0;
-    }
+    };
 }
 
 #endif //VECC_LANG_EXPRESSION_H

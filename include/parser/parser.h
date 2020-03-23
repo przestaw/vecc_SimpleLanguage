@@ -5,8 +5,12 @@
 #ifndef VECC_LANG_PARSER_H
 #define VECC_LANG_PARSER_H
 
-#include <AST/statement/statement.h>
 #include <error/exeception.h>
+#include <AST/statement/statement.h>
+#include <AST/statement/statement_block.h>
+#include <AST/expression/expression.h>
+
+#include <AST/general/function.h>
 #include "scanner/reader.h"
 #include "scanner/scanner.h"
 #include "AST/general/program.h"
@@ -16,8 +20,7 @@ namespace vecc {
     public:
         explicit Parser(std::ostream &out = std::cout);
         explicit Parser(std::unique_ptr<Reader> source, std::ostream &out = std::cout);
-        //Parser(Scanner scan); // FIXME : is it needed? will i change scanner for any reason
-        //void setlexer(Scanner scan);
+
         void setSource(std::unique_ptr<Reader> source);
 
         //Program parse();    // FIXME : run multiple times as source changes?
@@ -46,12 +49,34 @@ namespace vecc {
          * @param type expected Token type
          * @param ifTrue action if token has been encountered
          */
-        inline void expectToken(const Token::Type type, const std::function<void()> ifTrue = std::function<void()>()) {
+        inline void expectToken(const Token::Type type, std::list<Token::Type> expected, const std::function<void()> ifTrue = std::function<void()>()) {
             if(!tryToken(type, ifTrue))
-                throw Exception("expected token : " "TODO");
+                throw UnexpectedToken(scanner_->getToken(), expected);
         }
 
+        void functionDefParse();
+        void parametersParse(Function &def);
+
+        void blockStatementParse(StatementBlock &newBlock);
+        
+        std::unique_ptr<Statement> parseAssignStatement();
+        std::unique_ptr<Statement> parseFunctionCall();
+        std::unique_ptr<Statement> parseIfStatement();
+        std::unique_ptr<Statement> parseWhileStatement();
+        std::unique_ptr<Statement> parseReturnStatement();
+        std::unique_ptr<Statement> parseStatementBlock();
         std::unique_ptr<Statement> parsePrintStatement();
+
+        Variable vectorLiteralParse();
+        bool existVariable(Token &tokenId);
+
+        std::unique_ptr<Expression> orExpressionParse();
+        std::unique_ptr<Expression> andExpressionParser();
+        std::unique_ptr<Expression> relationalExpressionParser();
+        std::unique_ptr<Expression> baseLogicParser();
+        std::unique_ptr<Expression> additiveExpressionParser();
+        std::unique_ptr<Expression> multiplyExpressionParser();
+        std::unique_ptr<Expression> baseMathExpressionParser();
     };
 }
 

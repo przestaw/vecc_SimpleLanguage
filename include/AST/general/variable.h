@@ -48,6 +48,8 @@ namespace vecc {
 
         explicit operator bool() const;
 
+        void setPosition(const Position &position);
+
         std::string toString() const;
     private:
         std::vector<int> values_; //!< can store normal value or 2,3(with possibility for more) dim vec

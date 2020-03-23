@@ -217,7 +217,11 @@ Variable Variable::operator||(const Variable &rhs) const {
 }
 
 Variable::operator bool() const {
-    return std::count(values_.begin(), values_.end(), 0);
+    return !(std::count(values_.begin(), values_.end(), 0));
+}
+
+void Variable::setPosition(const Position &position) {
+    this->currentPosition = position;
 }
 
 std::string Variable::toString() const {
