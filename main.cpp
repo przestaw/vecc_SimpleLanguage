@@ -48,7 +48,8 @@ int main(int argc, char *argv[]) {
     std::cout << "Hello, World!\n"
               << "from vecc lang project\n"
               << "for " BOLD("TKOM ") DIM("[Compilation Techniques]") " classes\n"
-              << FBLU(INV("by Stawczyk Przemyslaw") "\n");
+              << FBLU(INV("by Stawczyk Przemyslaw"))
+              << std::endl; //flush stream
 
     Params params = parseParams(argc, argv);
     params.run = true;
@@ -60,12 +61,13 @@ int main(int argc, char *argv[]) {
         vecc::Token token;
 
         try{
+            if(file.fail()){throw vecc::Exception(FRED(BOLD("ARG ERROR"))" Invalid file");}
             do{
                 token = scanner.parseToken();
                 std::cout << INV("Token read") " : " <<  token.toString() << '\n';
             }while(token.getType() != vecc::Token::Type::NaT && token.getType() != vecc::Token::Type::EoF);
         } catch (vecc::Exception &error){
-            std::cerr << error.what();
+            std::cerr << error.what() << std::endl;
         }
 
         file.close();
