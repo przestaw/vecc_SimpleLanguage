@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.15)
-project(vecc_lang)
+project(vecc)
 
 set(CMAKE_CXX_STANDARD 17)
 
 set(EXECUTABLE ${PROJECT_NAME}-program)
-set(LIBRARY ${PROJECT_NAME})
+set(LIBRARY ${PROJECT_NAME}-lib)
 set(TEST ${PROJECT_NAME}-test)
 set(CHECK ${TEST}-check)
+set(DOC ${PROJECT_NAME}-doc)
 
 file(GLOB LIB_SRC "src/*.cpp")
 file(GLOB LIB_INC "include/*.h")
@@ -29,10 +30,14 @@ endif()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 
-
 find_package(Boost COMPONENTS program_options unit_test_framework REQUIRED)
 set(EXTERNAL_LIBS "Boost::program_options")
 include_directories("${PROJECT_SOURCE_DIR}/include" ${BOOST_INCLUDE_DIR})
+
+find_package(LATEX)
+if(LATEX_FOUND)
+    add_subdirectory(doc)
+endif()
 
 #Include src and test for library and test-check
 add_subdirectory("include")

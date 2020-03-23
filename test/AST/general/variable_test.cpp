@@ -27,7 +27,29 @@ BOOST_AUTO_TEST_SUITE(Variable_Test_Suite)
         BOOST_CHECK(static_cast<bool>(var3));
     }
 
-    //TODO operator: and or
+    BOOST_AUTO_TEST_CASE(GivenVariables_OrOperatorWorks) {
+        Variable var0({0});
+        Variable var1({2});
+
+        Variable var2({0, 0});
+        Variable var3({2, 6});
+
+        BOOST_CHECK(!static_cast<bool>(var0 || var2));
+        BOOST_CHECK(static_cast<bool>(var1 || var0));
+        BOOST_CHECK(static_cast<bool>(var3 || var1));
+    }
+
+    BOOST_AUTO_TEST_CASE(GivenVariables_AndOperatorWorks) {
+        Variable var0({0});
+        Variable var1({2});
+
+        Variable var2({0, 0});
+        Variable var3({2, 6});
+
+        BOOST_CHECK(!static_cast<bool>(var2 && var0));
+        BOOST_CHECK(!static_cast<bool>(var2 && var1));
+        BOOST_CHECK(static_cast<bool>(var3 && var1));
+    }
 
     BOOST_AUTO_TEST_CASE(GivenOneVariable_EqualityWorks) {
         Variable var1({2});
