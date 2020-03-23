@@ -56,6 +56,8 @@ Variable BaseMathExpr::getBaseValue() const{
                 return Variable({(*std::get<std::weak_ptr<Variable>>(value_).lock()).at(index_)});
             }
             // FIXME : consider weak_ptr check
+        default:
+            return Variable();
     }
 }
 

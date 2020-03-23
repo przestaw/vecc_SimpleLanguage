@@ -15,6 +15,7 @@ namespace vecc {
         explicit Variable(std::vector<int> values);
 
         Variable(const Variable &) = default;
+        Variable(Variable &&) = default;
         Variable &operator=(const Variable &rhs) = default;
 
         int& operator[](int idx);
@@ -51,6 +52,8 @@ namespace vecc {
         void setPosition(const Position &position);
 
         std::string toString() const;
+
+        std::ostream &operator<<(std::ostream &out){ out << this->toString(); return out;}
     private:
         std::vector<int> values_; //!< can store normal value or 2,3(with possibility for more) dim vec
         Position currentPosition;

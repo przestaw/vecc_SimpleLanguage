@@ -34,12 +34,11 @@ find_package(Boost COMPONENTS program_options unit_test_framework REQUIRED)
 set(EXTERNAL_LIBS "Boost::program_options")
 include_directories("${PROJECT_SOURCE_DIR}/include" ${BOOST_INCLUDE_DIR})
 
+#Include src and test for library and test-check
 find_package(LATEX)
 if(LATEX_FOUND)
     add_subdirectory(doc)
 endif()
-
-#Include src and test for library and test-check
 add_subdirectory("include")
 add_subdirectory("src")
 add_subdirectory("test")
@@ -52,3 +51,10 @@ add_dependencies(${LIBRARY} ${CHECK})
 add_executable(${EXECUTABLE} main.cpp)
 add_dependencies(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${LIBRARY} ${EXTERNAL_LIBS})
+
+# "all" target
+if(LATEX_FOUND)
+    add_custom_target(build-all DEPENDS ${DOC} ${PROGRAM} ${LIB} ${CHECK} ${TEST})
+else()
+    add_custom_target(build-all DEPENDS ${PROGRAM} ${LIB} ${CHECK} ${TEST})
+endif()

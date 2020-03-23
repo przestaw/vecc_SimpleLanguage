@@ -5,6 +5,7 @@
 #ifndef VECC_LANG_RETURN_H
 #define VECC_LANG_RETURN_H
 
+#include <utility>
 #include "variable.h"
 
 namespace vecc {
@@ -17,7 +18,7 @@ namespace vecc {
 
         explicit Return(const Type &type = Type::noting) : type_(type) {}
 
-        explicit Return(const Type &type, const Variable& variable) : type_(type), variable_(variable) {}
+        explicit Return(const Type &type, Variable variable) : type_(type), variable_(std::move(variable)) {}
 
         Type type_;
         Variable variable_;

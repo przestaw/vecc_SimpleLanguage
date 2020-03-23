@@ -20,13 +20,13 @@ Variable &Context::findVariable(const std::string &identifier, const Token& toke
     }
 }
 
-Context::Context(std::vector<std::pair<std::string, Variable>> variables) {
+Context::Context(std::vector<std::pair<std::string, Variable>> variables) : parentContext(nullptr){
     for (auto &variable : variables) {
         this->variables_.insert(variable);
     }
 }
 
-Context::Context(const Context &context) {
+Context::Context(const Context &context) : parentContext(context.parentContext){
     for (auto &variable : context.variables_) {
         this->variables_.insert(variable);
     }

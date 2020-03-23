@@ -48,15 +48,39 @@ bool Parser::tryToken(const Token::Type type, std::function<void()> ifTrue) {
 }
 
 void Parser::functionDefParse() {
+    std::unique_ptr<Function> function;
 
+    expectToken(Token::Type::Identifier, [&]() {
+        function = std::make_unique<Function>(scanner_->getToken().getLiteral());
+    });
+
+    expectToken(Token::Type::ParenthesisOpen);
+    parametersParse(*function);
+
+    expectToken(Token::Type::CurlyBracketOpen);
+    blockStatementParse(function->getFunctionBody());
+
+    currentProgram->addFunction(std::move(function));
 }
 
 void Parser::parametersParse(Function &def) {
+    if (tryToken(Token::Type::Identifier, [&]() { def.addParameter(scanner_->getToken().getLiteral()); })) {
 
+        while (tryToken(Token::Type::Comma)) {
+            expectToken(Token::Type::Identifier, [&]() {
+                def.addParameter(scanner_->getToken().getLiteral());
+            });
+        }
+    }
+    expectToken(Token::Type::ParenthesisClose);
 }
 
 void Parser::blockStatementParse(StatementBlock &newBlock) {
-
+    (void)newBlock;
+    //TODO
+    while (!tryToken(Token::Type::CurlyBracketClose)) {
+        scanner_->parseToken();
+    }
 }
 
 std::unique_ptr<Statement> Parser::parseAssignStatement() {

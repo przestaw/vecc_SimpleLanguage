@@ -20,6 +20,7 @@ namespace vecc {
         Variable &findVariable(const std::string &identifier, const Token& token);
 
     private:
+        Context *parentContext; //!< used incases like if/while branch/just some code in curly brackets. In other cases nullptr
         std::unordered_map<std::string, Variable> variables_;
     };
 

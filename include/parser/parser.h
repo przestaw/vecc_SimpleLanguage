@@ -49,9 +49,9 @@ namespace vecc {
          * @param type expected Token type
          * @param ifTrue action if token has been encountered
          */
-        inline void expectToken(const Token::Type type, std::list<Token::Type> expected, const std::function<void()> ifTrue = std::function<void()>()) {
+        inline void expectToken(const Token::Type type, const std::function<void()> ifTrue = std::function<void()>()) {
             if(!tryToken(type, ifTrue))
-                throw UnexpectedToken(scanner_->getToken(), expected);
+                throw UnexpectedToken(scanner_->getToken(), {type});
         }
 
         void functionDefParse();

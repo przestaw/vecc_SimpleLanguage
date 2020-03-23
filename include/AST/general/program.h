@@ -5,9 +5,31 @@
 #ifndef VECC_LANG_PROGRAM_H
 #define VECC_LANG_PROGRAM_H
 
+#include <string>
+#include <unordered_map>
+#include <memory>
+#include <AST/general/function.h>
+
 namespace vecc {
     class Program {
+    public:
+        Program() = default;
 
+        Function &findFunction(std::string &identifier) {
+            return *functions.at(identifier);
+        }
+
+        bool existFunction(const std::string &identifier) const {
+            return functions.count(identifier);
+        }
+
+
+        void addFunction(std::unique_ptr<Function> function) {
+            functions.insert({function->getIdentifier(), std::move(function)});
+        }
+
+    private:
+        std::unordered_map<std::string, std::unique_ptr<Function>> functions;
     };
 }
 

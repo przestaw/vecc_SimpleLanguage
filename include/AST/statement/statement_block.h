@@ -13,7 +13,7 @@
 namespace vecc {
     class StatementBlock : public Statement {
     public:
-
+        StatementBlock() = default;
         //TODO
 
         void addInstruction(std::unique_ptr<Statement> statement) {

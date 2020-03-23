@@ -19,8 +19,8 @@ namespace vecc {
 
         void setPosition(const Position &position);
     private:
-        Variable &variable;
-        std::unique_ptr<Expression> expression;
+        Variable &variable_;
+        std::unique_ptr<Expression> expression_;
         bool indexedAcess;      //!< if variable is acessed with [] operator
         unsigned index_;
         Position position_;

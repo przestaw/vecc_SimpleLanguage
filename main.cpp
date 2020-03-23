@@ -3,7 +3,7 @@
 #include <boost/program_options.hpp>
 #include <scanner/scanner.h>
 #include <fstream>
-#include <vecc_exeception.h>
+#include <error/exeception.h>
 #include "scanner/reader.h"
 
 using namespace boost::program_options;
