@@ -4,6 +4,8 @@
 
 #include <parser/parser.h>
 #include <AST/statement/return_stmt.h>
+#include <AST/statement/while_stmt.h>
+#include <AST/statement/if_stmt.h>
 
 using namespace vecc;
 
@@ -109,7 +111,7 @@ void Parser::parseStatementBlock(StatementBlock &newBlock) {
                 break;
             case Token::Type::CurlyBracketOpen :
                 auto internalBlock = std::make_unique<StatementBlock>();
-                blockStatementParse(*internalBlock);
+                parseStatementBlock(*internalBlock);
                 newBlock.addInstruction(std::move(internalBlock));
         }
     }
@@ -117,11 +119,32 @@ void Parser::parseStatementBlock(StatementBlock &newBlock) {
     currentContext = currentContext->getParentContext();
 }
 
+Variable Parser::parseVectorValue() {
+    std::vector<int> variables;
+    auto addNumberLiteral = [&]() {
+        //need to convert value to integer
+        variables.push_back(std::stoi(scanner_->getToken().getLiteral()));
+    };
+
+    expectToken(Token::Type::ParenthesisOpen);
+    expectToken(Token::Type::NumberString, addNumberLiteral);
+    expectToken(Token::Type::Comma);
+    expectToken(Token::Type::NumberString, addNumberLiteral);
+    //check if 3 dimensional vector
+    if (tryToken(Token::Type::Comma)) {
+        expectToken(Token::Type::NumberString, addNumberLiteral);
+    }
+    expectToken(Token::Type::ParenthesisClose);
+
+    return Variable(std::move(variables));
+}
+
 std::unique_ptr<Statement> Parser::parseAssignStatement() {
     return std::unique_ptr<Statement>();
 }
 
 std::unique_ptr<Statement> Parser::parseIdentifier(const Token &identifier) {
+    (void) identifier;
     return std::unique_ptr<Statement>();
 }
 
@@ -130,11 +153,34 @@ std::unique_ptr<Statement> Parser::parseFunctionCall() {
 }
 
 std::unique_ptr<Statement> Parser::parseIfStatement() {
-    return std::unique_ptr<Statement>();
+    expectToken(Token::Type::ParenthesisOpen);
+    std::unique_ptr<Expression> condition = orExpressionParse();
+    expectToken(Token::Type::ParenthesisClose);
+
+    std::unique_ptr<IfStatement> ifStmt = std::make_unique<IfStatement>(std::move(condition));
+
+    expectToken(Token::Type::CurlyBracketOpen);
+    parseStatementBlock(ifStmt->trueBlock());
+
+    if(tryToken(Token::Type::Else)){
+        expectToken(Token::Type::CurlyBracketOpen);
+        parseStatementBlock(ifStmt->falseBlock());
+    }
+
+    return ifStmt;
 }
 
 std::unique_ptr<Statement> Parser::parseWhileStatement() {
-    return std::unique_ptr<Statement>();
+    expectToken(Token::Type::ParenthesisOpen);
+    std::unique_ptr<Expression> condition = orExpressionParse();
+    expectToken(Token::Type::ParenthesisClose);
+
+    std::unique_ptr<WhileStatement> whileStmt = std::make_unique<WhileStatement>(std::move(condition));
+
+    expectToken(Token::Type::CurlyBracketOpen);
+    parseStatementBlock(whileStmt->getWhileBody());
+
+    return whileStmt;
 }
 
 std::unique_ptr<Statement> Parser::parseReturnStatement() {
@@ -143,10 +189,6 @@ std::unique_ptr<Statement> Parser::parseReturnStatement() {
 
 std::unique_ptr<Statement> Parser::parsePrintStatement() {
     return std::unique_ptr<Statement>();
-}
-
-Variable Parser::parseVectorValue() {
-    return Variable();
 }
 
 std::unique_ptr<Expression> Parser::orExpressionParse() {

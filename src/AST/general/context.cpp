@@ -45,5 +45,6 @@ std::vector<Variable> Context::saveValues() {
 }
 
 void Context::restoreValues(const std::vector<Variable> &savedValues) {
+    (void)savedValues;
     //TODO
 }
