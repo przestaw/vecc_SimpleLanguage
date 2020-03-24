@@ -6,7 +6,7 @@
 #define VECC_LANG_FUNCTION_H
 
 #include <string>
-#include <list>
+#include <vector>
 #include <AST/general/variable.h>
 #include <AST/general/return.h>
 #include <AST/statement/statement_block.h>
@@ -14,20 +14,20 @@
 namespace vecc {
     class Function {
     public:
-        explicit Function(std::string identifier) : identifier_(std::move(identifier)) {}
+        explicit Function(std::string identifier);
 
         void addParameter(const std::string &identifier);
 
-        unsigned size() const { return parameters_.size(); }
+        unsigned size() const { return names_.size(); }
 
         const std::string &getIdentifier() const { return identifier_; }
 
-        Return run(std::list<Variable> parameters = std::list<Variable>());
+        Return run(const std::vector<Variable> &parameters = std::vector<Variable>());
 
         StatementBlock &getFunctionBody();
     private:
         const std::string identifier_;      //!< function identifier/name
-        std::list<std::string> parameters_; //!< Parameters names
+        std::vector<std::string> names_; //!< Parameters names
         StatementBlock functionBody_;
     };
 }

@@ -7,11 +7,11 @@
 
 using namespace vecc;
 
-void Context::addVariable(const std::string &identifier, Variable &&variable) {
-    variables_.insert({identifier, std::move(variable)});
+void Context::addVariable(const std::string &identifier, const Variable &variable) {
+    variables_.insert({identifier, std::make_shared<Variable>(variable)});
 }
 
-Variable &Context::findVariable(const std::string &identifier, const Token& token) {
+std::weak_ptr<Variable> Context::findVariable(const std::string &identifier, const Token& token) {
     if (variables_.count(identifier)) {
         return variables_.at(identifier);
     } else { // parent context?
@@ -20,7 +20,7 @@ Variable &Context::findVariable(const std::string &identifier, const Token& toke
     }
 }
 
-Context::Context(std::vector<std::pair<std::string, Variable>> variables) : parentContext(nullptr){
+Context::Context(std::vector<std::pair<std::string, std::shared_ptr<Variable>>> variables) : parentContext(nullptr){
     for (auto &variable : variables) {
         this->variables_.insert(variable);
     }

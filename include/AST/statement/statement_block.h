@@ -13,25 +13,14 @@
 namespace vecc {
     class StatementBlock : public Statement {
     public:
-        StatementBlock() = default;
-        //TODO
+        StatementBlock(Context *parentContext = nullptr);
 
-        void addInstruction(std::unique_ptr<Statement> statement) {
-            this->statements_.push_back(std::move(statement));
-        }
+        void addInstruction(std::unique_ptr<Statement> statement);
 
-        Return run() override {
-            Return ret;
+        void addVariable(const std::string &identifier);
+        std::weak_ptr<Variable> findVariable(const std::string &identifier);
 
-            for(auto &it : statements_){
-                ret = it->run();
-                if(ret.type_ == Return::Type::value){
-                    break;
-                }
-            }
-
-            return ret;
-        }
+        Return run() override;
     private:
         std::list<std::unique_ptr<Statement>> statements_;
         Context context_;

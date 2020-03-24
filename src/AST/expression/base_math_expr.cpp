@@ -3,61 +3,71 @@
 //
 
 #include <AST/expression/base_math_expr.h>
+#include <error/exeception.h>
+#include <AST/general/function.h>
+#include <AST/statement/function_call.h>
 
 using namespace vecc;
 
 BaseMathExpr::BaseMathExpr(std::unique_ptr<Statement> functionCall, bool unaryMathOp)
-    : type_(Type::function), indexedAcess(false), invert(unaryMathOp), index_(){
+        : type_(Type::function), indexedAcess(false), invert(unaryMathOp), index_() {
     value_ = std::move(functionCall);
 }
 
 BaseMathExpr::BaseMathExpr(std::unique_ptr<Expression> expr, bool unaryMathOp)
-    : type_(Type::expression), indexedAcess(false), invert(unaryMathOp), index_(){
+        : type_(Type::expression), indexedAcess(false), invert(unaryMathOp), index_() {
     value_ = std::move(expr);
 }
 
 BaseMathExpr::BaseMathExpr(std::unique_ptr<Variable> constant, bool unaryMathOp)
-        : type_(Type::constant), indexedAcess(false), invert(unaryMathOp), index_(){
+        : type_(Type::constant), indexedAcess(false), invert(unaryMathOp), index_() {
     value_ = std::move(constant);
 }
 
-BaseMathExpr::BaseMathExpr(std::weak_ptr<Variable> variable, bool unaryMathOp)
-        : type_(Type::variable), indexedAcess(false), invert(unaryMathOp), index_(){
-    value_ = std::move(variable);
+BaseMathExpr::BaseMathExpr(Variable *variable, bool unaryMathOp)
+        : type_(Type::variable), indexedAcess(false), invert(unaryMathOp), index_() {
+    value_ = variable;
 }
 
-BaseMathExpr::BaseMathExpr(std::weak_ptr<Variable> variable, unsigned int index, bool unaryMathOp)
-        : type_(Type::variable), indexedAcess(true), invert(unaryMathOp), index_(index){
-    value_ = std::move(variable);
+BaseMathExpr::BaseMathExpr(Variable *variable, unsigned int index, bool unaryMathOp)
+        : type_(Type::variable), indexedAcess(true), invert(unaryMathOp), index_(index) {
+    value_ = variable;
 }
 
 Variable BaseMathExpr::calculate() const {
     Variable ret = getBaseValue();
-    if(invert){
+    if (invert) {
         return -ret;
     } else {
         return ret;
     }
 }
 
-Variable BaseMathExpr::getBaseValue() const{
-    switch (type_){
-        case Type::function :
-            return std::get<std::unique_ptr<Statement>>(value_)->run().variable_;
-            // FIXME : consider exception if return NONE
+Variable BaseMathExpr::getBaseValue() const {
+    switch (type_) {
         case Type::expression :
             return std::get<std::unique_ptr<Expression>>(value_)->calculate();
         case Type::constant :
             return *std::get<std::unique_ptr<Variable>>(value_);
         case Type::variable :
-            if(indexedAcess){
-                return *std::get<std::weak_ptr<Variable>>(value_).lock();
+            if (indexedAcess) {
+                return Variable({(std::get<Variable *>(value_)->at(index_))});
             } else {
-                return Variable({(*std::get<std::weak_ptr<Variable>>(value_).lock()).at(index_)});
+                return *std::get<Variable *>(value_);
             }
             // FIXME : consider weak_ptr check
         default:
             return Variable();
+        case Type::function :
+            Return ret = std::get<std::unique_ptr<Statement>>(value_)->run();
+            if (ret.type_ == Return::Type::value) {
+                return ret.variable_;
+            } else {
+                throw NoReturnValue("Function " +
+                                    dynamic_cast<FunctionCallStatement *>(std::get<std::unique_ptr<Statement>>(
+                                            value_).get())->getFunction().getIdentifier() +
+                                    " does not return any value");
+            }
     }
 }
 

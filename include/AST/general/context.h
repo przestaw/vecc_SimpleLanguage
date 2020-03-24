@@ -6,22 +6,26 @@
 #define VECC_LANG_CONTEXT_H
 
 #include <iostream>
+#include <memory>
 #include <AST/general/variable.h>
 #include <vector>
 
 namespace vecc {
     class Context {
     public:
-        Context(std::vector<std::pair<std::string, Variable>> variables);
+        explicit Context(Context* parent = nullptr) : parentContext(parent) {}
+        explicit Context(std::vector<std::pair<std::string, std::shared_ptr<Variable>>> variables);
         Context(const Context& context);
 
-        void addVariable(const std::string &identifier, Variable &&variable);
+        void addVariable(const std::string &identifier, const Variable &variable);
         bool existVariable(const std::string &identifier) const;
-        Variable &findVariable(const std::string &identifier, const Token& token);
+        std::weak_ptr<Variable> findVariable(const std::string &identifier, const Token& token);
 
+        std::vector<Variable> saveValues();
+        void restoreValues(const std::vector<Variable> &savedValues);
     private:
         Context *parentContext; //!< used incases like if/while branch/just some code in curly brackets. In other cases nullptr
-        std::unordered_map<std::string, Variable> variables_;
+        std::unordered_map<std::string, std::shared_ptr<Variable>> variables_;
     };
 
 }

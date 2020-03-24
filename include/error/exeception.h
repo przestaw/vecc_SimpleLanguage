@@ -56,6 +56,11 @@ namespace vecc {
         explicit UndefinedFun(const std::string &desc) : Exception(FRED(BOLD("Undefined Function ERROR : ")) + desc ) {}
     };
 
+    class NoReturnValue : public Exception {
+    public:
+        explicit NoReturnValue(const std::string &desc) : Exception(FRED(BOLD("No Return Value ERROR : ")) + desc ) {}
+    };
+
     class MathException : public Exception {
     public:
         explicit MathException(const std::string& desc) : Exception( FYEL(BOLD("Math ERROR : \n")) + desc) {}

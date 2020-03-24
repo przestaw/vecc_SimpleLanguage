@@ -19,8 +19,10 @@ namespace vecc {
         explicit BaseMathExpr(std::unique_ptr<Expression> expr, bool unaryMathOp = false);
 
         explicit BaseMathExpr(std::unique_ptr<Variable> constant, bool unaryMathOp = false);
-        explicit BaseMathExpr(std::weak_ptr<Variable> variable, bool unaryMathOp = false);
-        explicit BaseMathExpr(std::weak_ptr<Variable> variable, unsigned index = 0, bool unaryMathOp = false);
+        // construction pointing to existing Variables
+        // TODO : considere using shared ptr for Variables in Context and weak_ptr here
+        explicit BaseMathExpr(Variable* variable, bool unaryMathOp = false);
+        explicit BaseMathExpr(Variable* variable, unsigned index = 0, bool unaryMathOp = false);
 
         Variable calculate() const override;
     private:
@@ -41,7 +43,7 @@ namespace vecc {
                 std::unique_ptr<Statement>,
                 std::unique_ptr<Expression>,
                 std::unique_ptr<Variable>,
-                std::weak_ptr<Variable>> value_;
+                Variable*> value_;
 
         unsigned index_;
     };
