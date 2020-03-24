@@ -35,6 +35,10 @@ namespace vecc {
         std::unique_ptr<Scanner> scanner_;
         std::unique_ptr<Program> currentProgram;
 
+        Context *currentContext = nullptr;
+
+        const std::unordered_map<Token::Type, std::function<void()>> relational;
+        
         /**
          * Check if next token is of given type and execute action if so
          * @param type expected Token type
@@ -54,21 +58,31 @@ namespace vecc {
                 throw UnexpectedToken(scanner_->getToken(), {type});
         }
 
-        void functionDefParse();
-        void parametersParse(Function &def);
+//        inline bool checkVariable(const Token &token){
+//            if(currentContext){
+//                if(currentContext->existVariable(token.getLiteral())){
+//                    return true;
+//                } else {
+//                    throw UndefinedVar(token);
+//                }
+//            }
+//            throw Exception(BRED(BOLD("FATAL : unknown error\n")));
+//        }
 
-        void blockStatementParse(StatementBlock &newBlock);
-        
+        void parseFunctionDef();
+        void parseParameters(Function &def);
+
+        void parseStatementBlock(StatementBlock &newBlock);
+
+        Variable parseVectorValue();
+
         std::unique_ptr<Statement> parseAssignStatement();
+        std::unique_ptr<Statement> parseIdentifier(const Token &identifier);
         std::unique_ptr<Statement> parseFunctionCall();
         std::unique_ptr<Statement> parseIfStatement();
         std::unique_ptr<Statement> parseWhileStatement();
         std::unique_ptr<Statement> parseReturnStatement();
-        std::unique_ptr<Statement> parseStatementBlock();
         std::unique_ptr<Statement> parsePrintStatement();
-
-        Variable vectorLiteralParse();
-        bool existVariable(Token &tokenId);
 
         std::unique_ptr<Expression> orExpressionParse();
         std::unique_ptr<Expression> andExpressionParser();

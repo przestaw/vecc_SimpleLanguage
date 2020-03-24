@@ -21,6 +21,8 @@ namespace vecc {
         bool existVariable(const std::string &identifier) const;
         std::weak_ptr<Variable> findVariable(const std::string &identifier, const Token& token);
 
+        Context* getParentContext();
+
         std::vector<Variable> saveValues();
         void restoreValues(const std::vector<Variable> &savedValues);
     private:

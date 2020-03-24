@@ -3,12 +3,14 @@
 //
 
 #include <parser/parser.h>
+#include <AST/statement/return_stmt.h>
 
 using namespace vecc;
 
-Parser::Parser(std::ostream &out) : out_(out), scanner_(std::make_unique<Scanner>(nullptr)){}
+Parser::Parser(std::ostream &out) : out_(out), scanner_(std::make_unique<Scanner>(nullptr)) {}
 
-Parser::Parser(std::unique_ptr<Reader> source, std::ostream &out) : out_(out), scanner_(std::make_unique<Scanner>(std::move(source))) {}
+Parser::Parser(std::unique_ptr<Reader> source, std::ostream &out) : out_(out), scanner_(
+        std::make_unique<Scanner>(std::move(source))) {}
 
 void Parser::setSource(std::unique_ptr<Reader> source) {
     scanner_->setReader(std::move(source));
@@ -17,11 +19,7 @@ void Parser::setSource(std::unique_ptr<Reader> source) {
 void Parser::parse() {
     scanner_->parseToken();
     while (scanner_->getToken().getType() != Token::Type::EoF) {
-        if (tryToken(Token::Type::Function)) {
-            // TODO : parse function
-        } else {
-            // TODO : throw : expected function declaration
-        }
+        expectToken(Token::Type::Function, [&]() { parseFunctionDef(); });
     }
 }
 
@@ -47,7 +45,7 @@ bool Parser::tryToken(const Token::Type type, std::function<void()> ifTrue) {
     }
 }
 
-void Parser::functionDefParse() {
+void Parser::parseFunctionDef() {
     std::unique_ptr<Function> function;
 
     expectToken(Token::Type::Identifier, [&]() {
@@ -55,15 +53,15 @@ void Parser::functionDefParse() {
     });
 
     expectToken(Token::Type::ParenthesisOpen);
-    parametersParse(*function);
+    parseParameters(*function);
 
     expectToken(Token::Type::CurlyBracketOpen);
-    blockStatementParse(function->getFunctionBody());
+    parseStatementBlock(function->getFunctionBody());
 
     currentProgram->addFunction(std::move(function));
 }
 
-void Parser::parametersParse(Function &def) {
+void Parser::parseParameters(Function &def) {
     if (tryToken(Token::Type::Identifier, [&]() { def.addParameter(scanner_->getToken().getLiteral()); })) {
 
         while (tryToken(Token::Type::Comma)) {
@@ -75,15 +73,55 @@ void Parser::parametersParse(Function &def) {
     expectToken(Token::Type::ParenthesisClose);
 }
 
-void Parser::blockStatementParse(StatementBlock &newBlock) {
-    (void)newBlock;
-    //TODO
+void Parser::parseStatementBlock(StatementBlock &newBlock) {
+    newBlock = StatementBlock(currentContext);
+    currentContext = &newBlock.getContext();
+
     while (!tryToken(Token::Type::CurlyBracketClose)) {
-        scanner_->parseToken();
+        Token token = scanner_->getToken();
+        switch (token.getType()) {
+            default:
+                throw UnexpectedToken(token, {Token::Type::If,
+                                              Token::Type::While,
+                                              Token::Type::Return,
+                                              Token::Type::Var,
+                                              Token::Type::Identifier,
+                                              Token::Type::Print,
+                                              Token::Type::CurlyBracketOpen});
+                //no need to break
+            case Token::Type::Var :
+                newBlock.addInstruction(parseAssignStatement());
+                break;
+            case Token::Type::Identifier :
+                newBlock.addInstruction(parseIdentifier(token));
+                break;
+            case Token::Type::If :
+                newBlock.addInstruction(parseIfStatement());
+                break;
+            case Token::Type::While :
+                newBlock.addInstruction(parseWhileStatement());
+                break;
+            case Token::Type::Return :
+                newBlock.addInstruction(parseReturnStatement());
+                break;
+            case Token::Type::Print :
+                newBlock.addInstruction(parsePrintStatement());
+                break;
+            case Token::Type::CurlyBracketOpen :
+                auto internalBlock = std::make_unique<StatementBlock>();
+                blockStatementParse(*internalBlock);
+                newBlock.addInstruction(std::move(internalBlock));
+        }
     }
+    // Note: we now exit this block
+    currentContext = currentContext->getParentContext();
 }
 
 std::unique_ptr<Statement> Parser::parseAssignStatement() {
+    return std::unique_ptr<Statement>();
+}
+
+std::unique_ptr<Statement> Parser::parseIdentifier(const Token &identifier) {
     return std::unique_ptr<Statement>();
 }
 
@@ -103,20 +141,12 @@ std::unique_ptr<Statement> Parser::parseReturnStatement() {
     return std::unique_ptr<Statement>();
 }
 
-std::unique_ptr<Statement> Parser::parseStatementBlock() {
-    return std::unique_ptr<Statement>();
-}
-
 std::unique_ptr<Statement> Parser::parsePrintStatement() {
     return std::unique_ptr<Statement>();
 }
 
-Variable Parser::vectorLiteralParse() {
+Variable Parser::parseVectorValue() {
     return Variable();
-}
-
-bool Parser::existVariable(Token &tokenId) {
-    return false;
 }
 
 std::unique_ptr<Expression> Parser::orExpressionParse() {

@@ -8,11 +8,11 @@ using namespace vecc;
 ReturnStatement::ReturnStatement() : return_(Return::Type::noting) {}
 
 ReturnStatement::ReturnStatement(std::unique_ptr<Expression> expression)
-        : expression(std::move(expression)), return_(Return::Type::value) {}
+        : expression_(std::move(expression)), return_(Return::Type::value) {}
 
 Return ReturnStatement::run() {
-    if (expression) {
-        return Return(return_, expression->calculate());
+    if (expression_) {
+        return Return(return_, expression_->calculate());
     } else {
         return Return(return_);
     }

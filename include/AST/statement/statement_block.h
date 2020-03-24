@@ -20,6 +20,8 @@ namespace vecc {
         void addVariable(const std::string &identifier);
         std::weak_ptr<Variable> findVariable(const std::string &identifier);
 
+        Context &getContext();
+
         Return run() override;
     private:
         std::list<std::unique_ptr<Statement>> statements_;

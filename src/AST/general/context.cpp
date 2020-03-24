@@ -15,8 +15,7 @@ std::weak_ptr<Variable> Context::findVariable(const std::string &identifier, con
     if (variables_.count(identifier)) {
         return variables_.at(identifier);
     } else { // parent context?
-        throw UndefinedVar("Variable " + identifier + " not found\n"
-                        " at line: " + token.getTokenPos().toString());
+        throw UndefinedVar(token);
     }
 }
 
@@ -34,4 +33,17 @@ Context::Context(const Context &context) : parentContext(context.parentContext){
 
 bool Context::existVariable(const std::string &identifier) const {
     return variables_.count(identifier); // parent context?
+}
+
+Context *Context::getParentContext() {
+    return parentContext;
+}
+
+std::vector<Variable> Context::saveValues() {
+    //TODO
+    return std::vector<Variable>();
+}
+
+void Context::restoreValues(const std::vector<Variable> &savedValues) {
+    //TODO
 }

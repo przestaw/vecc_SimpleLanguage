@@ -18,7 +18,7 @@ namespace vecc {
 
         Return run() override;
     private:
-        std::unique_ptr<Expression> expression;
+        std::unique_ptr<Expression> expression_;
         Return::Type return_;
     };
 }

@@ -20,7 +20,7 @@ Return IfStatement::run() {
     if(static_cast<bool>(expression_->calculate())){
         trueBlock_.run();
     } else {
-        falseBlock_.run()
+        falseBlock_.run();
     }
 
     return Return();

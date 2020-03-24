@@ -16,6 +16,10 @@ void StatementBlock::addVariable(const std::string &identifier) {
     this->context_.addVariable(identifier, Variable());
 }
 
+std::weak_ptr<Variable> StatementBlock::findVariable(const std::string &identifier) {
+    return context_.findVariable(identifier, Token()); //TODO
+}
+
 Return StatementBlock::run() {
     Return ret;
 
@@ -33,6 +37,6 @@ Return StatementBlock::run() {
     return ret;
 }
 
-std::weak_ptr<Variable> StatementBlock::findVariable(const std::string &identifier) {
-    return context_.findVariable(identifier, Token()); //TODO
+Context &StatementBlock::getContext() {
+    return context_;
 }
