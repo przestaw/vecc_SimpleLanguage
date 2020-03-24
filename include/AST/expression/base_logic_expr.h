@@ -5,15 +5,19 @@
 #ifndef VECC_LANG_BASE_LOGIC_EXPR_H
 #define VECC_LANG_BASE_LOGIC_EXPR_H
 
+#include <memory>
 #include <AST/general/variable.h>
 #include <AST/expression/expression.h>
 
 namespace vecc {
     class BaseLogicExpr : public Expression {
     public:
-        virtual ~BaseLogicExpr() {}
+        explicit BaseLogicExpr(std::unique_ptr<Expression> value, bool unaryLogicOp = false);
 
         Variable calculate() const override;
+    private:
+        bool invert;
+        std::unique_ptr<Expression> value_;
     };
 }
 

@@ -5,15 +5,28 @@
 #ifndef VECC_LANG_ADDITIVE_EXPR_H
 #define VECC_LANG_ADDITIVE_EXPR_H
 
+#include <memory>
 #include <AST/general/variable.h>
 #include <AST/expression/expression.h>
 
 namespace vecc {
     class RelationExpr : public Expression {
     public:
-        virtual ~RelationExpr() {}
+        enum class OperatorType{
+            equal,
+            notEqual,
+            greater,
+            greaterOrEqual,
+            less,
+            lessOrEqual
+        };
+        RelationExpr(std::unique_ptr<Expression> lVal, std::unique_ptr<Expression>rVal, const OperatorType &type);
 
         Variable calculate() const override;
+    private:
+        OperatorType type_;
+        std::unique_ptr<Expression> lVal_;
+        std::unique_ptr<Expression> rVal_;
     };
 }
 
