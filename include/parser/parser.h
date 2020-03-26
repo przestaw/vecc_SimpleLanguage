@@ -36,8 +36,6 @@ namespace vecc {
         std::unique_ptr<Program> currentProgram;
 
         Context *currentContext = nullptr;
-
-        const std::unordered_map<Token::Type, std::function<void()>> relational;
         
         /**
          * Check if next token is of given type and execute action if so
@@ -45,7 +43,7 @@ namespace vecc {
          * @param ifTrue action if token has been encountered
          * @return true on sucess
          */
-        bool tryToken(Token::Type type, std::function<void()> ifTrue = std::function<void()>());
+        bool tryToken(Token::Type type, const std::function<void()>& ifTrue = std::function<void()>());
 
         /**
          * Check if next token is of given type and execute action if so.
@@ -58,17 +56,6 @@ namespace vecc {
                 throw UnexpectedToken(scanner_->getToken(), {type});
         }
 
-//        inline bool checkVariable(const Token &token){
-//            if(currentContext){
-//                if(currentContext->existVariable(token.getLiteral())){
-//                    return true;
-//                } else {
-//                    throw UndefinedVar(token);
-//                }
-//            }
-//            throw Exception(BRED(BOLD("FATAL : unknown error\n")));
-//        }
-
         void parseFunctionDef();
         void parseParameters(Function &def);
 
@@ -76,21 +63,21 @@ namespace vecc {
 
         Variable parseVectorValue();
 
-        std::unique_ptr<Statement> parseAssignStatement();
+        std::unique_ptr<Statement> parseAssignStatement(std::weak_ptr<Variable> variable);
         std::unique_ptr<Statement> parseIdentifier(const Token &identifier);
-        std::unique_ptr<Statement> parseFunctionCall();
+        std::unique_ptr<Statement> parseFunctionCall(const Token &function);
         std::unique_ptr<Statement> parseIfStatement();
         std::unique_ptr<Statement> parseWhileStatement();
         std::unique_ptr<Statement> parseReturnStatement();
         std::unique_ptr<Statement> parsePrintStatement();
 
-        std::unique_ptr<Expression> orExpressionParse();
-        std::unique_ptr<Expression> andExpressionParser();
-        std::unique_ptr<Expression> relationalExpressionParser();
-        std::unique_ptr<Expression> baseLogicParser();
-        std::unique_ptr<Expression> additiveExpressionParser();
-        std::unique_ptr<Expression> multiplyExpressionParser();
-        std::unique_ptr<Expression> baseMathExpressionParser();
+        std::unique_ptr<Expression> parseOrExpression();
+        std::unique_ptr<Expression> parseAndExpression();
+        std::unique_ptr<Expression> parseRelationalExpression();
+        std::unique_ptr<Expression> parseBaseLogicExpression();
+        std::unique_ptr<Expression> parseAdditiveExpression();
+        std::unique_ptr<Expression> parseMultiplyExpression();
+        std::unique_ptr<Expression> parseBaseMathExpression();
     };
 }
 

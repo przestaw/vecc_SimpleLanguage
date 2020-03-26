@@ -54,13 +54,15 @@ namespace vecc {
     class UndefinedVar : public Exception {
     public:
         explicit UndefinedVar(const Token &token) : Exception(
-                FRED(BOLD("Undefined Variable ERROR : ")) "Variable " + token.getLiteral() + " not found\nat line: " +
-                token.getTokenPos().toString()) {}
+                FRED(BOLD("Undefined Variable ERROR : ")) "Variable " + token.getLiteral() + " not found"
+                + "\nat line: " + token.getTokenPos().toString()) {}
     };
 
     class UndefinedFun : public Exception {
     public:
-        explicit UndefinedFun(const std::string &desc) : Exception(FRED(BOLD("Undefined Function ERROR : ")) + desc) {}
+        explicit UndefinedFun(const Token &function) : Exception(
+                FRED(BOLD("Undefined Function ERROR : ")) "Function " + function.getLiteral() +
+                " has not been defined\nat line: " + function.getTokenPos().toString()) {}
     };
 
     class NoReturnValue : public Exception {
