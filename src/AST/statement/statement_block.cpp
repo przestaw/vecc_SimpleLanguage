@@ -6,7 +6,7 @@
 
 using namespace vecc;
 
-StatementBlock::StatementBlock(Context *parentContext)  : context_(parentContext) {}
+StatementBlock::StatementBlock(Context *parentContext) : context_(parentContext) {}
 
 void StatementBlock::addInstruction(std::unique_ptr<Statement> statement) {
     this->statements_.push_back(std::move(statement));
@@ -25,9 +25,9 @@ Return StatementBlock::run() {
 
     //save context
 
-    for(auto &it : statements_){
+    for (auto &it : statements_) {
         ret = it->run();
-        if(ret.type_ == Return::Type::value){
+        if (ret.type_ == Return::Type::value) {
             break;
         }
     }

@@ -23,7 +23,7 @@ Return AssignStatement::run() {
             variable_.at(index_) = value.at(0);
         } else {
             throw MathException("Try to assign a n-dimensional vector to the int\n"
-                            + (position_ != Position() ? "at " + position_.toString() : ""));
+                                + (position_ != Position() ? "at " + position_.toString() : ""));
         }
     } else {
         variable_ = value;
@@ -33,5 +33,5 @@ Return AssignStatement::run() {
 }
 
 void AssignStatement::setPosition(const Position &position) {
-    this->position_=position;
+    this->position_ = position;
 }

@@ -21,11 +21,13 @@ namespace vecc {
         void addString(std::string string);
 
         Return run() override;
+
     private:
         std::ostream &out_;
 
-        struct Printable{
+        struct Printable {
             explicit Printable(std::unique_ptr<Expression> val) : expression(true), value(std::move(val)) {}
+
             explicit Printable(std::string val) : expression(true), value(std::move(val)) {}
 
             bool expression;

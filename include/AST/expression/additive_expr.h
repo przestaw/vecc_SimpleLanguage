@@ -12,22 +12,28 @@
 namespace vecc {
     class AddExpr : public Expression {
     public:
-        enum class OperatorType{
+        enum class OperatorType {
             Add,
             Substract
         };
+
         AddExpr(std::unique_ptr<Expression> value);
 
         void addOperand(std::unique_ptr<Expression> value, const OperatorType &type);
 
         Variable calculate() const override;
+
     private:
         std::unique_ptr<Expression> baseValue;
+
         struct Addable {
-            Addable(const OperatorType type, std::unique_ptr<Expression> value) : operation_(type), value_(std::move(value)) {}
+            Addable(const OperatorType type, std::unique_ptr<Expression> value) : operation_(type),
+                                                                                  value_(std::move(value)) {}
+
             OperatorType operation_;
             std::unique_ptr<Expression> value_;
         };
+
         std::vector<Addable> multiplyables;
     };
 }

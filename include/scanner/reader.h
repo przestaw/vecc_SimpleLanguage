@@ -15,10 +15,13 @@ namespace vecc {
         explicit Reader(std::istream &input, const std::string &source = "unknown");
 
         char get();
+
         char peek();
+
         const Position &getCurrentPos() const;
 
         bool isEoF() const;
+
     private:
         std::istream &stream_;       //!< stream cannot be changed as Reader holds position in code
         std::string sourceName;      //!< identifer of the source

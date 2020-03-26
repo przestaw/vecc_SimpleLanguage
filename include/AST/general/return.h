@@ -11,7 +11,7 @@
 namespace vecc {
 
     struct Return {
-        enum class Type{
+        enum class Type {
             noting,
             value
         };

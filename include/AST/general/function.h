@@ -25,6 +25,7 @@ namespace vecc {
         Return run(const std::vector<Variable> &parameters = std::vector<Variable>());
 
         StatementBlock &getFunctionBody();
+
     private:
         const std::string identifier_;      //!< function identifier/name
         std::vector<std::string> names_; //!< Parameters names

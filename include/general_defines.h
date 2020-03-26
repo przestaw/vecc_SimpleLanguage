@@ -2,7 +2,7 @@
 #define PRZESTAW_GENERAL_DEFINES_H
 
 #ifndef CONSOLE_COLORS_POSIX
-#if ( defined(WIN32) || defined(__WIN32__) || defined(_WIN32) || defined(_MSC_VER) )
+#if (defined(WIN32) || defined(__WIN32__) || defined(_WIN32) || defined(_MSC_VER))
 #define CONSOLE_COLORS_POSIX FALSE
 #else
 #define CONSOLE_COLORS_POSIX UNIX

@@ -4,6 +4,7 @@
 
 #ifndef VECC_LANG_IF_STMT_H
 #define VECC_LANG_IF_STMT_H
+
 #include <AST/statement/statement.h>
 #include <AST/expression/expression.h>
 #include "statement_block.h"
@@ -14,9 +15,11 @@ namespace vecc {
         IfStatement(std::unique_ptr<Expression> expression);
 
         StatementBlock &trueBlock();
+
         StatementBlock &falseBlock();
 
         Return run() override;
+
     private:
         std::unique_ptr<Expression> expression_;
         StatementBlock trueBlock_;

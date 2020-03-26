@@ -11,7 +11,7 @@ void Context::addVariable(const std::string &identifier, const Variable &variabl
     variables_.insert({identifier, std::make_shared<Variable>(variable)});
 }
 
-std::weak_ptr<Variable> Context::findVariable(const std::string &identifier, const Token& token) {
+std::weak_ptr<Variable> Context::findVariable(const std::string &identifier, const Token &token) {
     if (variables_.count(identifier)) {
         return variables_.at(identifier);
     } else { // parent context?
@@ -19,13 +19,13 @@ std::weak_ptr<Variable> Context::findVariable(const std::string &identifier, con
     }
 }
 
-Context::Context(std::vector<std::pair<std::string, std::shared_ptr<Variable>>> variables) : parentContext(nullptr){
+Context::Context(std::vector<std::pair<std::string, std::shared_ptr<Variable>>> variables) : parentContext(nullptr) {
     for (auto &variable : variables) {
         this->variables_.insert(variable);
     }
 }
 
-Context::Context(const Context &context) : parentContext(context.parentContext){
+Context::Context(const Context &context) : parentContext(context.parentContext) {
     for (auto &variable : context.variables_) {
         this->variables_.insert(variable);
     }
@@ -45,6 +45,6 @@ std::vector<Variable> Context::saveValues() {
 }
 
 void Context::restoreValues(const std::vector<Variable> &savedValues) {
-    (void)savedValues;
+    (void) savedValues;
     //TODO
 }

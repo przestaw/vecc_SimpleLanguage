@@ -17,7 +17,7 @@ void OrLogicExpr::addOperand(std::unique_ptr<Expression> value) {
 Variable OrLogicExpr::calculate() const {
     Variable ret = operands.begin()->get()->calculate();
 
-    for(auto it = ++operands.begin(); it!=operands.end(); ++it) {
+    for (auto it = ++operands.begin(); it != operands.end(); ++it) {
         ret = ret || it->get()->calculate();
         if (ret)
             break;

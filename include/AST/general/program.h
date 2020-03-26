@@ -15,7 +15,7 @@ namespace vecc {
     public:
         Program() = default;
 
-        Function &findFunction(std::string &identifier) {
+        Function &findFunction(const std::string &identifier) {
             return *functions.at(identifier);
         }
 

@@ -20,6 +20,8 @@ namespace vecc {
 
         Return run() override;
 
+        unsigned size() const;
+
     private:
         Function &function_;
         std::list<std::unique_ptr<Expression>> arguments_;

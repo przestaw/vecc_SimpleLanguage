@@ -12,14 +12,19 @@ namespace vecc {
 
     struct Position {
         Position();
-        Position(const Position& other) = default;
+
+        Position(const Position &other) = default;
 
         bool operator==(const Position &rhs) const;
+
         bool operator!=(const Position &rhs) const;
 
         bool operator<(const Position &rhs) const;
+
         bool operator>(const Position &rhs) const;
+
         bool operator<=(const Position &rhs) const;
+
         bool operator>=(const Position &rhs) const;
 
         //private ? make class ?
@@ -28,8 +33,9 @@ namespace vecc {
         std::streampos linePos;
         std::streampos symbolPos;
 
-        inline std::string toString() const{
-            return BOLD("line number : ") + std::to_string(lineNo) + ", " BOLD("position : ") + std::to_string(symbolNo) + '\n';
+        inline std::string toString() const {
+            return BOLD("line number : ") + std::to_string(lineNo) + ", " BOLD("position : ") +
+                   std::to_string(symbolNo) + '\n';
         }
 
         inline std::ostream &operator<<(std::ostream &os) {

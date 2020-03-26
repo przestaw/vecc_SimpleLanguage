@@ -11,14 +11,14 @@ void Function::addParameter(const std::string &identifier) {
 }
 
 Return Function::run(const std::vector<Variable> &parameters) {
-    if(parameters.size() != names_.size()){
+    if (parameters.size() != names_.size()) {
         throw Exception("");
     } else {
         // Need to set parameters manually
         auto paramNameIt = names_.begin();
         auto paramValIt = parameters.begin();
 
-        for(;paramValIt != parameters.end(); ++paramNameIt, ++paramValIt){
+        for (; paramValIt != parameters.end(); ++paramNameIt, ++paramValIt) {
             *(functionBody_.findVariable(*paramNameIt).lock()) = *paramValIt;
         }
 

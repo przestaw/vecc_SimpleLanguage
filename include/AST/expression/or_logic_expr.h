@@ -17,6 +17,7 @@ namespace vecc {
         void addOperand(std::unique_ptr<Expression> value);
 
         Variable calculate() const override;
+
     private:
         std::vector<std::unique_ptr<Expression>> operands;
     };

@@ -13,11 +13,13 @@ namespace vecc {
     class AssignStatement : public Statement {
     public:
         AssignStatement(Variable &variable, std::unique_ptr<Expression> expression);
+        
         AssignStatement(Variable &variable, const unsigned &index, std::unique_ptr<Expression> expression);
-
+        
         Return run() override;
-
+        
         void setPosition(const Position &position);
+    
     private:
         Variable &variable_;
         std::unique_ptr<Expression> expression_;

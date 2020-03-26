@@ -4,6 +4,7 @@
 
 #ifndef VECC_LANG_WHILE_STMT_H
 #define VECC_LANG_WHILE_STMT_H
+
 #include <AST/statement/statement.h>
 #include <AST/expression/expression.h>
 #include <AST/statement/statement_block.h>

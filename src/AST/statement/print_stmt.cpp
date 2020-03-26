@@ -17,8 +17,8 @@ void PrintStatement::addString(std::string string) {
 }
 
 Return PrintStatement::run() {
-    for(auto &it: printables){
-        if(it.expression){
+    for (auto &it: printables) {
+        if (it.expression) {
             out_ << std::get<std::unique_ptr<Expression>>(it.value)->calculate().toString();
         } else {
             out_ << std::get<std::string>(it.value);

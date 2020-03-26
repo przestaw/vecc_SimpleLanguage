@@ -12,7 +12,7 @@
 namespace vecc {
     class RelationExpr : public Expression {
     public:
-        enum class OperatorType{
+        enum class OperatorType {
             Equal,
             NotEqual,
             Greater,
@@ -25,6 +25,7 @@ namespace vecc {
         RelationExpr(std::unique_ptr<Expression> lVal, const OperatorType &type, std::unique_ptr<Expression> rVal);
 
         Variable calculate() const override;
+
     private:
         OperatorType type_;
         std::unique_ptr<Expression> lVal_;

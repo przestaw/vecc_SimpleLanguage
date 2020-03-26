@@ -25,8 +25,8 @@ int &Variable::at(unsigned idx) {
         return values_.at(idx);
     } else {
         throw RangeException("index out of range on " +
-                            ((size() != 1) ? (std::to_string(size()) + "-dimension vector's \n") : "variable")
-                            + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));
+                             ((size() != 1) ? (std::to_string(size()) + "-dimension vector's \n") : "variable")
+                             + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));
     }
 }
 
@@ -35,8 +35,8 @@ const int &Variable::at(unsigned idx) const {
         return values_.at(idx);
     } else {
         throw RangeException("index out of range on " +
-                            ((size() != 1) ? (std::to_string(size()) + "-dimension vector's \n") : "variable")
-                            + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));
+                             ((size() != 1) ? (std::to_string(size()) + "-dimension vector's \n") : "variable")
+                             + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));
     }
 }
 
@@ -153,7 +153,7 @@ Variable Variable::operator/(const Variable &rhs) const {
     if (rhs.values_.size() == 1) {
         var = *this;
         for (auto &variable : var.values_) {
-            if(rhs.values_[0]) {
+            if (rhs.values_[0]) {
                 variable /= rhs.values_[0];
             } else {
                 throw MathException("Can't divide by 0 \n"
@@ -175,7 +175,7 @@ Variable Variable::operator%(const Variable &rhs) const {
     if (rhs.values_.size() == 1) {
         var = *this;
         for (auto &variable : var.values_) {
-            if(rhs.values_[0]) {
+            if (rhs.values_[0]) {
                 variable %= rhs.values_[0];
             } else {
                 throw MathException("Can't modulo by 0 \n"
@@ -226,13 +226,13 @@ void Variable::setPosition(const Position &position) {
 
 std::string Variable::toString() const {
     std::string buf;
-    if(size() == 1){
+    if (size() == 1) {
         buf = std::to_string(values_[0]);
     } else {
         buf.append("[ ");
         for (unsigned i = 0; i < values_.size(); ++i) {
             buf.append(std::to_string(values_[i]));
-            if(i < values_.size() - 1){
+            if (i < values_.size() - 1) {
                 buf.append(", ");
             }
         }

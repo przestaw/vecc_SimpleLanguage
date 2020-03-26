@@ -18,9 +18,13 @@ const Function &FunctionCallStatement::getFunction() const {
 
 Return FunctionCallStatement::run() {
     std::vector<Variable> argVal;
-    for(auto &&it : arguments_){
+    for (auto &&it : arguments_) {
         argVal.push_back(it->calculate());
     }
     return function_.run(argVal);
+}
+
+unsigned FunctionCallStatement::size() const {
+    return arguments_.size();
 }
 

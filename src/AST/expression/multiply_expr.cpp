@@ -15,7 +15,7 @@ void MultiplyExpr::addOperand(std::unique_ptr<Expression> value, const MultiplyE
 Variable MultiplyExpr::calculate() const {
     Variable ret = baseValue->calculate();
 
-    for(auto &&it : multiplyables){
+    for (auto &&it : multiplyables) {
         switch (it.operation) {
             case OperatorType::Multiply:
                 ret = ret * it.value_->calculate();

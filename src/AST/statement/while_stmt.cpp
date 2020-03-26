@@ -13,7 +13,7 @@ StatementBlock &WhileStatement::getWhileBody() {
 }
 
 Return WhileStatement::run() {
-    while(static_cast<bool>(expression_->calculate())){
+    while (static_cast<bool>(expression_->calculate())) {
         whileBody_.run();
     }
 

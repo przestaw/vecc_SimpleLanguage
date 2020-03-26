@@ -17,7 +17,7 @@ StatementBlock &IfStatement::falseBlock() {
 }
 
 Return IfStatement::run() {
-    if(static_cast<bool>(expression_->calculate())){
+    if (static_cast<bool>(expression_->calculate())) {
         trueBlock_.run();
     } else {
         falseBlock_.run();

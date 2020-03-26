@@ -13,16 +13,18 @@
 namespace vecc {
     class StatementBlock : public Statement {
     public:
-        StatementBlock(Context *parentContext = nullptr);
+        explicit StatementBlock(Context *parentContext = nullptr);
 
         void addInstruction(std::unique_ptr<Statement> statement);
 
         void addVariable(const std::string &identifier);
+
         std::weak_ptr<Variable> findVariable(const std::string &identifier);
 
         Context &getContext();
 
         Return run() override;
+
     private:
         std::list<std::unique_ptr<Statement>> statements_;
         Context context_;
