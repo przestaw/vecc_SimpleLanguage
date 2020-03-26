@@ -11,18 +11,20 @@ RelationExpr::RelationExpr(std::unique_ptr<Expression> lVal, std::unique_ptr<Exp
 
 Variable RelationExpr::calculate() const {
     switch (type_){
-        case OperatorType::equal:
+        case OperatorType::Equal:
             return (lVal_->calculate() == rVal_->calculate());
-        case OperatorType::notEqual:
+        case OperatorType::NotEqual:
             return (lVal_->calculate() != rVal_->calculate());
-        case OperatorType::greater:
+        case OperatorType::Greater:
             return (lVal_->calculate() > rVal_->calculate());
-        case OperatorType::greaterOrEqual:
+        case OperatorType::GreaterOrEqual:
             return (lVal_->calculate() >= rVal_->calculate());
-        case OperatorType::less:
+        case OperatorType::Less:
             return (lVal_->calculate() < rVal_->calculate());
-        case OperatorType::lessOrEqual:
+        case OperatorType::LessOrEqual:
             return (lVal_->calculate() <= rVal_->calculate());
+        case OperatorType::PassValue:
+            return lVal_->calculate();
     }
     // how to silence warning using g++ instead of clang++
 }

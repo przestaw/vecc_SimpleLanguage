@@ -29,15 +29,15 @@ namespace vecc {
         inline Variable getBaseValue() const;
 
         enum class Type {
-            function,
-            expression,
-            constant,
-            variable
+            Function,
+            Expression,
+            Constant,
+            Variable
         };
 
         Type type_;             //!< determines type of expression
-        bool indexedAcess;      //!< if variable is acessed with [] operator
-        bool invert;            //!< if unarymathOperator was present
+        bool indexedAccess_;      //!< if variable is acessed with [] operator
+        bool invert_;            //!< if unarymathOperator was present
 
         std::variant<
                 std::unique_ptr<Statement>,

@@ -13,9 +13,9 @@ namespace vecc {
     class MultiplyExpr : public Expression {
     public:
         enum class OperatorType{
-            multiply,
-            divide,
-            modulo
+            Multiply,
+            Divide,
+            Modulo
         };
         MultiplyExpr(std::unique_ptr<Expression> value);
 

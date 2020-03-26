@@ -17,13 +17,13 @@ Variable MultiplyExpr::calculate() const {
 
     for(auto &&it : multiplyables){
         switch (it.operation) {
-            case OperatorType::multiply:
+            case OperatorType::Multiply:
                 ret = ret * it.value_->calculate();
                 break;
-            case OperatorType::divide:
+            case OperatorType::Divide:
                 ret = ret / it.value_->calculate();
                 break;
-            case OperatorType::modulo:
+            case OperatorType::Modulo:
                 ret = ret % it.value_->calculate();
                 break;
         }

@@ -16,11 +16,11 @@ Variable AddExpr::calculate() const {
     Variable ret = baseValue->calculate();
 
     for(auto &&it : multiplyables){
-        switch (it.operation) {
-            case OperatorType::add:
+        switch (it.operation_) {
+            case OperatorType::Add:
                 ret = ret + it.value_->calculate();
                 break;
-            case OperatorType::substract:
+            case OperatorType::Substract:
                 ret = ret - it.value_->calculate();
                 break;
         }
