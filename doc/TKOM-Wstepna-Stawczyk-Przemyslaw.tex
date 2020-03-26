@@ -143,7 +143,6 @@ fun main() {
         print("a");
         print(a);
     }
-
     print(vec(1,2));
     print(vec(1,2,3));
 
@@ -158,13 +157,39 @@ fun main() {
 }   
 \end{verbatim}
 
-\paragraph{Przykład 4 - product3}
+\paragraph{Przykład 4 - product2}
+\begin{verbatim}
+fun product2(vec1, vec2) {
+    var res=vec(1,2);"
+    res[0] = vec1[1] - vec2[1];
+    res[1] = vec2[0] - vec1[0];
+    return res;
+}
+\end{verbatim}
+
+\paragraph{Przykład 5 - product3}
 \begin{verbatim}
 fun product3(vec1, vec2) {
     var res = vec(0,0,0);
     res[0] = vec1[1] * vec2[2] - vec1[2] * vec2[1];
     res[1] = vec1[2] * vec2[0] - vec1[0] * vec2[2];
     res[2] = vec1[0] * vec2[1] - vec1[1] * vec2[0];
+    return res;
+}
+\end{verbatim}
+
+\paragraph{Przykład 6 - scalar2}
+\begin{verbatim}
+fun scalar2(vec1, vec2) {
+    var res = vec1[0] * vec2[0] + vec1[1] * vec2[1];
+    return res;
+}
+\end{verbatim}
+
+\paragraph{Przykład 7 - scalar3}
+\begin{verbatim}
+fun scalar3(vec1, vec2) {
+    var res = vec1[0] * vec2[0] + vec1[1] * vec2[1] + vec1[2] * vec2[2];
     return res;
 }
 \end{verbatim}
@@ -177,20 +202,20 @@ fun product3(vec1, vec2) {
 \\
 \textbf{statementBlock} = ''\{'' \{ initStatement | assignStatement | returnStatement |
 ifStatement | whileStatement | functionCallStatement |  printStatement | statementBlock \} ''\}'' ;\\
-\textbf{returnStatement} = ''return'' expression '';'' ;\\
+\textbf{returnStatement} = ''return'' orExpr '';'' ;\\
 \\
-\textbf{initStatement} = ''var'' identifier [ ''='' expression ] '';'' ;\\
-\textbf{assignStatement} = variable ''='' expression '';'' ;\\
-\textbf{ifStatement} = ''if'' ''('' expression '')'' statementBlock [ ''else'' statementBlock ] ;\\
-\textbf{whileStatement} = ''while'' ''('' expression '')'' statementBlock ;\\
+\textbf{initStatement} = ''var'' identifier [ ''='' orExpr ] '';'' ;\\
+\textbf{assignStatement} = variable ''='' orExpr '';'' ;\\
+\textbf{ifStatement} = ''if'' ''('' orExpr '')'' statementBlock [ ''else'' statementBlock ] ;\\
+\textbf{whileStatement} = ''while'' ''('' orExpr '')'' statementBlock ;\\
 \textbf{functionCallStatement} =  functionCall '';''\\
-\textbf{printStatement} = ''print'' ''('' (charString | expression) \{'','' (charString | expression)\} '')'' '';'';\\
+\textbf{printStatement} = ''print'' ''('' (charString | orExpr) \{'','' (charString | orExpr)\} '')'' '';'';\\
 \\
 \textbf{functionCall} = identifier arguments ;\\
-\textbf{arguments} = ''('' [ expression \{ '','' expression \} ] '')'' ;\\
+\textbf{arguments} = ''('' [ orExpr \{ '','' orExpr \} ] '')'' ;\\
 \\
-\textbf{parentExpr} = ''('' expression '')'' ;\\
-\textbf{expression} = andExpr \{ orOp andExpr \} ;\\
+\textbf{parentExpr} = ''('' orExpr '')'' ;\\
+\textbf{orExpr} = andExpr \{ orOp andExpr \} ;\\
 \textbf{andExpr} = relationalExpr \{ andOp relationalExpr \} ;\\
 \textbf{relationalExpr} = baseLogicExpr [ relationOp baseLogicExpr ] ;\\
 \textbf{baseLogicExpr} = [ unaryNegation ] additiveExpr ;\\
@@ -235,4 +260,9 @@ Program miałby składać się z następujących modułów :
 	\item interpreter
 \end{itemize}
 
+\section{Instrukcja Kompilacji i Użytkowania}
+\subsection{Instrukcja Kompilacji}
+Projekt kompilowany jest z użyciem narzędzia \textsl{CMake}.
+	
+\subsection{Instrukcja Użycia}
 \end{document}
