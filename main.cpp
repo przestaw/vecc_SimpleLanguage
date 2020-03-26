@@ -62,6 +62,7 @@ int main(int argc, char *argv[]) {
 
         try{
             if(file.fail()){throw vecc::Exception(FRED(BOLD("ARG ERROR"))" Invalid file");}
+            // NOTE: Exception to be used/included in bigger/final function
             do{
                 token = scanner.parseToken();
                 std::cout << INV("Token read") " : " <<  token.toString() << '\n';
