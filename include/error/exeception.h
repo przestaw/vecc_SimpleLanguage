@@ -36,7 +36,7 @@ namespace vecc {
                 std::string buf = FRED(BOLD("Unexpected Token ERROR : \n"));
                 buf.append("Got " + token.typeName());
                 if (!expected.empty()) {
-                  buf.append("but expected : \n");
+                  buf.append(" but expected : \n");
                   for (auto &it: expected) {
                     buf.append("\t" + Token::getTypeName(it) + "\n");
                   }

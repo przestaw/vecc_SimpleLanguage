@@ -17,13 +17,14 @@ void StatementBlock::addVariable(const std::string &identifier) {
 }
 
 std::weak_ptr<Variable> StatementBlock::findVariable(const std::string &identifier) {
-    return context_.findVariable(identifier, Token()); //TODO
+    return context_.findVariable(identifier, Token()); //TODO ??
 }
 
 Return StatementBlock::run() {
     Return ret;
 
     //save context
+    std::vector<Variable> storedContext = context_.saveValues();
 
     for (auto &it : statements_) {
         ret = it->run();
@@ -33,6 +34,7 @@ Return StatementBlock::run() {
     }
 
     //restore context
+    context_.restoreValues(storedContext);
 
     return ret;
 }

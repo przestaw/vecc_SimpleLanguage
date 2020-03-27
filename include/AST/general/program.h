@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <memory>
 #include <AST/general/function.h>
+#include <error/exeception.h>
 
 namespace vecc {
     class Program {
@@ -20,12 +21,20 @@ namespace vecc {
         }
 
         bool existFunction(const std::string &identifier) const {
-            return functions.count(identifier);
+            return static_cast<bool>(functions.count(identifier));
         }
-
 
         void addFunction(std::unique_ptr<Function> function) {
             functions.insert({function->getIdentifier(), std::move(function)});
+        }
+
+        void run() {
+            auto main = functions.find("main");
+            if(main != functions.end()){
+                main->second->run();
+            } else {
+                throw Exception("No Main");
+            }
         }
 
     private:

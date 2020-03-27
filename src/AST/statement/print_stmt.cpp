@@ -3,6 +3,7 @@
 //
 
 #include <AST/statement/print_stmt.h>
+#include <sstream>
 
 using namespace vecc;
 
@@ -17,12 +18,14 @@ void PrintStatement::addString(std::string string) {
 }
 
 Return PrintStatement::run() {
+    std::stringstream buffer;
     for (auto &it: printables) {
         if (it.expression) {
-            out_ << std::get<std::unique_ptr<Expression>>(it.value)->calculate().toString();
+            buffer << std::get<std::unique_ptr<Expression>>(it.value)->calculate().toString();
         } else {
-            out_ << std::get<std::string>(it.value);
+            buffer << std::get<std::string>(it.value);
         }
     }
+    out_ << buffer.str();
     return Return(Return::Type::noting);
 }

@@ -28,7 +28,7 @@ namespace vecc {
         struct Printable {
             explicit Printable(std::unique_ptr<Expression> val) : expression(true), value(std::move(val)) {}
 
-            explicit Printable(std::string val) : expression(true), value(std::move(val)) {}
+            explicit Printable(std::string val) : expression(false), value(std::move(val)) {}
 
             bool expression;
             std::variant<std::unique_ptr<Expression>, std::string> value;

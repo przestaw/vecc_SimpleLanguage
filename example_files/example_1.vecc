@@ -1,13 +1,14 @@
 fun licz(a) {
     a = a * 2;
     if (a < 10) {
-        fun(a);
+        print( "licz a = ", a, "\n");
+        licz(a);
     }
     return a;
 }
 
 fun main() {
     if(11){
-        print(fun(2));
+        print("main : licz(2) = ", licz(2), "\n");
     }
 }

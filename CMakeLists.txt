@@ -19,7 +19,7 @@ enable_testing()
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og -g3 -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions")
 
-if(${CMAKE_BUILD_TYPE} EQUAL Release)
+if(CMAKE_BUILD_TYPE EQUAL Release)
     cmake_policy(SET CMP0069 NEW)
     include(CheckIPOSupported)
     check_ipo_supported()

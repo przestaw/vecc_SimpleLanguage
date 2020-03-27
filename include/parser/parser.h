@@ -68,7 +68,7 @@ namespace vecc {
         
         std::unique_ptr<Statement> parseInitStatement();
         
-        std::unique_ptr<Statement> parseIdentifier(const Token &identifier);
+        std::unique_ptr<Statement> parseIdentifier();
         
         std::unique_ptr<Statement> parseFunctionCall(const Token &function);
         

@@ -22,6 +22,7 @@ Token Scanner::parseToken() {
         tryToken(); // Note:  Handles EOF as first possible case
         
         if (currentToken.getType() != Token::Type::NaT) {
+            //std::cout << currentToken.toString();
             return currentToken;
         } else {
             throw vecc::NotAToken(currentToken); // TODO : invalid token
@@ -42,7 +43,9 @@ void Scanner::setReader(std::unique_ptr<Reader> reader) {
 void Scanner::tryToken() {
     while (std::isspace(reader_->peek()) && !reader_->isEoF())
         reader_->get();
-    
+
+    currentToken = Token(reader_->getCurrentPos());
+
     if (reader_->isEoF()) {
         currentToken.setType(Token::Type::EoF);
     } else if (isdigit(reader_->peek())) {
@@ -83,6 +86,9 @@ void Scanner::tryCharString() {
             if (reader_->peek() == '"') {
                 // consume escaped ' " '
                 buf.push_back(reader_->get());
+            } else if(reader_->peek() == 'n'){
+                reader_->get();
+                buf.push_back('\n');
             } else {
                 // push back ' \ ' character
                 buf.push_back('\\');
