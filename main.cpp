@@ -52,7 +52,6 @@ int main(int argc, char *argv[]) {
               << std::endl; //flush stream
 
     Params params = parseParams(argc, argv);
-    params.run = true;
     if(params.run){
         std::cout << FGRN(BOLD("START\n"));
         std::ifstream file;
