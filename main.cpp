@@ -12,16 +12,16 @@ using namespace boost::program_options;
 
 struct Params {
     bool run = false;
-    std::string file = "";
+    std::vector<std::string> files;
     vecc::LogLevel verbosity = vecc::LogLevel::FullLog;
 } params;
 
-inline Params parseParams(int argc, char *argv[]) {
+inline void parseParams(int argc, char *argv[]) {
     try {
         options_description desc{"Options"};
         desc.add_options()
                 ("help,h", "Help screen")
-                ("input,i", value<std::string>(), "Input file")
+                ("input,i", value<std::vector<std::string>>(), "Input file")
                 ("verbosity,v", value<uint8_t>()->default_value(static_cast<uint8_t>(vecc::LogLevel::FullLog)),
                  "verbosity level : \n"
                  "\t 0 - no information\n"
@@ -37,7 +37,7 @@ inline Params parseParams(int argc, char *argv[]) {
         } else {
             if (vm.count("input") > 0) {
                 params.run = true;
-                params.file = vm["input"].as<std::string>();
+                params.files = vm["input"].as<std::vector<std::string>>();
                 uint8_t verbosity = vm["verbosity"].as<uint8_t>();
                 if (verbosity >= static_cast<uint8_t>(vecc::LogLevel::FullLog)) {
                     params.verbosity = vecc::LogLevel::FullLog;
@@ -51,19 +51,24 @@ inline Params parseParams(int argc, char *argv[]) {
     }
 }
 
-void parseFile(vecc::Parser &parser){
+void parseFile(vecc::Parser &parser,const std::string &filename) {
     std::ifstream file;
-    file.open(params.file);
+    file.open(filename);
 
-    try {
-        if (file.fail()) { throw vecc::Exception(FRED(BOLD("ARG ERROR"))" Invalid file"); }
-        parser.setSource(std::make_unique<vecc::Reader>(file));
-        parser.parse();
-    } catch (vecc::Exception &error) {
+    if (!file.fail()) {
+        try {
+            parser.setSource(std::make_unique<vecc::Reader>(file, filename));
+            parser.parse();
+        } catch (vecc::Exception &error) {
+            if(params.verbosity >= vecc::LogLevel::Errors){
+                std::cerr << error.what() << std::endl;
+            } else {
+                (void)error;
+            }
+        }
+    } else {
         if(params.verbosity >= vecc::LogLevel::Errors){
-            std::cerr << error.what() << std::endl;
-        } else {
-            (void)error;
+            std::cerr << (FRED(BOLD("ARG ERROR"))" Invalid file : " + filename);
         }
     }
 
@@ -80,16 +85,24 @@ int main(int argc, char *argv[]) {
     parseParams(argc, argv);
     if (params.run) {
         std::cout << FGRN(BOLD("START\n"));
-        vecc::Parser parser;
 
-        //NOTE : WIP
-        //TODO : REWORK
-        parseFile(parser);
+        vecc::Parser parser(std::cout);
+
+        for(auto  &it : params.files){
+            parseFile(parser, it);
+        }
 
         auto prog = parser.getProgram();
 
-        prog->run();
-
+        try {
+            prog->run();
+        } catch (vecc::Exception &error) {
+            if(params.verbosity >= vecc::LogLevel::Errors){
+                std::cerr << error.what() << std::endl;
+            } else {
+                (void)error;
+            }
+        }
 
         std::cout << FRED(BOLD("END\n"));
     }

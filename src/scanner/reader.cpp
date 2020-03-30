@@ -15,15 +15,13 @@ char Reader::get() {
         if (lastSymbol_ == symbol_ ||
             (lastSymbol_ != '\n' && lastSymbol_ != '\r')) {
             // to allow LF CR an CRLF line endings
-            position_.lineNo++;
-            position_.symbolNo = 0;
-            position_.linePos = stream_.tellg();
+            position_.incrementLine();
+
         } // else -> CRLF LFCR
     } else {
-        position_.symbolNo++;
+        position_.incrementSymbol();
     }
     lastSymbol_ = symbol_;
-    position_.symbolPos = stream_.tellg();
 
     return symbol_;
 }

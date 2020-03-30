@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_SUITE(Reader_Test_Suite)
         for (auto &val : example) {
             BOOST_CHECK_EQUAL(val, reader.get());
         }
-        BOOST_CHECK_EQUAL(7, reader.getCurrentPos().lineNo);
+        BOOST_CHECK(vecc::Position(7,0) == reader.getCurrentPos());
     }
 
     BOOST_AUTO_TEST_CASE(ReadMultiLine_UsingPeek_1) {
@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_SUITE(Reader_Test_Suite)
             BOOST_CHECK_EQUAL(val, reader.peek());
             reader.get();
         }
-        BOOST_CHECK_EQUAL(7, reader.getCurrentPos().lineNo);
+        BOOST_CHECK(vecc::Position(7,0) ==reader.getCurrentPos());
     }
 
     BOOST_AUTO_TEST_CASE(AfterReadMultiLine_EofIsEncountered) {

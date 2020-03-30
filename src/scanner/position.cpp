@@ -11,14 +11,30 @@ using namespace vecc;
 Position::Position()
         : lineNo(1),
           symbolNo(0),
-          linePos(),
-          symbolPos() {}
+          namedSource(false) {}
+
+Position::Position(const std::string &streamName)
+        : lineNo(1),
+          symbolNo(0),
+          namedSource(true),
+          sourceName(streamName) {}
+
+Position::Position(unsigned line, unsigned symbol)
+        : lineNo(line),
+          symbolNo(symbol),
+          namedSource(false) {}
+
+Position::Position(unsigned line, unsigned symbol, const std::string &streamName)
+        : lineNo(line),
+          symbolNo(symbol),
+          namedSource(true),
+          sourceName(streamName) {}
 
 bool Position::operator==(const Position &rhs) const {
     return lineNo == rhs.lineNo &&
            symbolNo == rhs.symbolNo &&
-           linePos == rhs.linePos &&
-           symbolPos == rhs.symbolPos;
+           (namedSource == rhs.namedSource) &&
+           (namedSource ? true : sourceName == rhs.sourceName);
 }
 
 bool Position::operator!=(const Position &rhs) const {

@@ -13,6 +13,12 @@ namespace vecc {
     struct Position {
         Position();
 
+        Position(unsigned line, unsigned symbol);
+
+        Position(const std::string &streamName);
+
+        Position(unsigned line, unsigned symbol, const std::string &streamName);
+
         Position(const Position &other) = default;
 
         bool operator==(const Position &rhs) const;
@@ -27,21 +33,32 @@ namespace vecc {
 
         bool operator>=(const Position &rhs) const;
 
-        //private ? make class ?
-        unsigned int lineNo;
-        unsigned int symbolNo;
-        std::streampos linePos;
-        std::streampos symbolPos;
+        inline void incrementLine(){
+            ++lineNo;
+            symbolNo = 0;
+        }
+
+        inline void incrementSymbol(){
+            ++symbolNo;
+        }
 
         inline std::string toString() const {
             return BOLD("line number : ") + std::to_string(lineNo) + ", " BOLD("position : ") +
-                   std::to_string(symbolNo) + '\n';
+                   std::to_string(symbolNo) +
+                   (namedSource ? ("\nin file : " + sourceName) + "\n" : "\n");
         }
 
         inline std::ostream &operator<<(std::ostream &os) {
             os << toString();
             return os;
         }
+    private:
+        //private ? make class ?
+        unsigned int lineNo;
+        unsigned int symbolNo;
+
+        bool namedSource;
+        std::string sourceName;
     };
 }
 
