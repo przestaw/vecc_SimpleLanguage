@@ -23,6 +23,7 @@ namespace vecc {
         };
 
         RelationExpr(std::unique_ptr<Expression> lVal, const OperatorType &type, std::unique_ptr<Expression> rVal);
+        explicit RelationExpr(std::unique_ptr<Expression> passVal);
 
         Variable calculate() const override;
 

@@ -382,9 +382,7 @@ std::unique_ptr<Expression> Parser::parseRelationalExpression() {
                                                   parseBaseLogicExpression());
         default:
             // Not an Relation => just PassValue
-            return std::make_unique<RelationExpr>(std::move(lValue),
-                                                  RelationExpr::OperatorType::PassValue,
-                                                  std::unique_ptr<Expression>(nullptr));
+            return std::make_unique<RelationExpr>(std::move(lValue));
     }
 }
 

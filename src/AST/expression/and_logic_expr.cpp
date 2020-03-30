@@ -15,6 +15,7 @@ void AndLogicExpr::addOperand(std::unique_ptr<Expression> value) {
 }
 
 Variable AndLogicExpr::calculate() const {
+    // to allow for passing single value
     Variable ret = operands.begin()->get()->calculate();
 
     for (auto it = ++operands.begin(); it != operands.end(); ++it) {

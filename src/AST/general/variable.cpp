@@ -45,10 +45,17 @@ unsigned int Variable::size() const {
 }
 
 Variable Variable::operator==(const Variable &rhs) const {
-    if (values_ == rhs.values_) {
-        return retTrue;
+    if(values_.size() == rhs.values_.size()){
+        if (values_ == rhs.values_) {
+            return retTrue;
+        } else {
+            return retFalse;
+        }
     } else {
-        return retFalse;
+        throw MathException("Can't compare "
+                            + std::to_string(values_.size()) + "-dimension vector and "
+                            + std::to_string(rhs.values_.size()) + "-dimension vector\n"
+                            + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));
     }
 }
 
@@ -64,7 +71,8 @@ Variable Variable::operator<(const Variable &rhs) const {
             return retFalse;
         }
     } else {
-        throw Exception("");
+        throw MathException("Can't compare vectors to be greater/less from each other\n"
+                            + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));
     }
 }
 
@@ -217,7 +225,7 @@ Variable Variable::operator||(const Variable &rhs) const {
 }
 
 Variable::operator bool() const {
-    return !(std::count(values_.begin(), values_.end(), 0));
+    return std::count(values_.begin(), values_.end(), 0) != this->size();
 }
 
 void Variable::setPosition(const Position &position) {

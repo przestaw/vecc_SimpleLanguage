@@ -59,15 +59,15 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
         }
 
         BOOST_AUTO_TEST_CASE(GivenTwoVariables_EquaityWorks1) {
-            Variable var1({2});
+            Variable var1({2, 3});
             Variable var2({2, 3});
 
-            BOOST_CHECK(!(static_cast<bool>(var1 == var2)));
-            BOOST_CHECK(!(static_cast<bool>(var2 == var1)));
+            BOOST_CHECK((static_cast<bool>(var1 == var2)));
+            BOOST_CHECK((static_cast<bool>(var2 == var1)));
         }
 
         BOOST_AUTO_TEST_CASE(GivenTwoVariables_InequalityWorks1) {
-            Variable var1({2});
+            Variable var1({4, 2});
             Variable var2({2, 3});
 
             BOOST_CHECK(static_cast<bool>(var1 != var2));
