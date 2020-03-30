@@ -11,34 +11,38 @@ void Context::addVariable(const std::string &identifier, const Variable &variabl
     variables_.insert({identifier, std::make_shared<Variable>(variable)});
 }
 
-std::weak_ptr<Variable> Context::findVariable(const std::string &identifier, const Token &token) {
+std::shared_ptr<Variable> Context::findVariable(const std::string &identifier, const Token &token) {
     if (variables_.count(identifier)) {
         return variables_.at(identifier);
-    } else if (parentContext) {
-        return parentContext->findVariable(identifier, token);
+    } else if (parentContext_) {
+        return parentContext_->findVariable(identifier, token);
     } else { // parent context?
         throw UndefinedVar(token);
     }
 }
 
-Context::Context(std::vector<std::pair<std::string, std::shared_ptr<Variable>>> variables) : parentContext(nullptr) {
+Context::Context(std::vector<std::pair<std::string, std::shared_ptr<Variable>>> variables) : parentContext_(nullptr) {
     for (auto &variable : variables) {
         this->variables_.insert(variable);
     }
 }
 
-Context::Context(const Context &context) : parentContext(context.parentContext) {
+Context::Context(const Context &context) : parentContext_(context.parentContext_) {
     for (auto &variable : context.variables_) {
         this->variables_.insert(variable);
     }
 }
 
 bool Context::existVariable(const std::string &identifier) const {
-    return variables_.count(identifier) || (parentContext ? parentContext->existVariable(identifier) : false);
+    return variables_.count(identifier) || (parentContext_ ? parentContext_->existVariable(identifier) : false);
+}
+
+void Context::setParentContext(Context *parentContext){
+    parentContext_ = parentContext;
 }
 
 Context *Context::getParentContext() {
-    return parentContext;
+    return parentContext_;
 }
 
 std::vector<Variable> Context::saveValues() {

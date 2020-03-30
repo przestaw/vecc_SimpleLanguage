@@ -23,9 +23,9 @@ namespace vecc {
         
         // construction pointing to existing Variables
         // TODO : considere using shared ptr for Variables in Context and weak_ptr here
-        explicit BaseMathExpr(Variable *variable, bool unaryMathOp = false);
+        explicit BaseMathExpr(std::shared_ptr<Variable> variable, bool unaryMathOp = false);
         
-        explicit BaseMathExpr(Variable *variable, unsigned index = 0, bool unaryMathOp = false);
+        explicit BaseMathExpr(std::shared_ptr<Variable> variable, unsigned index = 0, bool unaryMathOp = false);
         
         Variable calculate() const override;
     
@@ -47,7 +47,7 @@ namespace vecc {
             std::unique_ptr<Statement>,
             std::unique_ptr<Expression>,
             std::unique_ptr<Variable>,
-            Variable *> value_;
+            std::shared_ptr<Variable> > value_;
         
         unsigned index_;
     };

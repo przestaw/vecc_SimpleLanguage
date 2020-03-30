@@ -24,14 +24,14 @@ BaseMathExpr::BaseMathExpr(std::unique_ptr<Variable> constant, bool unaryMathOp)
     value_ = std::move(constant);
 }
 
-BaseMathExpr::BaseMathExpr(Variable *variable, bool unaryMathOp)
+BaseMathExpr::BaseMathExpr(std::shared_ptr<Variable> variable, bool unaryMathOp)
         : type_(Type::Variable), indexedAccess_(false), invert_(unaryMathOp), index_() {
-    value_ = variable;
+    value_ = std::move(variable);
 }
 
-BaseMathExpr::BaseMathExpr(Variable *variable, unsigned int index, bool unaryMathOp)
+BaseMathExpr::BaseMathExpr(std::shared_ptr<Variable> variable, unsigned int index, bool unaryMathOp)
         : type_(Type::Variable), indexedAccess_(true), invert_(unaryMathOp), index_(index) {
-    value_ = variable;
+    value_ = std::move(variable);
 }
 
 Variable BaseMathExpr::calculate() const {
@@ -51,11 +51,10 @@ Variable BaseMathExpr::getBaseValue() const {
             return *std::get<std::unique_ptr<Variable>>(value_);
         case Type::Variable :
             if (indexedAccess_) {
-                return Variable({(std::get<Variable *>(value_)->at(index_))});
+                return Variable({(std::get<std::shared_ptr<Variable>>(value_)->at(index_))});
             } else {
-                return *std::get<Variable *>(value_);
+                return *std::get<std::shared_ptr<Variable>>(value_);
             }
-            // FIXME : consider weak_ptr check
         default:
             return Variable();
         case Type::Function :

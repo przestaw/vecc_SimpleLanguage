@@ -197,11 +197,11 @@ std::unique_ptr<Statement> Parser::parseInitStatement() {
 
         if (tryToken(Token::Type::Assignment)) {
             assignStmt = std::make_unique<AssignStatement>(
-                    *currentContext->findVariable(identifier.getLiteral(), identifier).lock(),
+                    *currentContext->findVariable(identifier.getLiteral(), identifier),
                     parseOrExpression());
         } else {
             assignStmt = std::make_unique<AssignStatement>(
-                    *currentContext->findVariable(identifier.getLiteral(), identifier).lock(),
+                    *currentContext->findVariable(identifier.getLiteral(), identifier),
                     std::make_unique<BaseMathExpr>(std::make_unique<Variable>()));
         }
 
@@ -267,13 +267,13 @@ std::unique_ptr<Statement> Parser::parseIfStatement() {
 
     expectToken(Token::Type::CurlyBracketOpen);
     //connect to context
-    ifStmt->trueBlock() = StatementBlock(currentContext);
+    ifStmt->trueBlock().getContext().setParentContext(currentContext);
     parseStatementBlock(ifStmt->trueBlock());
 
     if (tryToken(Token::Type::Else)) {
         expectToken(Token::Type::CurlyBracketOpen);
         //connect to context
-        ifStmt->falseBlock() = StatementBlock(currentContext);
+        ifStmt->falseBlock().getContext().setParentContext(currentContext);
         parseStatementBlock(ifStmt->falseBlock());
     }
 
@@ -291,7 +291,7 @@ std::unique_ptr<Statement> Parser::parseWhileStatement() {
 
     expectToken(Token::Type::CurlyBracketOpen);
     //connect to context
-    whileStmt->getWhileBody() = StatementBlock(currentContext);
+    whileStmt->getWhileBody().getContext().setParentContext(currentContext);
     parseStatementBlock(whileStmt->getWhileBody());
 
     return whileStmt;
@@ -412,6 +412,7 @@ std::unique_ptr<Expression> Parser::parseAdditiveExpression() {
             break;
         default:
             //NOTE: to silence warning
+            // here only passing value
             break;
     }
 
@@ -444,6 +445,7 @@ std::unique_ptr<Expression> Parser::parseMultiplyExpression() {
             break;
         default:
             //NOTE: to silence warning
+            // here only passing value
             break;
     }
 
@@ -504,13 +506,13 @@ std::unique_ptr<Expression> Parser::parseIdentifierValue(const bool &unaryMathOp
             return std::make_unique<BaseMathExpr>(
                     currentContext->findVariable(
                             identifier.getLiteral(),
-                            identifier).lock().get(),
+                            identifier),
                     val, unaryMathOp);
         } else {
             return std::make_unique<BaseMathExpr>(
                     currentContext->findVariable(
                             identifier.getLiteral(),
-                            identifier).lock().get(),
+                            identifier),
                     unaryMathOp);
         }
     }

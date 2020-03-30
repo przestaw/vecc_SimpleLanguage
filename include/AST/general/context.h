@@ -13,7 +13,7 @@
 namespace vecc {
     class Context {
     public:
-        explicit Context(Context *parent = nullptr) : parentContext(parent) {}
+        explicit Context(Context *parent = nullptr) : parentContext_(parent) {}
 
         explicit Context(std::vector<std::pair<std::string, std::shared_ptr<Variable>>> variables);
 
@@ -23,16 +23,18 @@ namespace vecc {
 
         bool existVariable(const std::string &identifier) const;
 
-        std::weak_ptr<Variable> findVariable(const std::string &identifier, const Token &token);
+        std::shared_ptr<Variable> findVariable(const std::string &identifier, const Token &token);
 
         Context *getParentContext();
+
+        void setParentContext(Context *parentContext);
 
         std::vector<Variable> saveValues();
 
         void restoreValues(const std::vector<Variable> &savedValues);
 
     private:
-        Context *parentContext; //!< used incases like if/while branch/just some code in curly brackets. In other cases nullptr
+        Context *parentContext_; //!< used incases like if/while branch/just some code in curly brackets. In other cases nullptr
         std::unordered_map<std::string, std::shared_ptr<Variable>> variables_;
     };
 
