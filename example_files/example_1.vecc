@@ -1,6 +1,6 @@
 fun licz(a) {
     a = a * 2;
-    if (a < 10) {
+    if (a < 80) {
         print( "licz a = ", a, "\n");
         licz(a);
     }

@@ -1,0 +1,26 @@
+fun fib_rec(n){
+    if(n <= 1){
+        return 1;
+    }
+    var ret = fib_rec(n-1) + fib_rec(n-2);
+    return ret;
+}
+
+fun fib_it(n){
+    var a = 0;
+    if( n == 0){
+        return a;
+    }
+    var b = 1;
+    var c = a + b;
+
+    while(0 < n){
+        c = a + b;
+        a = b;
+        b = c;
+        
+        n = n - 1;
+    }
+
+    return b;
+}

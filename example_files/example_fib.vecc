@@ -1,0 +1,8 @@
+fun main() {
+    var i = 0;
+    while( i <= 20){
+        print("fib_it(", i, ")  = ", fib_it(i), ".\n");
+        print("fib_rec(", i, ") = ", fib_rec(i), ".\n");
+        i = i + 1;
+    }
+}

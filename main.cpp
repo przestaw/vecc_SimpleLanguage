@@ -21,7 +21,7 @@ inline void parseParams(int argc, char *argv[]) {
         options_description desc{"Options"};
         desc.add_options()
                 ("help,h", "Help screen")
-                ("input,i", value<std::vector<std::string>>(), "Input file")
+                ("input,i", value<std::vector<std::string>>()->multitoken(), "Input file")
                 ("verbosity,v", value<uint8_t>()->default_value(static_cast<uint8_t>(vecc::LogLevel::FullLog)),
                  "verbosity level : \n"
                  "\t 0 - no information\n"
