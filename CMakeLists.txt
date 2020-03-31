@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.10)
 project(vecc)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -9,15 +9,15 @@ set(TEST ${PROJECT_NAME}-test)
 set(CHECK ${TEST}-check)
 set(DOC ${PROJECT_NAME}-doc)
 
-file(GLOB LIB_SRC "src/*.cpp")
-file(GLOB LIB_INC "include/*.h")
+file(GLOB LIB_SRC  "src/*.cpp")
+file(GLOB LIB_INC  "include/*.h")
 file(GLOB TEST_SRC "test/*.cpp")
+
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules/finders")
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules")
 
 include(CTest)
 enable_testing()
-
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og -g3 -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions")
 
 if(CMAKE_BUILD_TYPE EQUAL Release)
     cmake_policy(SET CMP0069 NEW)
@@ -27,6 +27,29 @@ if(CMAKE_BUILD_TYPE EQUAL Release)
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    # using Clang
+    set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   -O0 -g -Wextra-tokens -Wambiguous-member-template -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions -fmerge-all-constants -fvectorize -flto")
+
+    include(LLVMtoolchain)
+
+    set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=gold)
+
+    set(CMAKE_C_ARCHIVE_CREATE "<CMAKE_AR> qcs <TARGET> <LINK_FLAGS> <OBJECTS>")
+    set(CMAKE_C_ARCHIVE_FINISH   true)
+    set(CMAKE_CXX_ARCHIVE_CREATE "<CMAKE_AR> qcs <TARGET> <LINK_FLAGS> <OBJECTS>")
+    set(CMAKE_CXX_ARCHIVE_FINISH true)
+
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    # using GCC
+    set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   -O0 -Og -g -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions -fdevirtualize -fmerge-constants")
+
+    include(GNUtoolchain)
+endif()
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 
@@ -50,7 +73,8 @@ add_dependencies(${LIBRARY} ${CHECK})
 #Program executable
 add_executable(${EXECUTABLE} main.cpp)
 add_dependencies(${EXECUTABLE} ${LIBRARY})
-target_link_libraries(${EXECUTABLE} ${LIBRARY} ${EXTERNAL_LIBS})
+target_link_libraries(${EXECUTABLE} ${LIBRARY} -flto)
+target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
 
 # "all" target
 if(LATEX_FOUND)

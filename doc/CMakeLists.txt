@@ -1,4 +1,4 @@
-include(UseLATEX.cmake)
+include(../cmake_modules/UseLATEX.cmake)
 
 set(DOCUMENT_1 TKOM-Wstepna-Stawczyk-Przemyslaw)
 
