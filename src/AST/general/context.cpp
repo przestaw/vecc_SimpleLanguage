@@ -48,7 +48,7 @@ Context *Context::getParentContext() {
 std::vector<Variable> Context::saveValues() {
     std::vector<Variable> ret;
     for(auto &it: variables_){
-        ret.emplace_back(*it.second);
+        ret.push_back(*it.second);
     }
     return ret;
 }

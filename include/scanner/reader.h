@@ -12,7 +12,8 @@ namespace vecc {
 
     class Reader {
     public:
-        explicit Reader(std::istream &input, const std::string &source = "unknown");
+        explicit Reader(std::istream &input);
+        Reader(std::istream &input, const std::string &source);
 
         char get();
 
@@ -24,7 +25,7 @@ namespace vecc {
 
     private:
         std::istream &stream_;       //!< stream cannot be changed as Reader holds position in code
-        std::string sourceName;      //!< identifer of the source
+        //std::string sourceName;      //!< identifer of the source
 
         char symbol_ = 0x00;
         Position position_;

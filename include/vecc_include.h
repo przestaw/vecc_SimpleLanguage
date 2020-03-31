@@ -7,18 +7,19 @@
 
 #include <cstdint>
 
-namespace vecc{
-    enum class LogLevel : uint8_t{
-        NoLog = 0,
-        Errors,
-        ParsedFiles,
-        CreatedFunctionsVariables,
-        ExecutedStatementsAndExpressions,
-        CreatedStatementsAndExpressions,
-        ParsedTokens,
-        ReadCharacters,
-        PeakedCharacters,
-        FullLog,
+namespace vecc {
+    /**
+     * Log Level type
+     */
+    enum class LogLevel : uint8_t {
+        NoLog = 0,                       //!< no information outputed to stderr
+        Errors,                          //!< runtime and compile errors
+        ParsedFiles,                     //!< Errors & information about parsed files
+        CreatedFunctions,                //!< ParsedFiles & any created function
+        ExecutedStatementsAndExpressions,//!< CreatedFunctions & Executed stmt/expr
+        CreatedStatementsAndExpressions, //!< ExecutedStatementsAndExpressions & Creation of stmt/expr
+        ParsedTokens,                    //!< CreatedStatementsAndExpressions & any Token
+        FullLog,                         //!< All available logs
     };
 }
 

@@ -12,15 +12,15 @@
 namespace vecc {
     class FunctionCallStatement : public Statement {
     public:
-        FunctionCallStatement(Function &function);
+        explicit FunctionCallStatement(Function &function);
 
         void addArgument(std::unique_ptr<Expression> arg);
 
-        const Function &getFunction() const;
+        [[nodiscard]] const Function &getFunction() const;
 
         Return run() override;
 
-        unsigned size() const;
+        [[nodiscard]] unsigned size() const;
 
     private:
         Function &function_;

@@ -15,7 +15,7 @@ namespace vecc {
 
         Position(unsigned line, unsigned symbol);
 
-        Position(const std::string &streamName);
+        explicit Position(const std::string &streamName);
 
         Position(unsigned line, unsigned symbol, const std::string &streamName);
 
@@ -42,10 +42,9 @@ namespace vecc {
             ++symbolNo;
         }
 
-        inline std::string toString() const {
+        [[nodiscard]] inline std::string toString() const {
             return BOLD("line number : ") + std::to_string(lineNo) + ", " BOLD("position : ") +
-                   std::to_string(symbolNo) +
-                   (namedSource ? ("\nin file : " + sourceName) + "\n" : "\n");
+                   std::to_string(symbolNo) + (namedSource ? BOLD("\nin file : ") + sourceName : "");
         }
 
         inline std::ostream &operator<<(std::ostream &os) {

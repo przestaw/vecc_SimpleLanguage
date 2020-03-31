@@ -10,12 +10,20 @@
 
 using namespace boost::program_options;
 
+/**
+ * Params struct for storing runtime params
+ */
 struct Params {
-    bool run = false;
-    std::vector<std::string> files;
-    vecc::LogLevel verbosity = vecc::LogLevel::FullLog;
-} params;
+    bool run = false;                                   //!< determines if there are files to parse&run
+    std::vector<std::string> files;                     //!< files to be parsed
+    vecc::LogLevel verbosity = vecc::LogLevel::FullLog; //!< log level
+} params;                                               //!< global Params object
 
+/**
+ * Function for arguments parsing
+ * @param argc arguments count from stdin
+ * @param argv arguments array
+ */
 inline void parseParams(int argc, char *argv[]) {
     try {
         options_description desc{"Options"};
@@ -51,6 +59,11 @@ inline void parseParams(int argc, char *argv[]) {
     }
 }
 
+/**
+ * Helper function for single file parsing
+ * @param parser Parser used in the process
+ * @param filename name of the file to be parsed
+ */
 void parseFile(vecc::Parser &parser,const std::string &filename) {
     std::ifstream file;
     file.open(filename);

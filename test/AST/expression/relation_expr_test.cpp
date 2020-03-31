@@ -19,22 +19,22 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
     BOOST_AUTO_TEST_SUITE(Relation_Expr_Test_Suite)
 
-        BOOST_AUTO_TEST_CASE(GivenMathExpr_ValueIsCorrect) {
-            Variable var = Variable({1, 2, 3});
-
-            unique_ptr<Variable> variable =
-                    make_unique<Variable>(var);
-
-            RelationExpr expr1(make_unique<BaseMathExpr>(move(variable)),
-                              RelationExpr::OperatorType::PassValue,
-                              unique_ptr<vecc::Expression>(nullptr));
-
-            variable = make_unique<Variable>(var);
-            RelationExpr expr2(make_unique<BaseMathExpr>(move(variable)));
-
-            BOOST_CHECK(static_cast<bool>(expr1.calculate() == var));
-            BOOST_CHECK(static_cast<bool>(expr2.calculate() == var));
-        }
+//        BOOST_AUTO_TEST_CASE(GivenMathExpr_ValueIsCorrect) {
+//            Variable var = Variable({1, 2, 3});
+//
+//            unique_ptr<Variable> variable =
+//                    make_unique<Variable>(var);
+//
+//            RelationExpr expr1(make_unique<BaseMathExpr>(move(variable)),
+//                              RelationExpr::OperatorType::PassValue,
+//                              unique_ptr<vecc::Expression>(nullptr));
+//
+//            variable = make_unique<Variable>(var);
+//            RelationExpr expr2(make_unique<BaseMathExpr>(move(variable)));
+//
+//            BOOST_CHECK(static_cast<bool>(expr1.calculate() == var));
+//            BOOST_CHECK(static_cast<bool>(expr2.calculate() == var));
+//        }
 
         BOOST_AUTO_TEST_CASE(GivenTwoValues_EqualityReturnsCorrectValue) {
             Variable var1 = Variable({1});

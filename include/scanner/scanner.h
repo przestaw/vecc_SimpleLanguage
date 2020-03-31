@@ -15,7 +15,7 @@ namespace vecc {
     public:
         Scanner();
 
-        Scanner(std::unique_ptr<Reader> reader);
+        explicit Scanner(std::unique_ptr<Reader> reader);
 
         Token getToken();
 

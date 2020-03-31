@@ -8,15 +8,16 @@ using namespace vecc;
 
 MultiplyExpr::MultiplyExpr(std::unique_ptr<Expression> value) : baseValue(std::move(value)) {}
 
-void MultiplyExpr::addOperand(std::unique_ptr<Expression> value, const MultiplyExpr::OperatorType &type) {
-    multiplyables.emplace_back(type, std::move(value));
+void MultiplyExpr::addOperand(std::unique_ptr<Expression> value, const MultiplyExpr::OperatorType &type, const Position &position) {
+    multiplyables.emplace_back(type, std::move(value), position);
 }
 
 Variable MultiplyExpr::calculate() const {
     Variable ret = baseValue->calculate();
 
     for (auto &&it : multiplyables) {
-        switch (it.operation) {
+        ret.setPosition(it.pos_);
+        switch (it.operation_) {
             case OperatorType::Multiply:
                 ret = ret * it.value_->calculate();
                 break;

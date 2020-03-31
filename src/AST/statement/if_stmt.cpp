@@ -18,10 +18,8 @@ StatementBlock &IfStatement::falseBlock() {
 
 Return IfStatement::run() {
     if (static_cast<bool>(expression_->calculate())) {
-        trueBlock_.run();
+        return trueBlock_.run();
     } else {
-        falseBlock_.run();
+        return falseBlock_.run();
     }
-
-    return Return();
 }

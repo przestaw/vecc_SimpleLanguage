@@ -12,7 +12,7 @@
 namespace vecc {
     class AndLogicExpr : public Expression {
     public:
-        AndLogicExpr(std::unique_ptr<Expression> value);
+        explicit AndLogicExpr(std::unique_ptr<Expression> value);
 
         void addOperand(std::unique_ptr<Expression> value);
 

@@ -27,5 +27,5 @@ Return PrintStatement::run() {
         }
     }
     out_ << buffer.str();
-    return Return(Return::Type::noting);
+    return Return(Return::Type::Noting);
 }

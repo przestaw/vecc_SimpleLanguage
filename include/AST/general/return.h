@@ -12,11 +12,11 @@ namespace vecc {
 
     struct Return {
         enum class Type {
-            noting,
-            value
+            Noting,
+            Value
         };
 
-        explicit Return(const Type &type = Type::noting) : type_(type) {}
+        explicit Return(const Type &type = Type::Noting) : type_(type) {}
 
         explicit Return(const Type &type, Variable variable) : type_(type), variable_(std::move(variable)) {}
 

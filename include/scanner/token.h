@@ -61,7 +61,7 @@ namespace vecc {
             EoF                  //!< End of File
         };
 
-        Token(const Position &position = Position(), const Type &type = Type::NaT);
+        explicit Token(const Position &position = Position(), const Type &type = Type::NaT);
 
         // setters
         void setType(const Type &type);
@@ -69,16 +69,16 @@ namespace vecc {
         void setLiteral(const std::string &literal);
 
         // getters
-        const Position &getTokenPos() const;
+        [[nodiscard]] const Position &getTokenPos() const;
 
-        Type getType() const;
+        [[nodiscard]] Type getType() const;
 
-        const std::string &getLiteral() const;
+        [[nodiscard]] const std::string &getLiteral() const;
 
-        std::string toString() const;
+        [[nodiscard]] std::string toString() const;
 
         // functions connected with Type
-        std::string typeName() const;   //!< description for errors and so
+        [[nodiscard]] std::string typeName() const;   //!< description for errors and so
 
         static Type findKeywordType(const std::string &literal);        //!< for standard literals
         static Type findSymbolType(const char &literal);                //!< for single signs like operators

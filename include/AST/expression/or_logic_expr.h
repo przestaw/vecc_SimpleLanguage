@@ -12,11 +12,11 @@
 namespace vecc {
     class OrLogicExpr : public Expression {
     public:
-        OrLogicExpr(std::unique_ptr<Expression> value);
+        explicit OrLogicExpr(std::unique_ptr<Expression> value);
 
         void addOperand(std::unique_ptr<Expression> value);
 
-        Variable calculate() const override;
+        [[nodiscard]] Variable calculate() const override;
 
     private:
         std::vector<std::unique_ptr<Expression>> operands;

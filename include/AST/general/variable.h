@@ -27,11 +27,11 @@ namespace vecc {
 
         std::vector<int> &operator*();
 
-        int &at(unsigned idx);
+        [[nodiscard]] int &at(unsigned idx);
 
-        const int &at(unsigned idx) const;
+        [[nodiscard]] const int &at(unsigned idx) const;
 
-        unsigned size() const;
+        [[nodiscard]] unsigned size() const;
 
         Variable operator==(const Variable &rhs) const;
 
@@ -69,7 +69,7 @@ namespace vecc {
 
         void setPosition(const Position &position);
 
-        std::string toString() const;
+        [[nodiscard]] std::string toString() const;
 
         std::ostream &operator<<(std::ostream &out) {
             out << this->toString();

@@ -14,7 +14,7 @@
 namespace vecc {
     class PrintStatement : public Statement {
     public:
-        PrintStatement(std::ostream &out = std::cout);
+        explicit PrintStatement(std::ostream &out = std::cout);
 
         void addExpression(std::unique_ptr<Expression> expression);
 

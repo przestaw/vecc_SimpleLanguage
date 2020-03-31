@@ -29,7 +29,7 @@ namespace vecc {
 
         void setParentContext(Context *parentContext);
 
-        std::vector<Variable> saveValues();
+        [[nodiscard]] std::vector<Variable> saveValues();
 
         void restoreValues(const std::vector<Variable> &savedValues);
 

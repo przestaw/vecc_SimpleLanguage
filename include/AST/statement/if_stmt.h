@@ -12,7 +12,7 @@
 namespace vecc {
     class IfStatement : public Statement {
     public:
-        IfStatement(std::unique_ptr<Expression> expression);
+        explicit IfStatement(std::unique_ptr<Expression> expression);
 
         StatementBlock &trueBlock();
 

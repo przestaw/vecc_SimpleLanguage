@@ -23,18 +23,12 @@ std::weak_ptr<Variable> StatementBlock::findVariable(const std::string &identifi
 Return StatementBlock::run() {
     Return ret;
 
-    //save context
-    std::vector<Variable> storedContext = context_.saveValues();
-
     for (auto &it : statements_) {
         ret = it->run();
-        if (ret.type_ == Return::Type::value) {
+        if (ret.type_ != Return::Type::Noting) {
             break;
         }
     }
-
-    //restore context
-    context_.restoreValues(storedContext);
 
     return ret;
 }

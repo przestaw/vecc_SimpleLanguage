@@ -14,7 +14,7 @@ namespace vecc {
     public:
         explicit BaseLogicExpr(std::unique_ptr<Expression> value, bool unaryLogicOp = false);
 
-        Variable calculate() const override;
+        [[nodiscard]] Variable calculate() const override;
 
     private:
         bool invert;

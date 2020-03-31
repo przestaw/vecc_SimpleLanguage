@@ -65,36 +65,23 @@ namespace vecc {
         
         // Statements
         std::unique_ptr<Statement> parseAssignStatement(std::weak_ptr<Variable> variable);
-        
         std::unique_ptr<Statement> parseInitStatement();
-        
         std::unique_ptr<Statement> parseIdentifier();
-        
         std::unique_ptr<Statement> parseFunctionCall(const Token &function);
-        
         std::unique_ptr<Statement> parseIfStatement();
-        
         std::unique_ptr<Statement> parseWhileStatement();
-        
         std::unique_ptr<Statement> parseReturnStatement();
-        
         std::unique_ptr<Statement> parsePrintStatement();
         
         // Expressions
         std::unique_ptr<Expression> parseOrExpression();
-        
         std::unique_ptr<Expression> parseAndExpression();
-        
         std::unique_ptr<Expression> parseRelationalExpression();
-        
         std::unique_ptr<Expression> parseBaseLogicExpression();
-        
         std::unique_ptr<Expression> parseAdditiveExpression();
-        
         std::unique_ptr<Expression> parseMultiplyExpression();
-        
         std::unique_ptr<Expression> parseBaseMathExpression();
-        
+        std::unique_ptr<Expression> parseParentExpression(const bool &unaryMathOp);
         std::unique_ptr<Expression> parseIdentifierValue(const bool &unaryMathOp);
     };
 }

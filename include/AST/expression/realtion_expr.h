@@ -19,17 +19,17 @@ namespace vecc {
             GreaterOrEqual,
             Less,
             LessOrEqual,
-            PassValue
+            //PassValue
         };
 
-        RelationExpr(std::unique_ptr<Expression> lVal, const OperatorType &type, std::unique_ptr<Expression> rVal);
-        explicit RelationExpr(std::unique_ptr<Expression> passVal);
+        RelationExpr(std::unique_ptr<Expression> lVal, const OperatorType &type, std::unique_ptr<Expression> rVal, const Position &position  = Position());
 
-        Variable calculate() const override;
+        [[nodiscard]] Variable calculate() const override;
 
     private:
         OperatorType type_;
         std::unique_ptr<Expression> lVal_;
+        Position pos_;
         std::unique_ptr<Expression> rVal_;
     };
 }

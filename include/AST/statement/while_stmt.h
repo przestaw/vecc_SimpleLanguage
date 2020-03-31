@@ -12,7 +12,7 @@
 namespace vecc {
     class WhileStatement : public Statement {
     public:
-        WhileStatement(std::unique_ptr<Expression> expression);
+        explicit WhileStatement(std::unique_ptr<Expression> expression);
 
         StatementBlock &getWhileBody();
 

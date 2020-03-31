@@ -18,24 +18,25 @@ namespace vecc {
             Modulo
         };
 
-        MultiplyExpr(std::unique_ptr<Expression> value);
+        explicit MultiplyExpr(std::unique_ptr<Expression> value);
 
-        void addOperand(std::unique_ptr<Expression> value, const OperatorType &type);
+        void addOperand(std::unique_ptr<Expression> value, const OperatorType &type, const Position &position = Position());
 
-        Variable calculate() const override;
+        [[nodiscard]] Variable calculate() const override;
 
     private:
         std::unique_ptr<Expression> baseValue;
 
-        struct Multipyable {
-            Multipyable(const OperatorType type, std::unique_ptr<Expression> value) : operation(type),
-                                                                                      value_(std::move(value)) {}
+        struct Multiplyable {
+            Multiplyable(const OperatorType type, std::unique_ptr<Expression> value, const Position &position)
+                : operation_(type), value_(std::move(value)), pos_(position) {}
 
-            OperatorType operation;
+            OperatorType operation_;
             std::unique_ptr<Expression> value_;
+            Position pos_;
         };
 
-        std::vector<Multipyable> multiplyables;
+        std::vector<Multiplyable> multiplyables;
     };
 }
 

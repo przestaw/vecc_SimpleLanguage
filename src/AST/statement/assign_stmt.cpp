@@ -8,16 +8,16 @@
 using namespace vecc;
 
 AssignStatement::AssignStatement(Variable &variable, std::unique_ptr<Expression> expression)
-        : variable_(variable), expression_(std::move(expression)), indexedAcess(false), index_() {
+        : variable_(variable), expression_(std::move(expression)), indexedAccess(false), index_() {
 }
 
 AssignStatement::AssignStatement(Variable &variable, const unsigned &index, std::unique_ptr<Expression> expression)
-        : variable_(variable), expression_(std::move(expression)), indexedAcess(true), index_(index) {
+        : variable_(variable), expression_(std::move(expression)), indexedAccess(true), index_(index) {
 }
 
 Return AssignStatement::run() {
     Variable value = expression_->calculate();
-    if (indexedAcess) {
+    if (indexedAccess) {
         if (value.size() == 1) {
             variable_.setPosition(position_);
             variable_.at(index_) = value.at(0);
@@ -29,7 +29,7 @@ Return AssignStatement::run() {
         variable_ = value;
     }
 
-    return Return(Return::Type::noting);
+    return Return(Return::Type::Noting);
 }
 
 void AssignStatement::setPosition(const Position &position) {

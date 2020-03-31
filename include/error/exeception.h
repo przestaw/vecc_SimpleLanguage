@@ -43,48 +43,48 @@ namespace vecc {
                 }
                 return buf;
             }()
-            + " at " + token.getTokenPos().toString()) {}
+            + "at " + token.getTokenPos().toString()) {}
     };
 
     class UndefinedVar : public Exception {
     public:
         explicit UndefinedVar(const Token &token) : Exception(
-            FRED(BOLD("Undefined Variable ERROR : ")) "Variable " + token.getLiteral() + " not found"
+            FRED(BOLD("Undefined Variable ERROR : \n")) "Variable " + token.getLiteral() + " not found"
             + "\nat line: " + token.getTokenPos().toString()) {}
     };
 
     class RedefinedVar : public Exception {
     public:
         explicit RedefinedVar(const Token &token) : Exception(
-            FRED(BOLD("Redefined Variable ERROR : ")) "Variable " + token.getLiteral() + " has been redefined"
+            FRED(BOLD("Redefined Variable ERROR : \n")) "Variable " + token.getLiteral() + " has been redefined"
             + "\nat line: " + token.getTokenPos().toString()) {}
     };
 
     class UndefinedFun : public Exception {
     public:
         explicit UndefinedFun(const Token &function) : Exception(
-            FRED(BOLD("Undefined Function ERROR : ")) "Function " + function.getLiteral() +
+            FRED(BOLD("Undefined Function ERROR : \n")) "Function " + function.getLiteral() +
             " has not been defined\nat line: " + function.getTokenPos().toString()) {}
     };
 
     class RedefinedFun : public Exception {
     public:
         explicit RedefinedFun(const Token &function) : Exception(
-            FRED(BOLD("Redefined Function ERROR : ")) "Function " + function.getLiteral() + " is already defined"
+            FRED(BOLD("Redefined Function ERROR : \n")) "Function " + function.getLiteral() + " is already defined"
             + "\nat line: " + function.getTokenPos().toString()) {}
     };
 
     class MismachedArgumentsCount : public Exception {
     public:
         explicit MismachedArgumentsCount(const Token &function, const unsigned &funCount, const unsigned &callCount) : Exception(
-            FRED(BOLD("Function Call ERROR : ")) "Function " + function.getLiteral() +
+            FRED(BOLD("Function Call ERROR : \n")) "Function " + function.getLiteral() +
             " has " + std::to_string(funCount) + " arguments but " + std::to_string(callCount) + "were provided"
             + "\nat line: " + function.getTokenPos().toString()) {}
     };
 
     class NoReturnValue : public Exception {
     public:
-        explicit NoReturnValue(const std::string &desc) : Exception(FRED(BOLD("No Return Value ERROR : ")) + desc) {}
+        explicit NoReturnValue(const std::string &desc) : Exception(FRED(BOLD("No Return Value ERROR : \n")) + desc) {}
     };
 
     class MathException : public Exception {

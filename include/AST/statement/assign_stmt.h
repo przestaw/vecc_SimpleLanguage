@@ -15,7 +15,7 @@ namespace vecc {
         AssignStatement(Variable &variable, std::unique_ptr<Expression> expression);
         
         AssignStatement(Variable &variable, const unsigned &index, std::unique_ptr<Expression> expression);
-        
+
         Return run() override;
         
         void setPosition(const Position &position);
@@ -23,7 +23,7 @@ namespace vecc {
     private:
         Variable &variable_;
         std::unique_ptr<Expression> expression_;
-        bool indexedAcess;      //!< if variable is acessed with [] operator
+        bool indexedAccess;      //!< if variable is acessed with [] operator
         unsigned index_;
         Position position_;
     };

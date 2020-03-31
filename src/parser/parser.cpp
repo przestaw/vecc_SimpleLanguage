@@ -311,8 +311,8 @@ std::unique_ptr<Statement> Parser::parsePrintStatement() {
     std::unique_ptr<PrintStatement> printStmt = std::make_unique<PrintStatement>(out_);
     do {
         if (!tryToken(Token::Type::CharacterString, [&]() {
-                printStmt->addString(scanner_->getToken().getLiteral());
-            })) {
+            printStmt->addString(scanner_->getToken().getLiteral());
+        })) {
             printStmt->addExpression(parseOrExpression());
         }
     } while (tryToken(Token::Type::Comma));
@@ -354,35 +354,41 @@ std::unique_ptr<Expression> Parser::parseRelationalExpression() {
             scanner_->parseToken();
             return std::make_unique<RelationExpr>(std::move(lValue),
                                                   RelationExpr::OperatorType::Equal,
-                                                  parseBaseLogicExpression());
+                                                  parseBaseLogicExpression(),
+                                                  token.getTokenPos());
         case Token::Type::Inequality:
             scanner_->parseToken();
             return std::make_unique<RelationExpr>(std::move(lValue),
                                                   RelationExpr::OperatorType::NotEqual,
-                                                  parseBaseLogicExpression());
+                                                  parseBaseLogicExpression(),
+                                                  token.getTokenPos());
         case Token::Type::Less:
             scanner_->parseToken();
             return std::make_unique<RelationExpr>(std::move(lValue),
                                                   RelationExpr::OperatorType::Less,
-                                                  parseBaseLogicExpression());
+                                                  parseBaseLogicExpression(),
+                                                  token.getTokenPos());
         case Token::Type::Greater:
             scanner_->parseToken();
             return std::make_unique<RelationExpr>(std::move(lValue),
                                                   RelationExpr::OperatorType::Greater,
-                                                  parseBaseLogicExpression());
+                                                  parseBaseLogicExpression(),
+                                                  token.getTokenPos());
         case Token::Type::LessOrEqual:
             scanner_->parseToken();
             return std::make_unique<RelationExpr>(std::move(lValue),
                                                   RelationExpr::OperatorType::LessOrEqual,
-                                                  parseBaseLogicExpression());
+                                                  parseBaseLogicExpression(),
+                                                  token.getTokenPos());
         case Token::Type::GreaterOrEqual:
             scanner_->parseToken();
             return std::make_unique<RelationExpr>(std::move(lValue),
                                                   RelationExpr::OperatorType::GreaterOrEqual,
-                                                  parseBaseLogicExpression());
+                                                  parseBaseLogicExpression(),
+                                                  token.getTokenPos());
         default:
             // Not an Relation => just PassValue
-            return std::make_unique<RelationExpr>(std::move(lValue));
+            return lValue;
     }
 }
 
@@ -396,25 +402,32 @@ std::unique_ptr<Expression> Parser::parseAdditiveExpression() {
     std::unique_ptr<AddExpr> addExpr =
             std::make_unique<AddExpr>(parseMultiplyExpression());
 
-    Token token = scanner_->getToken();
-    switch (token.getType()) {
-        case Token::Type::Plus:
-            scanner_->parseToken();
-            //TODO : token.pos -> for math exception
-            addExpr->addOperand(parseMultiplyExpression(),
-                                AddExpr::OperatorType::Add);
-            break;
-        case Token::Type::Minus:
-            scanner_->parseToken();
-            //TODO : token.pos -> for math exception
-            addExpr->addOperand(parseMultiplyExpression(),
-                                AddExpr::OperatorType::Substract);
-            break;
-        default:
-            //NOTE: to silence warning
-            // here only passing value
-            break;
-    }
+    Token token;
+    bool flag;
+    do{
+        flag = false;
+        token = scanner_->getToken();
+        switch (token.getType()) {
+            case Token::Type::Plus:
+                scanner_->parseToken();
+                addExpr->addOperand(parseMultiplyExpression(),
+                                    AddExpr::OperatorType::Add,
+                                    token.getTokenPos());
+                flag = true;
+                break;
+            case Token::Type::Minus:
+                scanner_->parseToken();
+                addExpr->addOperand(parseMultiplyExpression(),
+                                    AddExpr::OperatorType::Substract,
+                                    token.getTokenPos());
+                flag = true;
+                break;
+            default:
+                //NOTE: to silence warning
+                // here only passing value
+                break;
+        }
+    }while(flag);
 
     return addExpr;
 }
@@ -423,31 +436,38 @@ std::unique_ptr<Expression> Parser::parseMultiplyExpression() {
     std::unique_ptr<MultiplyExpr> multiExpr =
             std::make_unique<MultiplyExpr>(parseBaseMathExpression());
 
-    Token token = scanner_->getToken();
-    switch (token.getType()) {
-        case Token::Type::Divide:
-            scanner_->parseToken();
-            //TODO : token.pos -> for math exception
-            multiExpr->addOperand(parseMultiplyExpression(),
-                                  MultiplyExpr::OperatorType::Divide);
-            break;
-        case Token::Type::Modulo:
-            scanner_->parseToken();
-            //TODO : token.pos -> for math exception
-            multiExpr->addOperand(parseMultiplyExpression(),
-                                  MultiplyExpr::OperatorType::Modulo);
-            break;
-        case Token::Type::Multiply:
-            scanner_->parseToken();
-            //TODO : token.pos -> for math exception
-            multiExpr->addOperand(parseMultiplyExpression(),
-                                  MultiplyExpr::OperatorType::Multiply);
-            break;
-        default:
-            //NOTE: to silence warning
-            // here only passing value
-            break;
-    }
+    Token token;
+    bool flag;
+    do{
+        flag = false;
+        token = scanner_->getToken();
+        switch (token.getType()) {
+            case Token::Type::Divide:
+                scanner_->parseToken();
+                multiExpr->addOperand(parseMultiplyExpression(),
+                                      MultiplyExpr::OperatorType::Divide,
+                                      token.getTokenPos());
+                flag = true;
+                break;
+            case Token::Type::Modulo:
+                scanner_->parseToken();
+                multiExpr->addOperand(parseMultiplyExpression(),
+                                      MultiplyExpr::OperatorType::Modulo,
+                                      token.getTokenPos());
+                flag = true;
+                break;
+            case Token::Type::Multiply:
+                scanner_->parseToken();
+                multiExpr->addOperand(parseMultiplyExpression(),
+                                      MultiplyExpr::OperatorType::Multiply,
+                                      token.getTokenPos());
+                flag = true;
+                break;
+            default:
+
+                break;
+        }
+    }while(flag);
 
     return multiExpr;
 }
@@ -472,8 +492,7 @@ std::unique_ptr<Expression> Parser::parseBaseMathExpression() {
             return parseIdentifierValue(unaryMathOp);
 
         case Token::Type::ParenthesisOpen:
-            return std::make_unique<BaseMathExpr>(
-                    parseOrExpression(), unaryMathOp);
+            return parseParentExpression(unaryMathOp);
 
         default:
             throw UnexpectedToken(scanner_->getToken(), {
@@ -482,8 +501,15 @@ std::unique_ptr<Expression> Parser::parseBaseMathExpression() {
                     Token::Type::Identifier,
                     Token::Type::ParenthesisOpen
             });
-
     }
+}
+
+std::unique_ptr<Expression> Parser::parseParentExpression(const bool &unaryMathOp) {
+    scanner_->parseToken();
+    std::unique_ptr<BaseMathExpr> ret =
+            std::make_unique<BaseMathExpr>(parseOrExpression(), unaryMathOp);
+    expectToken(Token::Type::ParenthesisClose);
+    return ret;
 }
 
 std::unique_ptr<Expression> Parser::parseIdentifierValue(const bool &unaryMathOp) {

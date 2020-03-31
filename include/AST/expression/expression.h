@@ -12,7 +12,7 @@ namespace vecc {
     public:
         virtual ~Expression() = default;
 
-        virtual Variable calculate() const = 0;
+        [[nodiscard]] virtual Variable calculate() const = 0;
     };
 }
 

@@ -25,9 +25,9 @@ namespace vecc {
         // TODO : considere using shared ptr for Variables in Context and weak_ptr here
         explicit BaseMathExpr(std::shared_ptr<Variable> variable, bool unaryMathOp = false);
         
-        explicit BaseMathExpr(std::shared_ptr<Variable> variable, unsigned index = 0, bool unaryMathOp = false);
+        BaseMathExpr(std::shared_ptr<Variable> variable, unsigned index = 0, bool unaryMathOp = false);
         
-        Variable calculate() const override;
+        [[nodiscard]] Variable calculate() const override;
     
     private:
         inline Variable getBaseValue() const;
