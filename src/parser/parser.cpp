@@ -338,7 +338,7 @@ std::unique_ptr<Expression> Parser::parseRelationalExpression() {
 
     Token token = scanner_->getToken();
 
-    auto makeRel = [&](const RelationExpr::OperatorType &operatorType){
+    auto makeRel = [&](const RelationExpr::OperatorType &operatorType) {
         scanner_->parseToken();
         return std::make_unique<RelationExpr>(std::move(lValue),
                                               operatorType,
@@ -383,14 +383,14 @@ std::unique_ptr<Expression> Parser::parseAdditiveExpression() {
 
     Token token;
 
-    auto addOp = [&](const AddExpr::OperatorType &operatorType){
+    auto addOp = [&](const AddExpr::OperatorType &operatorType) {
         scanner_->parseToken();
         addExpr->addOperand(parseMultiplyExpression(),
                             operatorType,
                             token.getTokenPos());
     };
 
-    for(;;){
+    for (;;) {
         token = scanner_->getToken();
         switch (token.getType()) {
             case Token::Type::Plus:
@@ -412,14 +412,14 @@ std::unique_ptr<Expression> Parser::parseMultiplyExpression() {
 
     Token token;
 
-    auto addOp = [&](const MultiplyExpr::OperatorType &operatorType){
+    auto addOp = [&](const MultiplyExpr::OperatorType &operatorType) {
         scanner_->parseToken();
         multiExpr->addOperand(parseBaseMathExpression(),
                               operatorType,
                               token.getTokenPos());
     };
 
-    for(;;){
+    for (;;) {
         token = scanner_->getToken();
         switch (token.getType()) {
             case Token::Type::Divide:
@@ -446,13 +446,13 @@ std::unique_ptr<Expression> Parser::parseBaseMathExpression() {
         case Token::Type::NumberString:
             scanner_->parseToken();
             return std::make_unique<BaseMathExpr>(
-                    std::make_unique<Variable>(Variable({
-                                                                std::stoi(token.getLiteral())
-                                                        })), unaryMathOp);
+                    Variable({
+                                     std::stoi(token.getLiteral())
+                             }), unaryMathOp);
 
         case Token::Type::Vec:
             return std::make_unique<BaseMathExpr>(
-                    std::make_unique<Variable>(parseVectorValue()), unaryMathOp);
+                    parseVectorValue(), unaryMathOp);
 
         case Token::Type::Identifier:
             return parseIdentifierValue(unaryMathOp);

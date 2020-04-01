@@ -17,7 +17,7 @@ BaseMathExpr::BaseMathExpr(std::unique_ptr<Expression> expr, bool unaryMathOp)
         : type_(Type::Expression), indexedAccess_(false), invert_(unaryMathOp),
           value_(std::move(expr)), index_() {}
 
-BaseMathExpr::BaseMathExpr(std::unique_ptr<Variable> constant, bool unaryMathOp)
+BaseMathExpr::BaseMathExpr(Variable constant, bool unaryMathOp)
         : type_(Type::Constant), indexedAccess_(false), invert_(unaryMathOp),
           value_(std::move(constant)), index_() {}
 
@@ -43,7 +43,7 @@ Variable BaseMathExpr::getBaseValue() const {
         case Type::Expression :
             return std::get<std::unique_ptr<Expression>>(value_)->calculate();
         case Type::Constant :
-            return *std::get<std::unique_ptr<Variable>>(value_);
+            return std::get<Variable>(value_);
         case Type::Variable :
             if (indexedAccess_) {
                 return Variable({(std::get<std::shared_ptr<Variable>>(value_)->at(index_))});

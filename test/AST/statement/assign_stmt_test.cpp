@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             Variable after({3});
 
             AssignStatement stmt(*variable,
-                                 std::make_unique<BaseMathExpr>(BaseMathExpr(std::make_unique<Variable>(after))));
+                                 std::make_unique<BaseMathExpr>(BaseMathExpr(after)));
             BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
             stmt.run();
             BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));
@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             Variable after({3, 3});
 
             AssignStatement stmt(*variable,
-                                 std::make_unique<BaseMathExpr>(BaseMathExpr(std::make_unique<Variable>(after))));
+                                 std::make_unique<BaseMathExpr>(BaseMathExpr(after)));
             BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
             stmt.run();
             BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));
@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             Variable after({3, 3, 3});
 
             AssignStatement stmt(*variable,
-                                 std::make_unique<BaseMathExpr>(BaseMathExpr(std::make_unique<Variable>(after))));
+                                 std::make_unique<BaseMathExpr>(BaseMathExpr(after)));
             BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
             stmt.run();
             BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
             AssignStatement stmt(*variable, 0,
                                  std::make_unique<BaseMathExpr>(BaseMathExpr(
-                                         std::make_unique<Variable>(Variable({3})))));
+                                         Variable({3}))));
             BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
             stmt.run();
             BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
             AssignStatement stmt(*variable, 1,
                                  std::make_unique<BaseMathExpr>(BaseMathExpr(
-                                         std::make_unique<Variable>(Variable({7})))));
+                                         Variable({7}))));
             BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
             stmt.run();
             BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));
@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
             AssignStatement stmt(*variable, 0,
                                  std::make_unique<BaseMathExpr>(BaseMathExpr(
-                                         std::make_unique<Variable>(Variable({3})))));
+                                         Variable({3}))));
             BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
             stmt.run();
             BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
             AssignStatement stmt(*variable, 1,
                                  std::make_unique<BaseMathExpr>(BaseMathExpr(
-                                         std::make_unique<Variable>(Variable({9})))));
+                                         Variable({9}))));
             BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
             stmt.run();
             BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));
@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
             AssignStatement stmt(*variable, 2,
                                  std::make_unique<BaseMathExpr>(BaseMathExpr(
-                                         std::make_unique<Variable>(Variable({-3})))));
+                                         Variable({-3}))));
             BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
             stmt.run();
             BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));

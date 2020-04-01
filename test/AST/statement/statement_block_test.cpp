@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             StatementBlock stmt;
 
             stmt.addInstruction(std::make_unique<AssignStatement>(
-                    *variable, std::make_unique<BaseMathExpr>(BaseMathExpr(std::make_unique<Variable>(after)))));
+                    *variable, std::make_unique<BaseMathExpr>(BaseMathExpr(after))));
 
             BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
             stmt.run();

@@ -17,6 +17,9 @@ Return WhileStatement::run() {
 
     while (static_cast<bool>(expression_->calculate())) {
         ret = whileBody_.run();
+        if(ret.type_ == Return::Type::Value){
+            break;
+        }
     }
 
     return ret;

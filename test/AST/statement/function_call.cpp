@@ -1,42 +1,19 @@
 //
 // Created by przemek on 01.04.2020.
 //
-
 #include <boost/test/unit_test.hpp>
-#include <AST/general/function.h>
 #include <AST/statement/assign_stmt.h>
-#include <AST/expression/base_math_expr.h>
 #include <AST/statement/return_stmt.h>
+#include <AST/expression/base_math_expr.h>
+#include <AST/statement/function_call.h>
 
 using namespace vecc;
 
 BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
-    BOOST_AUTO_TEST_SUITE(Function_Test_Suite)
+    BOOST_AUTO_TEST_SUITE(Function_Call_Test_Suite)
 
-        BOOST_AUTO_TEST_CASE(FunctionArgs_CorrectCount) {
-            Function fun("kotek");
-
-            BOOST_CHECK_EQUAL(0, fun.size());
-
-            fun.addParameter("bananek");
-
-            BOOST_CHECK_EQUAL(1, fun.size());
-            BOOST_CHECK_EQUAL(true, fun.getFunctionBody().getContext().existVariable("bananek"));
-
-            fun.addParameter("koluszki");
-
-            BOOST_CHECK_EQUAL(2, fun.size());
-            BOOST_CHECK_EQUAL(true, fun.getFunctionBody().getContext().existVariable("koluszki"));
-        }
-
-        BOOST_AUTO_TEST_CASE(EmptyFun_ReturnsNone) {
-            Function fun("kotek");
-
-            BOOST_CHECK_EQUAL(true, static_cast<bool>(Return::Type::Noting == fun.run().type_));
-        }
-
-        BOOST_AUTO_TEST_CASE(AddedStmt_IsExecuted) {
+        BOOST_AUTO_TEST_CASE(FunctionRun_Works) {
             Function fun("kotek");
             Variable before({0});
             Variable after({3});
@@ -51,8 +28,10 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
                     std::make_unique<ReturnStatement>(
                             std::make_unique<BaseMathExpr>(fun.getFunctionBody().findVariable("kotitka"))));
 
+            FunctionCallStatement funCall(fun);
+
             BOOST_CHECK_EQUAL(true, static_cast<bool>(*fun.getFunctionBody().findVariable("kotitka") == before));
-            BOOST_CHECK_EQUAL(true, static_cast<bool>(fun.run().variable_ == after));
+            BOOST_CHECK_EQUAL(true, static_cast<bool>(funCall.run().variable_ == after));
             BOOST_CHECK_EQUAL(true, static_cast<bool>(*fun.getFunctionBody().findVariable("kotitka") == before));
         }
 
@@ -65,7 +44,11 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
                     std::make_unique<ReturnStatement>(
                             std::make_unique<BaseMathExpr>(fun.getFunctionBody().findVariable("kotitka"))));
 
-            BOOST_CHECK_EQUAL(true, static_cast<bool>(Variable({5}) == fun.run({Variable({5})}).variable_));
+            FunctionCallStatement funCall(fun);
+
+            funCall.addArgument(std::make_unique<BaseMathExpr>(Variable({5})));
+
+            BOOST_CHECK_EQUAL(true, static_cast<bool>(Variable({5}) == funCall.run().variable_));
         }
 
     BOOST_AUTO_TEST_SUITE_END()

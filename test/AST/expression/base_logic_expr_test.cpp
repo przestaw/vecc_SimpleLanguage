@@ -21,18 +21,16 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
         BOOST_AUTO_TEST_CASE(BaseLogic_ReturnsVal) {
             Variable var = Variable({1, 2, 3});
-            unique_ptr<Variable> variable =
-                    make_unique<Variable>(var);
-            BaseLogicExpr expr(make_unique<BaseMathExpr>(move(variable)));
+
+            BaseLogicExpr expr(make_unique<BaseMathExpr>(var));
 
             BOOST_CHECK(static_cast<bool>(expr.calculate() == var));
         }
 
         BOOST_AUTO_TEST_CASE(NegatedBaseLogic_ReturnsNegatedVal) {
             Variable var = Variable({1, 2, 3});
-            unique_ptr<Variable> variable =
-                    make_unique<Variable>(var);
-            BaseLogicExpr expr(make_unique<BaseMathExpr>(move(variable)), true);
+
+            BaseLogicExpr expr(make_unique<BaseMathExpr>(var), true);
 
             BOOST_CHECK(static_cast<bool>(expr.calculate() == !var));
         }

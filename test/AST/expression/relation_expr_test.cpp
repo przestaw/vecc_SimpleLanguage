@@ -23,13 +23,13 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 //            Variable var = Variable({1, 2, 3});
 //
 //            unique_ptr<Variable> variable =
-//                    make_unique<Variable>(var);
+//                    var);
 //
 //            RelationExpr expr1(make_unique<BaseMathExpr>(move(variable)),
 //                              RelationExpr::OperatorType::PassValue,
 //                              unique_ptr<vecc::Expression>(nullptr));
 //
-//            variable = make_unique<Variable>(var);
+//            variable = var);
 //            RelationExpr expr2(make_unique<BaseMathExpr>(move(variable)));
 //
 //            BOOST_CHECK(static_cast<bool>(expr1.calculate() == var));
@@ -40,17 +40,17 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             Variable var1 = Variable({1});
             Variable var2 = Variable({2});
 
-            RelationExpr expr1(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr1(make_unique<BaseMathExpr>(var1),
                                RelationExpr::OperatorType::Equal,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var1)));
+                               make_unique<BaseMathExpr>(var1));
 
-            RelationExpr expr2(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr2(make_unique<BaseMathExpr>(var1),
                                RelationExpr::OperatorType::Equal,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                               make_unique<BaseMathExpr>(var2));
 
-            RelationExpr expr3(make_unique<BaseMathExpr>(make_unique<Variable>(var2)),
+            RelationExpr expr3(make_unique<BaseMathExpr>(var2),
                                RelationExpr::OperatorType::Equal,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                               make_unique<BaseMathExpr>(var2));
 
             BOOST_CHECK_EQUAL(static_cast<bool>(expr1.calculate()), true);
             BOOST_CHECK_EQUAL(static_cast<bool>(expr2.calculate()), false);
@@ -61,17 +61,17 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             Variable var1 = Variable({1, 1});
             Variable var2 = Variable({2, 2});
 
-            RelationExpr expr1(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr1(make_unique<BaseMathExpr>(var1),
                                RelationExpr::OperatorType::Equal,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var1)));
+                               make_unique<BaseMathExpr>(var1));
 
-            RelationExpr expr2(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr2(make_unique<BaseMathExpr>(var1),
                                RelationExpr::OperatorType::Equal,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                               make_unique<BaseMathExpr>(var2));
 
-            RelationExpr expr3(make_unique<BaseMathExpr>(make_unique<Variable>(var2)),
+            RelationExpr expr3(make_unique<BaseMathExpr>(var2),
                                RelationExpr::OperatorType::Equal,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                               make_unique<BaseMathExpr>(var2));
 
             BOOST_CHECK_EQUAL(static_cast<bool>(expr1.calculate()), true);
             BOOST_CHECK_EQUAL(static_cast<bool>(expr2.calculate()), false);
@@ -82,9 +82,9 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             Variable var1 = Variable({1, 1});
             Variable var2 = Variable({2, 2, 3});
 
-            RelationExpr expr(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr(make_unique<BaseMathExpr>(var1),
                               RelationExpr::OperatorType::Equal,
-                              make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                              make_unique<BaseMathExpr>(var2));
 
             Variable temp;
             BOOST_CHECK_THROW(temp = expr.calculate(), vecc::MathException);
@@ -94,17 +94,17 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             Variable var1 = Variable({1});
             Variable var2 = Variable({2});
 
-            RelationExpr expr1(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr1(make_unique<BaseMathExpr>(var1),
                                RelationExpr::OperatorType::NotEqual,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var1)));
+                               make_unique<BaseMathExpr>(var1));
 
-            RelationExpr expr2(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr2(make_unique<BaseMathExpr>(var1),
                                RelationExpr::OperatorType::NotEqual,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                               make_unique<BaseMathExpr>(var2));
 
-            RelationExpr expr3(make_unique<BaseMathExpr>(make_unique<Variable>(var2)),
+            RelationExpr expr3(make_unique<BaseMathExpr>(var2),
                                RelationExpr::OperatorType::NotEqual,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                               make_unique<BaseMathExpr>(var2));
 
             BOOST_CHECK_EQUAL(static_cast<bool>(expr1.calculate()), false);
             BOOST_CHECK_EQUAL(static_cast<bool>(expr2.calculate()), true);
@@ -115,17 +115,17 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             Variable var1 = Variable({1, 1});
             Variable var2 = Variable({2, 2});
 
-            RelationExpr expr1(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr1(make_unique<BaseMathExpr>(var1),
                                RelationExpr::OperatorType::NotEqual,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var1)));
+                               make_unique<BaseMathExpr>(var1));
 
-            RelationExpr expr2(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr2(make_unique<BaseMathExpr>(var1),
                                RelationExpr::OperatorType::NotEqual,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                               make_unique<BaseMathExpr>(var2));
 
-            RelationExpr expr3(make_unique<BaseMathExpr>(make_unique<Variable>(var2)),
+            RelationExpr expr3(make_unique<BaseMathExpr>(var2),
                                RelationExpr::OperatorType::NotEqual,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                               make_unique<BaseMathExpr>(var2));
 
             BOOST_CHECK_EQUAL(static_cast<bool>(expr1.calculate()), false);
             BOOST_CHECK_EQUAL(static_cast<bool>(expr2.calculate()), true);
@@ -136,9 +136,9 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             Variable var1 = Variable({1, 1});
             Variable var2 = Variable({2, 2, 3});
 
-            RelationExpr expr(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr(make_unique<BaseMathExpr>(var1),
                               RelationExpr::OperatorType::NotEqual,
-                              make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                              make_unique<BaseMathExpr>(var2));
             Variable temp;
             BOOST_CHECK_THROW(temp=expr.calculate(), vecc::MathException);
         }
@@ -147,21 +147,21 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             Variable var1 = Variable({1});
             Variable var2 = Variable({2});
 
-            RelationExpr expr1(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr1(make_unique<BaseMathExpr>(var1),
                                RelationExpr::OperatorType::Less,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var1)));
+                               make_unique<BaseMathExpr>(var1));
 
-            RelationExpr expr2(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr2(make_unique<BaseMathExpr>(var1),
                                RelationExpr::OperatorType::Less,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                               make_unique<BaseMathExpr>(var2));
 
-            RelationExpr expr3(make_unique<BaseMathExpr>(make_unique<Variable>(var2)),
+            RelationExpr expr3(make_unique<BaseMathExpr>(var2),
                                RelationExpr::OperatorType::Less,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                               make_unique<BaseMathExpr>(var2));
 
-            RelationExpr expr4(make_unique<BaseMathExpr>(make_unique<Variable>(var2)),
+            RelationExpr expr4(make_unique<BaseMathExpr>(var2),
                                RelationExpr::OperatorType::Less,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var1)));
+                               make_unique<BaseMathExpr>(var1));
 
             BOOST_CHECK_EQUAL(static_cast<bool>(expr1.calculate()), false);
             BOOST_CHECK_EQUAL(static_cast<bool>(expr2.calculate()), true);
@@ -173,17 +173,17 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             Variable var1 = Variable({1, 1});
             Variable var2 = Variable({2, 2});
 
-            RelationExpr expr1(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr1(make_unique<BaseMathExpr>(var1),
                                RelationExpr::OperatorType::Less,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var1)));
+                               make_unique<BaseMathExpr>(var1));
 
-            RelationExpr expr2(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr2(make_unique<BaseMathExpr>(var1),
                                RelationExpr::OperatorType::Less,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                               make_unique<BaseMathExpr>(var2));
 
-            RelationExpr expr3(make_unique<BaseMathExpr>(make_unique<Variable>(var2)),
+            RelationExpr expr3(make_unique<BaseMathExpr>(var2),
                                RelationExpr::OperatorType::Less,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                               make_unique<BaseMathExpr>(var2));
 
             Variable temp;
             BOOST_CHECK_THROW(temp=expr1.calculate(), vecc::MathException);
@@ -195,21 +195,21 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             Variable var1 = Variable({1});
             Variable var2 = Variable({2});
 
-            RelationExpr expr1(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr1(make_unique<BaseMathExpr>(var1),
                                RelationExpr::OperatorType::LessOrEqual,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var1)));
+                               make_unique<BaseMathExpr>(var1));
 
-            RelationExpr expr2(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr2(make_unique<BaseMathExpr>(var1),
                                RelationExpr::OperatorType::LessOrEqual,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                               make_unique<BaseMathExpr>(var2));
 
-            RelationExpr expr3(make_unique<BaseMathExpr>(make_unique<Variable>(var2)),
+            RelationExpr expr3(make_unique<BaseMathExpr>(var2),
                                RelationExpr::OperatorType::LessOrEqual,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                               make_unique<BaseMathExpr>(var2));
 
-            RelationExpr expr4(make_unique<BaseMathExpr>(make_unique<Variable>(var2)),
+            RelationExpr expr4(make_unique<BaseMathExpr>(var2),
                                RelationExpr::OperatorType::LessOrEqual,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var1)));
+                               make_unique<BaseMathExpr>(var1));
 
 
             BOOST_CHECK_EQUAL(static_cast<bool>(expr1.calculate()), true);
@@ -222,17 +222,17 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             Variable var1 = Variable({1, 1});
             Variable var2 = Variable({2, 2});
 
-            RelationExpr expr1(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr1(make_unique<BaseMathExpr>(var1),
                                RelationExpr::OperatorType::LessOrEqual,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var1)));
+                               make_unique<BaseMathExpr>(var1));
 
-            RelationExpr expr2(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
+            RelationExpr expr2(make_unique<BaseMathExpr>(var1),
                                RelationExpr::OperatorType::LessOrEqual,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                               make_unique<BaseMathExpr>(var2));
 
-            RelationExpr expr3(make_unique<BaseMathExpr>(make_unique<Variable>(var2)),
+            RelationExpr expr3(make_unique<BaseMathExpr>(var2),
                                RelationExpr::OperatorType::LessOrEqual,
-                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
+                               make_unique<BaseMathExpr>(var2));
 
             Variable temp;
             BOOST_CHECK_THROW(temp=expr1.calculate(), vecc::MathException);

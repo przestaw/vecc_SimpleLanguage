@@ -21,9 +21,7 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
         BOOST_AUTO_TEST_CASE(GivenMathExpr_ValueIsCorrect) {
             Variable var = Variable({1, 2, 3});
-            unique_ptr<Variable> variable =
-                    make_unique<Variable>(var);
-            OrLogicExpr expr(make_unique<BaseMathExpr>(move(variable)));
+             OrLogicExpr expr(make_unique<BaseMathExpr>(var));
 
             BOOST_CHECK(static_cast<bool>(expr.calculate() == var));
         }
@@ -35,13 +33,8 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             BOOST_REQUIRE_EQUAL(true, static_cast<bool>(trueVar));
             BOOST_REQUIRE_EQUAL(false, static_cast<bool>(falseVar));
 
-            unique_ptr<Variable> truePtr =
-                    make_unique<Variable>(trueVar);
-            OrLogicExpr expr(make_unique<BaseMathExpr>(move(truePtr)));
-
-            unique_ptr<Variable> falsePtr =
-                    make_unique<Variable>(falseVar);
-            expr.addOperand(make_unique<BaseMathExpr>(move(falsePtr)));
+            OrLogicExpr expr(make_unique<BaseMathExpr>(trueVar));
+            expr.addOperand(make_unique<BaseMathExpr>(falseVar));
 
             BOOST_CHECK_EQUAL(true, static_cast<bool>(expr.calculate()));
         }
@@ -53,13 +46,8 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             BOOST_REQUIRE_EQUAL(false, static_cast<bool>(falseVar1));
             BOOST_REQUIRE_EQUAL(false, static_cast<bool>(falseVar2));
 
-            unique_ptr<Variable> ptr1 =
-                    make_unique<Variable>(falseVar1);
-            OrLogicExpr expr(make_unique<BaseMathExpr>(move(ptr1)));
-
-            unique_ptr<Variable> ptr2 =
-                    make_unique<Variable>(falseVar2);
-            expr.addOperand(make_unique<BaseMathExpr>(move(ptr2)));
+            OrLogicExpr expr(make_unique<BaseMathExpr>(falseVar1));
+            expr.addOperand(make_unique<BaseMathExpr>(falseVar2));
 
             BOOST_CHECK_EQUAL(false, static_cast<bool>(expr.calculate()));
         }
@@ -71,13 +59,8 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             BOOST_REQUIRE_EQUAL(true, static_cast<bool>(trueVar1));
             BOOST_REQUIRE_EQUAL(true, static_cast<bool>(trueVar2));
 
-            unique_ptr<Variable> ptr1 =
-                    make_unique<Variable>(trueVar1);
-            OrLogicExpr expr(make_unique<BaseMathExpr>(move(ptr1)));
-
-            unique_ptr<Variable> ptr2 =
-                    make_unique<Variable>(trueVar2);
-            expr.addOperand(make_unique<BaseMathExpr>(move(ptr2)));
+            OrLogicExpr expr(make_unique<BaseMathExpr>(trueVar1));
+            expr.addOperand(make_unique<BaseMathExpr>(trueVar2));
 
             BOOST_CHECK_EQUAL(true, static_cast<bool>(expr.calculate()));
         }
@@ -91,32 +74,17 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             BOOST_REQUIRE_EQUAL(true, static_cast<bool>(trueVar2));
             BOOST_REQUIRE_EQUAL(false, static_cast<bool>(falseVar1));
 
-            unique_ptr<Variable> ptr1 =
-                    make_unique<Variable>(trueVar1);
-            unique_ptr<Variable> ptr3 =
-                    make_unique<Variable>(falseVar1);
-            unique_ptr<Variable> ptr2 =
-                    make_unique<Variable>(trueVar2);
+            OrLogicExpr expr1(make_unique<BaseMathExpr>(trueVar1));
+            expr1.addOperand(make_unique<BaseMathExpr>(trueVar2));
+            expr1.addOperand(make_unique<BaseMathExpr>(falseVar1));
 
-            OrLogicExpr expr1(make_unique<BaseMathExpr>(move(ptr1)));
-            expr1.addOperand(make_unique<BaseMathExpr>(move(ptr2)));
-            expr1.addOperand(make_unique<BaseMathExpr>(move(ptr3)));
+            OrLogicExpr expr2(make_unique<BaseMathExpr>(trueVar2));
+            expr2.addOperand(make_unique<BaseMathExpr>(falseVar1));
+            expr2.addOperand(make_unique<BaseMathExpr>(trueVar1));
 
-            ptr1 = make_unique<Variable>(trueVar1);
-            ptr3 = make_unique<Variable>(falseVar1);
-            ptr2 = make_unique<Variable>(trueVar2);
-
-            OrLogicExpr expr2(make_unique<BaseMathExpr>(move(ptr3)));
-            expr2.addOperand(make_unique<BaseMathExpr>(move(ptr2)));
-            expr2.addOperand(make_unique<BaseMathExpr>(move(ptr1)));
-
-            ptr1 = make_unique<Variable>(trueVar1);
-            ptr3 = make_unique<Variable>(falseVar1);
-            ptr2 = make_unique<Variable>(trueVar2);
-
-            OrLogicExpr expr3(make_unique<BaseMathExpr>(move(ptr2)));
-            expr3.addOperand(make_unique<BaseMathExpr>(move(ptr3)));
-            expr3.addOperand(make_unique<BaseMathExpr>(move(ptr1)));
+            OrLogicExpr expr3(make_unique<BaseMathExpr>(falseVar1));
+            expr3.addOperand(make_unique<BaseMathExpr>(trueVar2));
+            expr3.addOperand(make_unique<BaseMathExpr>(trueVar1));
 
             BOOST_CHECK_EQUAL(true, static_cast<bool>(expr1.calculate()));
             BOOST_CHECK_EQUAL(true, static_cast<bool>(expr2.calculate()));
@@ -132,32 +100,17 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             BOOST_REQUIRE_EQUAL(false, static_cast<bool>(falseVar1));
             BOOST_REQUIRE_EQUAL(false, static_cast<bool>(falseVar2));
 
-            unique_ptr<Variable> ptr1 =
-                    make_unique<Variable>(trueVar1);
-            unique_ptr<Variable> ptr3 =
-                    make_unique<Variable>(falseVar2);
-            unique_ptr<Variable> ptr2 =
-                    make_unique<Variable>(falseVar1);
+            OrLogicExpr expr1(make_unique<BaseMathExpr>(trueVar1));
+            expr1.addOperand(make_unique<BaseMathExpr>(falseVar1));
+            expr1.addOperand(make_unique<BaseMathExpr>(falseVar2));
 
-            OrLogicExpr expr1(make_unique<BaseMathExpr>(move(ptr1)));
-            expr1.addOperand(make_unique<BaseMathExpr>(move(ptr2)));
-            expr1.addOperand(make_unique<BaseMathExpr>(move(ptr3)));
+            OrLogicExpr expr2(make_unique<BaseMathExpr>(falseVar2));
+            expr2.addOperand(make_unique<BaseMathExpr>(falseVar1));
+            expr2.addOperand(make_unique<BaseMathExpr>(trueVar1));
 
-            ptr1 = make_unique<Variable>(trueVar1);
-            ptr2 = make_unique<Variable>(falseVar1);
-            ptr3 = make_unique<Variable>(falseVar2);
-
-            OrLogicExpr expr2(make_unique<BaseMathExpr>(move(ptr3)));
-            expr2.addOperand(make_unique<BaseMathExpr>(move(ptr2)));
-            expr2.addOperand(make_unique<BaseMathExpr>(move(ptr1)));
-
-            ptr1 = make_unique<Variable>(trueVar1);
-            ptr2 = make_unique<Variable>(falseVar1);
-            ptr3 = make_unique<Variable>(falseVar2);
-
-            OrLogicExpr expr3(make_unique<BaseMathExpr>(move(ptr2)));
-            expr3.addOperand(make_unique<BaseMathExpr>(move(ptr3)));
-            expr3.addOperand(make_unique<BaseMathExpr>(move(ptr1)));
+            OrLogicExpr expr3(make_unique<BaseMathExpr>(falseVar1));
+            expr3.addOperand(make_unique<BaseMathExpr>(falseVar2));
+            expr3.addOperand(make_unique<BaseMathExpr>(trueVar1));
 
             BOOST_CHECK_EQUAL(true, static_cast<bool>(expr1.calculate()));
             BOOST_CHECK_EQUAL(true, static_cast<bool>(expr2.calculate()));
@@ -173,32 +126,17 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             BOOST_REQUIRE_EQUAL(false, static_cast<bool>(falseVar2));
             BOOST_REQUIRE_EQUAL(false, static_cast<bool>(falseVar3));
 
-            unique_ptr<Variable> ptr1 =
-                    make_unique<Variable>(falseVar1);
-            unique_ptr<Variable> ptr2 =
-                    make_unique<Variable>(falseVar2);
-            unique_ptr<Variable> ptr3 =
-                    make_unique<Variable>(falseVar3);
+            OrLogicExpr expr1(make_unique<BaseMathExpr>(falseVar1));
+            expr1.addOperand(make_unique<BaseMathExpr>(falseVar2));
+            expr1.addOperand(make_unique<BaseMathExpr>(falseVar3));
 
-            OrLogicExpr expr1(make_unique<BaseMathExpr>(move(ptr1)));
-            expr1.addOperand(make_unique<BaseMathExpr>(move(ptr2)));
-            expr1.addOperand(make_unique<BaseMathExpr>(move(ptr3)));
+            OrLogicExpr expr2(make_unique<BaseMathExpr>(falseVar3));
+            expr2.addOperand(make_unique<BaseMathExpr>(falseVar2));
+            expr2.addOperand(make_unique<BaseMathExpr>(falseVar1));
 
-            ptr1 = make_unique<Variable>(falseVar1);
-            ptr2 = make_unique<Variable>(falseVar2);
-            ptr3 = make_unique<Variable>(falseVar3);
-
-            OrLogicExpr expr2(make_unique<BaseMathExpr>(move(ptr3)));
-            expr2.addOperand(make_unique<BaseMathExpr>(move(ptr2)));
-            expr2.addOperand(make_unique<BaseMathExpr>(move(ptr1)));
-
-            ptr1 = make_unique<Variable>(falseVar1);
-            ptr2 = make_unique<Variable>(falseVar2);
-            ptr3 = make_unique<Variable>(falseVar3);
-
-            OrLogicExpr expr3(make_unique<BaseMathExpr>(move(ptr2)));
-            expr3.addOperand(make_unique<BaseMathExpr>(move(ptr3)));
-            expr3.addOperand(make_unique<BaseMathExpr>(move(ptr1)));
+            OrLogicExpr expr3(make_unique<BaseMathExpr>(falseVar2));
+            expr3.addOperand(make_unique<BaseMathExpr>(falseVar3));
+            expr3.addOperand(make_unique<BaseMathExpr>(falseVar1));
 
             BOOST_CHECK_EQUAL(false, static_cast<bool>(expr1.calculate()));
             BOOST_CHECK_EQUAL(false, static_cast<bool>(expr2.calculate()));
@@ -218,25 +156,11 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             BOOST_REQUIRE_EQUAL(true, static_cast<bool>(trueVar4));
             BOOST_REQUIRE_EQUAL(true, static_cast<bool>(trueVar5));
 
-            unique_ptr<Variable> ptr1 =
-                    make_unique<Variable>(falseVar1);
-            OrLogicExpr expr(make_unique<BaseMathExpr>(move(ptr1)));
-
-            unique_ptr<Variable> ptr4 =
-                    make_unique<Variable>(trueVar4);
-            expr.addOperand(make_unique<BaseMathExpr>(move(ptr4)));
-
-            unique_ptr<Variable> ptr2 =
-                    make_unique<Variable>(falseVar2);
-            expr.addOperand(make_unique<BaseMathExpr>(move(ptr2)));
-
-            unique_ptr<Variable> ptr3 =
-                    make_unique<Variable>(falseVar3);
-            expr.addOperand(make_unique<BaseMathExpr>(move(ptr3)));
-
-            unique_ptr<Variable> ptr5 =
-                    make_unique<Variable>(trueVar5);
-            expr.addOperand(make_unique<BaseMathExpr>(move(ptr5)));
+            OrLogicExpr expr(make_unique<BaseMathExpr>(falseVar1));
+            expr.addOperand(make_unique<BaseMathExpr>(trueVar4));
+            expr.addOperand(make_unique<BaseMathExpr>(falseVar2));
+            expr.addOperand(make_unique<BaseMathExpr>(falseVar3));
+            expr.addOperand(make_unique<BaseMathExpr>(trueVar5));
 
             BOOST_CHECK_EQUAL(true, static_cast<bool>(expr.calculate()));
         }
@@ -254,25 +178,11 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             BOOST_REQUIRE_EQUAL(true, static_cast<bool>(trueVar1));
             BOOST_REQUIRE_EQUAL(false, static_cast<bool>(falseVar4));
 
-            unique_ptr<Variable> ptr1 =
-                    make_unique<Variable>(falseVar1);
-            OrLogicExpr expr(make_unique<BaseMathExpr>(move(ptr1)));
-
-            unique_ptr<Variable> ptr2 =
-                    make_unique<Variable>(falseVar2);
-            expr.addOperand(make_unique<BaseMathExpr>(move(ptr2)));
-
-            unique_ptr<Variable> ptr3 =
-                    make_unique<Variable>(falseVar3);
-            expr.addOperand(make_unique<BaseMathExpr>(move(ptr3)));
-
-            unique_ptr<Variable> ptr4 =
-                    make_unique<Variable>(trueVar1);
-            expr.addOperand(make_unique<BaseMathExpr>(move(ptr4)));
-
-            unique_ptr<Variable> ptr5 =
-                    make_unique<Variable>(falseVar4);
-            expr.addOperand(make_unique<BaseMathExpr>(move(ptr5)));
+            OrLogicExpr expr(make_unique<BaseMathExpr>(falseVar1));
+            expr.addOperand(make_unique<BaseMathExpr>(falseVar2));
+            expr.addOperand(make_unique<BaseMathExpr>(falseVar3));
+            expr.addOperand(make_unique<BaseMathExpr>(trueVar1));
+            expr.addOperand(make_unique<BaseMathExpr>(falseVar4));
 
             BOOST_CHECK_EQUAL(true, static_cast<bool>(expr.calculate()));
         }
@@ -290,25 +200,11 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             BOOST_REQUIRE_EQUAL(false, static_cast<bool>(falseVar4));
             BOOST_REQUIRE_EQUAL(false, static_cast<bool>(falseVar5));
 
-            unique_ptr<Variable> ptr1 =
-                    make_unique<Variable>(falseVar1);
-            OrLogicExpr expr(make_unique<BaseMathExpr>(move(ptr1)));
-
-            unique_ptr<Variable> ptr2 =
-                    make_unique<Variable>(falseVar2);
-            expr.addOperand(make_unique<BaseMathExpr>(move(ptr2)));
-
-            unique_ptr<Variable> ptr3 =
-                    make_unique<Variable>(falseVar3);
-            expr.addOperand(make_unique<BaseMathExpr>(move(ptr3)));
-
-            unique_ptr<Variable> ptr4 =
-                    make_unique<Variable>(falseVar4);
-            expr.addOperand(make_unique<BaseMathExpr>(move(ptr4)));
-
-            unique_ptr<Variable> ptr5 =
-                    make_unique<Variable>(falseVar5);
-            expr.addOperand(make_unique<BaseMathExpr>(move(ptr5)));
+            OrLogicExpr expr(make_unique<BaseMathExpr>(falseVar1));
+            expr.addOperand(make_unique<BaseMathExpr>(falseVar2));
+            expr.addOperand(make_unique<BaseMathExpr>(falseVar3));
+            expr.addOperand(make_unique<BaseMathExpr>(falseVar4));
+            expr.addOperand(make_unique<BaseMathExpr>(falseVar5));
 
             BOOST_CHECK_EQUAL(false, static_cast<bool>(expr.calculate()));
         }
