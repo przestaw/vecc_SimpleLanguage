@@ -18,11 +18,18 @@ Return Function::run(const std::vector<Variable> &parameters) {
         auto paramNameIt = names_.begin();
         auto paramValIt = parameters.begin();
 
+        //save context
+        std::vector<Variable> storedContext = functionBody_.getContext().saveValues();
+
         for (; paramValIt != parameters.end(); ++paramNameIt, ++paramValIt) {
             *(functionBody_.findVariable(*paramNameIt)) = *paramValIt;
         }
+        Return ret = functionBody_.run();
 
-        return functionBody_.run();
+        //restore context
+        functionBody_.getContext().restoreValues(storedContext);
+
+        return ret;
     }
 }
 
