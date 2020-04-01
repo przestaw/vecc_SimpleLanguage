@@ -19,7 +19,7 @@ namespace vecc {
 
         void addVariable(const std::string &identifier);
 
-        std::weak_ptr<Variable> findVariable(const std::string &identifier);
+        std::shared_ptr<Variable> findVariable(const std::string &identifier);
 
         Context &getContext();
 

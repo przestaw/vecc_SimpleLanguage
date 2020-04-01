@@ -67,6 +67,12 @@ namespace vecc {
             " has not been defined\nat line: " + function.getTokenPos().toString()) {}
     };
 
+    class UndefinedMain : public Exception {
+    public:
+        explicit UndefinedMain() : Exception(
+                FRED(BOLD("Undefined Function ERROR : \n")) "Function main has not been defined"){}
+    };
+
     class RedefinedFun : public Exception {
     public:
         explicit RedefinedFun(const Token &function) : Exception(

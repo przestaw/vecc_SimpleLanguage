@@ -19,6 +19,9 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules")
 include(CTest)
 enable_testing()
 
+find_package(Boost COMPONENTS program_options unit_test_framework REQUIRED)
+set(EXTERNAL_LIBS "Boost::program_options")
+
 if(CMAKE_BUILD_TYPE EQUAL Release)
     cmake_policy(SET CMP0069 NEW)
     include(CheckIPOSupported)
@@ -53,8 +56,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 
-find_package(Boost COMPONENTS program_options unit_test_framework REQUIRED)
-set(EXTERNAL_LIBS "Boost::program_options")
 include_directories("${PROJECT_SOURCE_DIR}/include" ${BOOST_INCLUDE_DIR})
 
 #Include src and test for library and test-check

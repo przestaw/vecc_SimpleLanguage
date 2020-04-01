@@ -13,9 +13,11 @@ StatementBlock &WhileStatement::getWhileBody() {
 }
 
 Return WhileStatement::run() {
+    Return ret;
+
     while (static_cast<bool>(expression_->calculate())) {
-        whileBody_.run();
+        ret = whileBody_.run();
     }
 
-    return Return();
+    return ret;
 }

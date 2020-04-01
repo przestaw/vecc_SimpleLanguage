@@ -86,7 +86,8 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
                               RelationExpr::OperatorType::Equal,
                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
 
-            BOOST_CHECK_THROW(expr.calculate(), vecc::MathException);
+            Variable temp;
+            BOOST_CHECK_THROW(temp = expr.calculate(), vecc::MathException);
         }
 
         BOOST_AUTO_TEST_CASE(GivenTwoValues_InequalityReturnsCorrectValue) {
@@ -138,8 +139,8 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             RelationExpr expr(make_unique<BaseMathExpr>(make_unique<Variable>(var1)),
                               RelationExpr::OperatorType::NotEqual,
                               make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
-
-            BOOST_CHECK_THROW(expr.calculate(), vecc::MathException);
+            Variable temp;
+            BOOST_CHECK_THROW(temp=expr.calculate(), vecc::MathException);
         }
 
         BOOST_AUTO_TEST_CASE(GivenTwoValues_LessReturnsCorrectValue) {
@@ -184,9 +185,10 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
                                RelationExpr::OperatorType::Less,
                                make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
 
-            BOOST_CHECK_THROW(expr1.calculate(), vecc::MathException);
-            BOOST_CHECK_THROW(expr2.calculate(), vecc::MathException);
-            BOOST_CHECK_THROW(expr3.calculate(), vecc::MathException);
+            Variable temp;
+            BOOST_CHECK_THROW(temp=expr1.calculate(), vecc::MathException);
+            BOOST_CHECK_THROW(temp=expr2.calculate(), vecc::MathException);
+            BOOST_CHECK_THROW(temp=expr3.calculate(), vecc::MathException);
         }
 
         BOOST_AUTO_TEST_CASE(GivenTwoValues_LessOrEqualReturnsCorrectValue) {
@@ -208,6 +210,7 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             RelationExpr expr4(make_unique<BaseMathExpr>(make_unique<Variable>(var2)),
                                RelationExpr::OperatorType::LessOrEqual,
                                make_unique<BaseMathExpr>(make_unique<Variable>(var1)));
+
 
             BOOST_CHECK_EQUAL(static_cast<bool>(expr1.calculate()), true);
             BOOST_CHECK_EQUAL(static_cast<bool>(expr2.calculate()), true);
@@ -231,9 +234,10 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
                                RelationExpr::OperatorType::LessOrEqual,
                                make_unique<BaseMathExpr>(make_unique<Variable>(var2)));
 
-            BOOST_CHECK_THROW(expr1.calculate(), vecc::MathException);
-            BOOST_CHECK_THROW(expr2.calculate(), vecc::MathException);
-            BOOST_CHECK_THROW(expr3.calculate(), vecc::MathException);
+            Variable temp;
+            BOOST_CHECK_THROW(temp=expr1.calculate(), vecc::MathException);
+            BOOST_CHECK_THROW(temp=expr2.calculate(), vecc::MathException);
+            BOOST_CHECK_THROW(temp=expr3.calculate(), vecc::MathException);
         }
 
     BOOST_AUTO_TEST_SUITE_END()

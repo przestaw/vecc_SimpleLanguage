@@ -101,7 +101,8 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             AddExpr expr(make_unique<BaseMathExpr>(move(variable)));
             expr.addOperand(make_unique<BaseMathExpr>(make_unique<Variable>(Variable({2, 2}))),
                             AddExpr::OperatorType::Add);
-            BOOST_CHECK_THROW(expr.calculate(), vecc::MathException);
+            Variable temp;
+            BOOST_CHECK_THROW(temp = expr.calculate(), vecc::MathException);
         }
 
         BOOST_AUTO_TEST_CASE(GivenWrongDimSubstract_Throws) {
@@ -111,7 +112,8 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             AddExpr expr(make_unique<BaseMathExpr>(move(variable)));
             expr.addOperand(make_unique<BaseMathExpr>(make_unique<Variable>(Variable({2, 2}))),
                             AddExpr::OperatorType::Substract);
-            BOOST_CHECK_THROW(expr.calculate(), vecc::MathException);
+            Variable temp;
+            BOOST_CHECK_THROW(temp = expr.calculate(), vecc::MathException);
         }
 
     BOOST_AUTO_TEST_SUITE_END()

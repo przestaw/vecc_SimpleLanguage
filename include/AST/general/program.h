@@ -33,7 +33,7 @@ namespace vecc {
             if(main != functions.end()){
                 main->second->run();
             } else {
-                throw Exception("No Main");
+                throw UndefinedMain();
             }
         }
 

@@ -21,15 +21,8 @@ Return FunctionCallStatement::run() {
     for (auto &&it : arguments_) {
         argVal.push_back(it->calculate());
     }
-    //save context
-    std::vector<Variable> storedContext = function_.getFunctionBody().getContext().saveValues();
 
-    Return ret = function_.run(argVal);
-
-    //restore context
-    function_.getFunctionBody().getContext().restoreValues(storedContext);
-
-    return ret;
+    return function_.run(argVal);
 }
 
 unsigned FunctionCallStatement::size() const {

@@ -11,9 +11,10 @@
 #include <AST/expression/expression.h>
 
 #include <AST/general/function.h>
-#include "scanner/reader.h"
-#include "scanner/scanner.h"
-#include "AST/general/program.h"
+#include <AST/general/program.h>
+#include <scanner/scanner.h>
+#include <scanner/reader.h>
+#include <scanner/token.h>
 
 namespace vecc {
     class Parser {
@@ -41,48 +42,54 @@ namespace vecc {
          * @param ifTrue action if token has been encountered
          * @return true on sucess
          */
-        bool tryToken(Token::Type type, const std::function<void()> &ifTrue = std::function<void()>());
-        
+        inline bool tryToken(const Token::Type &type, const std::function<void()> &ifTrue = std::function<void()>()) {
+            if (scanner_->getToken().getType() == type) {
+                if (ifTrue) {
+                    ifTrue();
+                }
+                scanner_->parseToken();
+                return true;
+            } else {
+                return false;
+            }
+        };
         /**
          * Check if next token is of given type and execute action if so.
          * Throws exception if token has not been encountered
          * @param type expected Token type
          * @param ifTrue action if token has been encountered
          */
-        inline void expectToken(const Token::Type type, const std::function<void()> ifTrue = std::function<void()>()) {
+        inline void expectToken(const Token::Type type, const std::function<void()>& ifTrue = std::function<void()>()) {
             if (!tryToken(type, ifTrue))
                 throw UnexpectedToken(scanner_->getToken(), {type});
-        }
+        };
         
         // Utility function
-        void parseFunctionDef();
-        
-        void parseParameters(Function &def);
-        
-        void parseStatementBlock(StatementBlock &newBlock);
-        
-        Variable parseVectorValue();
+        inline void parseFunctionDef();
+        inline void parseParameters(Function &def);
+        inline void parseStatementBlock(StatementBlock &newBlock);
+        inline Variable parseVectorValue();
         
         // Statements
-        std::unique_ptr<Statement> parseAssignStatement(std::weak_ptr<Variable> variable);
-        std::unique_ptr<Statement> parseInitStatement();
-        std::unique_ptr<Statement> parseIdentifier();
-        std::unique_ptr<Statement> parseFunctionCall(const Token &function);
-        std::unique_ptr<Statement> parseIfStatement();
-        std::unique_ptr<Statement> parseWhileStatement();
-        std::unique_ptr<Statement> parseReturnStatement();
-        std::unique_ptr<Statement> parsePrintStatement();
+        inline std::unique_ptr<Statement> parseAssignStatement(std::weak_ptr<Variable> variable);
+        inline std::unique_ptr<Statement> parseInitStatement();
+        inline std::unique_ptr<Statement> parseIdentifier();
+        inline std::unique_ptr<Statement> parseFunctionCall(const Token &function);
+        inline std::unique_ptr<Statement> parseIfStatement();
+        inline std::unique_ptr<Statement> parseWhileStatement();
+        inline std::unique_ptr<Statement> parseReturnStatement();
+        inline std::unique_ptr<Statement> parsePrintStatement();
         
         // Expressions
-        std::unique_ptr<Expression> parseOrExpression();
-        std::unique_ptr<Expression> parseAndExpression();
-        std::unique_ptr<Expression> parseRelationalExpression();
-        std::unique_ptr<Expression> parseBaseLogicExpression();
-        std::unique_ptr<Expression> parseAdditiveExpression();
-        std::unique_ptr<Expression> parseMultiplyExpression();
-        std::unique_ptr<Expression> parseBaseMathExpression();
-        std::unique_ptr<Expression> parseParentExpression(const bool &unaryMathOp);
-        std::unique_ptr<Expression> parseIdentifierValue(const bool &unaryMathOp);
+        inline std::unique_ptr<Expression> parseOrExpression();
+        inline std::unique_ptr<Expression> parseAndExpression();
+        inline std::unique_ptr<Expression> parseRelationalExpression();
+        inline std::unique_ptr<Expression> parseBaseLogicExpression();
+        inline std::unique_ptr<Expression> parseAdditiveExpression();
+        inline std::unique_ptr<Expression> parseMultiplyExpression();
+        inline std::unique_ptr<Expression> parseBaseMathExpression();
+        inline std::unique_ptr<Expression> parseParentExpression(const bool &unaryMathOp);
+        inline std::unique_ptr<Expression> parseIdentifierValue(const bool &unaryMathOp);
     };
 }
 

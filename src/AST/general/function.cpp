@@ -19,7 +19,7 @@ Return Function::run(const std::vector<Variable> &parameters) {
         auto paramValIt = parameters.begin();
 
         for (; paramValIt != parameters.end(); ++paramNameIt, ++paramValIt) {
-            *(functionBody_.findVariable(*paramNameIt).lock()) = *paramValIt;
+            *(functionBody_.findVariable(*paramNameIt)) = *paramValIt;
         }
 
         return functionBody_.run();

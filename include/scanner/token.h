@@ -78,12 +78,12 @@ namespace vecc {
         [[nodiscard]] std::string toString() const;
 
         // functions connected with Type
-        [[nodiscard]] std::string typeName() const;   //!< description for errors and so
+        [[nodiscard]] std::string typeName() const;    //!< description for errors and so
 
         static Type findKeywordType(const std::string &literal);        //!< for standard literals
         static Type findSymbolType(const char &literal);                //!< for single signs like operators
         static Type checkSecondSecond(const char &first,
-                                      const char &second); //!< for two-symbol operators like ==, returns type::NaT if it's not a two-symbol operator
+                                      const char &second);              //!< for two-symbol operators like ==, returns type::NaT if it's not a two-symbol operator
         static std::string getTypeName(const Type &type);
 
     private:
