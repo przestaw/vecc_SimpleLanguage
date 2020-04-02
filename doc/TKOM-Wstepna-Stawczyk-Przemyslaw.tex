@@ -1,0 +1,238 @@
+% !TeX spellcheck = pl_PL
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+\usepackage[T1]{fontenc} %font encoding ? --> need to clarify that
+\usepackage[polish]{babel}
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+\geometry{margin=1in} % for example, change the margins to 2 inches all round
+
+\usepackage{graphicx} % support the \includegraphics command and options
+\usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{%
+	Techniki Kompilacji - Projekt \\
+	\large Interpreter prostego języka z typem wektorowym
+	}
+\author{Stawczyk Przemysław 293153}
+\date{} % Activate to display a given date or no date (if empty),
+% otherwise the current date is printed 
+
+
+\begin{document}
+
+\maketitle
+
+%\begin{abstract}
+
+%\end{abstract}
+
+\section{Opis Projektu}
+Projekt zakłada wykonanie interpretera prostego języka z obsługą wbudowanego typu \textsl{wektora} o \textsl{dim = \{2, 3\}}. Język ten ma obsługiwać : zmienne z zasięgiem, instrukcje wykonywane na żądanie \textsl{funkcje}, instrukcje wykonywane nie zawsze \textsl{warunkowe}, wyrażenia matematyczne oraz operatory wraz z priorytetami.
+\subsection{Ogólne założenia}
+\begin{itemize}
+	\item 
+		Wartości liczbowe są reprezentowane przez liczby całkowite.
+	\item
+		Obsługiwane są typy : 
+		\begin{itemize}
+			\item 
+				Typ liczbowy \textsl{skalar}.
+			\item
+				Typ wektorowy \textsl{vec} o \textsl{dim = \{2,3\}}\\ np. \textsl{vec(1,2), vec(4,5,6)}.
+		\end{itemize}
+	\item
+		Na typach liczbowych można definiować wyrażenia arytmetyczne za pomocą operatorów: \textsl{+ - * / ( )} z uwzględnieniem ich priorytetów.
+	\item
+		Wykonywanie operacji na wektorach : iloczynu skalarnego oraz wektorowego. \textsl{z użyciem wbudowanych funkcji}
+	\item
+		Na typach \textsl{vec} i liczbowych można użyć operatorów przyrównania \textsl{== !=} oraz łączyć w wyrażenia za pomocą \textsl{|| \&\& ( )}.
+	\item
+		Możliwy jest dostęp indeksowy do zawartości zmiennej np \textsl{ zmienna[1]} daje dostęp do wartości 2 wymiaru wektora. 
+	\item
+		Można definiować instrukcje warunkowe za pomocą konstrukcji \textsl{if()} oraz \textsl{else}.
+	\item
+		Można tworzyć pętle korzystając z konstrukcji \textsl{while()}.
+	\item
+		Można definiować funkcje z użycie słowa kluczowego \textsl{fun}.
+	\item
+		Zmienne są przekazywane do funkcji przez referencje.
+	\item
+		Program zaczyna wykonanie od bezparametrycznej funkcji \textsl{main()}
+	\item 
+		Wartości logiczne sa reprezentowane przez liczby gdzie 0 = fałsz, !0 = prawda. Każdy wektor niezerowy jest ewaluowany do prawdy.
+	\item
+		Język wspierać ma operację \textsl{print(...)} przyjmująca oprócz typów numerycznych stałe tekstowe \textsl{[w cudzysłowach " "]} istniejące wyłącznie na potrzeby \textsl{print}.
+\end{itemize}
+\subsection{Funkcje Biblioteczne}
+Funkcje biblioteczne miały być ładowane przed właściwym programem.
+\begin{itemize}
+	\item fun \textbf{product3}(vec1, vec2) - \textit{iloczyn wektorowy wektorów wymiaru 3}
+	\item fun \textbf{product2}(vec1, vec2) - \textit{iloczyn wektorowy wektorów wymiaru 2}
+	\item fun \textbf{scalar3}(vec1, vec2) - \textit{iloczyn skalarny wektorów wymiaru 3}
+	\item fun \textbf{scalar2}(vec1, vec2) - \textit{iloczyn skalarny wektorów wymiaru 2}
+\end{itemize}
+
+\section{Przykłady}
+
+\paragraph{Przykład 1 funkcja z rekurencją}
+\begin{verbatim}
+fun licz(a) {
+    a = a * 2;
+    if (a < 10) {
+        fun(a);
+    }
+    return a;
+}  				
+
+fun main() {
+    if(11){
+        print(fun(2));
+    }
+}					
+\end{verbatim}
+
+\paragraph{Przykład 2 funkcje biblioteczne}
+\begin{verbatim}
+fun main() {
+    var a = vec(1,2);
+    var b = vec(3,4);
+    print("a = ", a);
+    print("b = ", b);
+    print("a + b = ", a+b);
+    print("a * b = ", scalar2(a, b));
+    print("a o b = ", product2(a, b));
+    print("2 * a = ", 2*a);
+    print("a * 2 = ", a*2);
+}   
+\end{verbatim}
+
+\paragraph{Przykład 3 zmienne}
+\begin{verbatim}
+fun printAndRet(a) {
+    print(a);
+    return a+1;
+}
+
+fun main() {
+    var a = 0;
+    if(a == 0) {
+        print("a");
+        print(a);
+    }
+
+    print(vec(1,2));
+    print(vec(1,2,3));
+
+    var b = a;
+    while(b < 10) {
+        b = b + 1;
+    }
+    print("b = ", b);
+
+    fun(1);
+    fun(fun(2));
+}   
+\end{verbatim}
+
+\paragraph{Product3}
+\begin{verbatim}
+fun product3(vec1, vec2) {
+    var res=vec(0,0,0);
+    res[0]=vec1[1]*vec2[2] - vec1[2]*vec2[1];
+    res[1]=vec1[2]*vec2[0] - vec1[0]*vec2[2];
+    res[2]=vec1[0]*vec2[1] - vec1[1]*vec2[0];
+    return res;
+}
+\end{verbatim}
+
+\section{Opis Struktury Języka}
+
+\textsl{\textbf{program} = \{ functionDef \} ;\\
+\textbf{functionDef} = ''fun'' identifier parameters statementBlock ;\\
+\textbf{parameters} = ''('' [ identifier \{ '','' identifier \} ] '')'' ;\\
+\\
+\textbf{statementBlock} = ''\{'' \{ initStatement | assignStatement | returnStatement |
+ifStatement | whileStatement | functionCallStatement |  printStatement | statementBlock \} ''\}'' ;\\
+\textbf{returnStatement} = ''return'' expression '';'' ;\\
+\\
+\textbf{initStatement} = ''var'' identifier [ ''='' expression ] '';'' ;\\
+\textbf{assignStatement} = variable ''='' expression '';'' ;\\
+\textbf{ifStatement} = ''if'' ''('' expression '')'' statementBlock [ ''else'' statementBlock ] ;\\
+\textbf{whileStatement} = ''while'' ''('' expression '')'' statementBlock ;\\
+\textbf{functionCallStatement} =  functionCall '';''\\
+\textbf{functionCall} = identifier arguments ;\\
+\textbf{arguments} = ''('' [ expression \{ '','' expression \} ] '')'' ;\\
+\\
+\textbf{printStatement} = ''print'' ''('' (charString | expression) \{'','' (charString | expression)\} '')'' '';'';\\
+\\
+\textbf{parentExpr} = ''('' expression '')'' ;\\
+\textbf{expression} = andExpr \{ orOp andExpr \} ;\\
+\textbf{andExpr} = relationalExpr \{ andOp relationalExpr \} ;\\
+\textbf{relationalExpr} = baseLogicExpr [ relationOp baseLogicExpr ] ;\\
+\textbf{baseLogicExpr} = [ unaryNegation ] additiveExpr ;\\
+\\
+\textbf{additiveExpr} = multiplyExpr \{ additiveOp multiplyExpr \} ;\\
+\textbf{multiplyExpr} = baseMathExpr \{ multiplyOp baseMathExpr \} ;\\
+\textbf{baseMathExpr} = [unaryMinus ] (value | parentExpr) ;\\
+\\
+\textbf{value} = numberString | vectorValue | variable | functionCall ;\\
+\\
+\textbf{additiveOp} = ''+'' | ''-­'' ;\\
+\textbf{multiplyOp} = ''*'' | ''/'' | ''\%'' ;\\
+\textbf{orOp} = ''or'' ;\\
+\textbf{andOp} = ''and'' ;\\
+\textbf{unaryMinus} = ''-'' ;\\
+\textbf{unaryNegation} = ''!'' ;\\
+\textbf{relationOp} = ''=='' | ''!='' | ''<'' | ''>'' | ''<='' | ''>='' ;\\
+\\
+\textbf{identifier} = letter \{ letter | digit | underscore \} ;\\
+\textbf{variable} = identifier [ index ] ;\\
+\textbf{index} = ''['' numberString '']'' ;\\
+\\
+\textbf{vectorValue} = ''vec'' ''('' numberString '','' numberString ['','' numberString] '')'' ;\\ 
+\textbf{numberString} = digit \{ digit \} ;\\
+\textbf{charString} = '''' \{ allCharacters – '''' \} '''' ;\\
+\\
+\textbf{digit} = ''0''..''9'';\\
+\textbf{underscore} = ''\_'';\\
+\textbf{letter} = ''a''..''z'' | ''A''..''Z'' ;\\
+\textbf{allCharacters} = ? all visible characters ? ;\\
+}
+\section{Założenia Implementacyjne}
+\subsection{Produkt Końcowy}
+Finalny program ma być konsolowa aplikacja uruchamianą wraz z parametrem reprezentującym ścieżkę do pliku do interpretacji. Wynik działania skryptu będzie wypisywane na standardowe wyjście \textsl{stdout}. W przypadku błędów kompilacji lub wykonania będą one wypisywane na standardowe wyjście błędów \textsl{stderr}. Umożliwi to łatwe przekierowanie poszczególnych wyjść do pliku/innej konsoli etc.
+\subsection{Struktura i Narzędzia}
+Projekt miałby zostać zaimplementowany w języku \textit{C++} z użyciem biblioteki \textit{boost} do testów jednostkowych \textit{boost::unit\_test} oraz parsowania argumentów \textit{boost::program\_options}. Całość korzystać ma z narzędzia \textit{CMake} do zarządzania procesem budowania.
+\paragraph{}
+Program miałby składać się z następujących modułów : 
+\begin{itemize}
+	\item analizator leksykalny
+	\item analizator składniowy
+	\item interpreter
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,13 @@
+fun licz(a) {
+    a = a * 2;
+    if (a < 10) {
+        fun(a);
+    }
+    return a;
+}
+
+fun main() {
+    if(11){
+        print(fun(2));
+    }
+}

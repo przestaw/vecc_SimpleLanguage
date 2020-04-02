@@ -1,0 +1,3 @@
+file(GLOB SCANNER_SRC "${PROJECT_SOURCE_DIR}/src/scanner/*.cpp")
+
+set(LIB_SRC ${LIB_SRC} ${SCANNER_SRC} PARENT_SCOPE)
