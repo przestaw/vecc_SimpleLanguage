@@ -44,7 +44,7 @@ namespace vecc {
 
         [[nodiscard]] inline std::string toString() const {
             return BOLD("line number : ") + std::to_string(lineNo) + ", " BOLD("position : ") +
-                   std::to_string(symbolNo) + (namedSource ? BOLD("\nin file : ") + sourceName : "");
+                   std::to_string(symbolNo) + (namedSource ? BOLD("\n\tin file : ") + sourceName : "");
         }
 
         inline std::ostream &operator<<(std::ostream &os) {

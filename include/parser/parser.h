@@ -19,9 +19,9 @@
 namespace vecc {
     class Parser {
     public:
-        explicit Parser(std::ostream &out = std::cout);
+        explicit Parser(const LogLevel &logLevel = LogLevel::NoLog, std::ostream &out = std::cout);
         
-        explicit Parser(std::unique_ptr<Reader> source, std::ostream &out = std::cout);
+        explicit Parser(std::unique_ptr<Reader> source, const LogLevel &logLevel = LogLevel::NoLog, std::ostream &out = std::cout);
         
         void setSource(std::unique_ptr<Reader> source);
         
@@ -30,6 +30,7 @@ namespace vecc {
         std::unique_ptr<Program> getProgram();
     
     private:
+        LogLevel logLevel_;
         std::ostream &out_;
         std::unique_ptr<Scanner> scanner_;
         std::unique_ptr<Program> currentProgram;

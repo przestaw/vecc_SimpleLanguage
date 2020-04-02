@@ -28,10 +28,10 @@ namespace vecc {
             functions.insert({function->getIdentifier(), std::move(function)});
         }
 
-        void run() {
+        Return run() {
             auto main = functions.find("main");
             if(main != functions.end()){
-                main->second->run();
+                return main->second->run();
             } else {
                 throw UndefinedMain();
             }

@@ -19,12 +19,12 @@
 
 using namespace vecc;
 
-Parser::Parser(std::ostream &out)
-        : out_(out), scanner_(std::make_unique<Scanner>(nullptr)),
+Parser::Parser(const LogLevel &logLevel, std::ostream &out)
+        : logLevel_(logLevel), out_(out), scanner_(std::make_unique<Scanner>(nullptr, logLevel, out)),
           currentProgram(std::make_unique<Program>()), currentContext(nullptr) {}
 
-Parser::Parser(std::unique_ptr<Reader> source, std::ostream &out)
-        : out_(out), scanner_(std::make_unique<Scanner>(std::move(source))),
+Parser::Parser(std::unique_ptr<Reader> source, const LogLevel &logLevel, std::ostream &out)
+        : logLevel_(logLevel), out_(out), scanner_(std::make_unique<Scanner>(std::move(source), logLevel, out)),
           currentProgram(std::make_unique<Program>()), currentContext(nullptr) {}
 
 void Parser::setSource(std::unique_ptr<Reader> source) {
@@ -65,6 +65,11 @@ void Parser::parseFunctionDef() {
         currentProgram->addFunction(std::move(function));
 
         parseStatementBlock(funRef->getFunctionBody());
+
+        if(logLevel_ >= LogLevel::CreatedFunctions){
+            out_ << FCYN(BOLD("Function Log : \n")) "Function : "
+            FCYN("" + funToken.getLiteral() + "") " has been created \n";
+        }
     } else {
         throw RedefinedFun(funToken);
     }
@@ -164,7 +169,7 @@ std::unique_ptr<Statement> Parser::parseAssignStatement(std::weak_ptr<Variable> 
             // Is there need for range check?
             val = static_cast<unsigned>(std::stoul(scanner_->getToken().getLiteral()));
         });
-
+        expectToken(Token::Type::BracketClose);
         return std::make_unique<AssignStatement>(*(variable.lock()), val, rValueParse());
     } else {
         // whole var/vec accesss
@@ -494,6 +499,7 @@ std::unique_ptr<Expression> Parser::parseIdentifierValue(const bool &unaryMathOp
                 // Is there need for range check?
                 val = static_cast<unsigned>(std::stoul(scanner_->getToken().getLiteral()));
             });
+            expectToken(Token::Type::BracketClose);
 
             return std::make_unique<BaseMathExpr>(
                     currentContext->findVariable(

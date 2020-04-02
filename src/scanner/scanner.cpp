@@ -7,9 +7,11 @@
 
 using namespace vecc;
 
-Scanner::Scanner() : reader_(nullptr) {}
+Scanner::Scanner(const LogLevel &logLevel, std::ostream &out)
+        : logLevel_(logLevel), reader_(nullptr), out_(out) {}
 
-Scanner::Scanner(std::unique_ptr<Reader> reader) : reader_(std::move(reader)) {}
+Scanner::Scanner(std::unique_ptr<Reader> reader, const LogLevel &logLevel, std::ostream &out)
+        : logLevel_(logLevel), reader_(std::move(reader)), out_(out) {}
 
 bool Scanner::canRead() {
     return static_cast<bool>(reader_);
@@ -18,17 +20,20 @@ bool Scanner::canRead() {
 Token Scanner::parseToken() {
     if (canRead()) {
         currentToken = Token(reader_->getCurrentPos());
-        
+
         tryToken(); // Note:  Handles EOF as first possible case
-        
+
         if (currentToken.getType() != Token::Type::NaT) {
-            //std::cout << currentToken.toString();
+            if (logLevel_ >= LogLevel::ParsedTokens) {
+                out_ << FCYN(BOLD("Token Log : \n")) "Parsed token : " + currentToken.toString() + "\n";
+            }
+
             return currentToken;
         } else {
-            throw vecc::NotAToken(currentToken); // TODO : invalid token
+            throw vecc::NotAToken(currentToken);
         }
     } else {
-        throw vecc::NoInputStream(); // TODO : no reader attached
+        throw vecc::NoInputStream();
     }
 }
 
@@ -76,7 +81,7 @@ void Scanner::tryKeyword() {
 void Scanner::tryCharString() {
     reader_->get(); // consume first ' " '
     std::string buf;
-    
+
     while ((std::isprint(reader_->peek()) || std::isspace(reader_->peek()))
            && reader_->peek() != '"'
            && !reader_->isEoF()) {
@@ -86,7 +91,7 @@ void Scanner::tryCharString() {
             if (reader_->peek() == '"') {
                 // consume escaped ' " '
                 buf.push_back(reader_->get());
-            } else if(reader_->peek() == 'n'){
+            } else if (reader_->peek() == 'n') {
                 reader_->get();
                 buf.push_back('\n');
             } else {
@@ -97,7 +102,7 @@ void Scanner::tryCharString() {
             buf.push_back(reader_->get());
         }
     }
-    
+
     // check for closing ' " '
     if (reader_->peek() == '"') {
         // consume last ' " '
@@ -113,11 +118,11 @@ void Scanner::tryCharString() {
 void Scanner::tryNumberString() {
     std::string buf;
     buf.push_back(reader_->get());
-    
+
     while (std::isdigit(reader_->peek())) {
         buf.push_back(reader_->get());
     }
-    
+
     currentToken.setType(Token::Type::NumberString);
     currentToken.setLiteral(buf);
 }
