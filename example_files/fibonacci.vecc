@@ -1,9 +1,9 @@
 fun fib_rec(n){
     if(n <= 1){
         return 1;
+    } else {
+        return fib_rec(n-1) + fib_rec(n-2);
     }
-    var ret = fib_rec(n-1) + fib_rec(n-2);
-    return ret;
 }
 
 fun fib_it(n){
@@ -21,6 +21,5 @@ fun fib_it(n){
         
         n = n - 1;
     }
-
     return b;
 }

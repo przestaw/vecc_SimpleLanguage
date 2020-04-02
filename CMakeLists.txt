@@ -9,9 +9,8 @@ set(TEST ${PROJECT_NAME}-test)
 set(CHECK ${TEST}-check)
 set(DOC ${PROJECT_NAME}-doc)
 
-file(GLOB LIB_SRC  "src/*.cpp")
-file(GLOB LIB_INC  "include/*.h")
-file(GLOB TEST_SRC "test/*.cpp")
+#file(GLOB LIB_SRC  "src/*.cpp")
+#file(GLOB LIB_INC  "include/*.h")
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules/finders")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules")
@@ -59,10 +58,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}
 include_directories("${PROJECT_SOURCE_DIR}/include" ${BOOST_INCLUDE_DIR})
 
 #Include src and test for library and test-check
-find_package(LATEX)
-if(LATEX_FOUND)
-    add_subdirectory(doc)
-endif()
 add_subdirectory("include")
 add_subdirectory("src")
 add_subdirectory("test")
@@ -77,6 +72,10 @@ add_dependencies(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
 
+find_package(LATEX)
+if(LATEX_FOUND)
+    add_subdirectory(doc)
+endif()
 # "all" target
 if(LATEX_FOUND)
     add_custom_target(build-all DEPENDS ${DOC} ${PROGRAM} ${LIB} ${CHECK} ${TEST})

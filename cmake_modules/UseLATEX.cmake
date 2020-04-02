@@ -117,7 +117,6 @@
 #       INCLUDE_DIRECTORIES provides a list of directories in which LaTeX
 #       should look for input files. It accepts both files relative to the
 #       binary directory and absolute paths.
-#
 
 if(__USE_LATEX_INCLUDED)
     return()
@@ -128,7 +127,7 @@ set(__USE_LATEX_INCLUDED TRUE)
 # Find the location of myself while originally executing.  If you do this
 # inside of a macro, it will recode where the macro was invoked.
 #############################################################################
-set(LATEX_USE_LATEX_LOCATION UseLATEX.cmake
+set(LATEX_USE_LATEX_LOCATION ${CMAKE_CURRENT_LIST_FILE}
         CACHE INTERNAL "Location of UseLATEX.cmake file." FORCE
         )
 
@@ -876,13 +875,13 @@ function(latex_get_output_path var)
         get_filename_component(
                 LATEX_OUTPUT_PATH_FULL "${LATEX_OUTPUT_PATH}" ABSOLUTE
         )
-        if("${LATEX_OUTPUT_PATH_FULL}" STREQUAL "../doc")
+        if("${LATEX_OUTPUT_PATH_FULL}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
             message(SEND_ERROR "You cannot set LATEX_OUTPUT_PATH to the same directory that contains LaTeX input files.")
         else()
             set(latex_output_path "${LATEX_OUTPUT_PATH_FULL}")
         endif()
     else()
-        if("${CMAKE_CURRENT_BINARY_DIR}" STREQUAL "../doc")
+        if("${CMAKE_CURRENT_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
             message(SEND_ERROR "LaTeX files must be built out of source or you must set LATEX_OUTPUT_PATH.")
         else()
             set(latex_output_path "${CMAKE_CURRENT_BINARY_DIR}")
@@ -963,7 +962,7 @@ function(latex_convert_image
         other_files
         )
     set(output_file_list)
-    set(input_dir ../doc)
+    set(input_dir ${CMAKE_CURRENT_SOURCE_DIR})
     latex_get_output_path(output_dir)
 
     latex_get_filename_component(extension "${input_file}" EXT)
@@ -972,7 +971,7 @@ function(latex_convert_image
     latex_get_filename_component(name "${input_file}" NAME_WE)
     set(suggested_name "${name}")
     if(suggested_name MATCHES ".*\\..*")
-        string(REPLACE "../doc" "-" suggested_name "${suggested_name}")
+        string(REPLACE "." "-" suggested_name "${suggested_name}")
     endif()
     if(suggested_name MATCHES ".* .*")
         string(REPLACE " " "-" suggested_name "${suggested_name}")
@@ -1251,7 +1250,7 @@ function(add_latex_targets_internal)
         # that the copied files can be found. It also needs to end with an
         # empty directory so that the standard system directories are included
         # after any specified.
-        set(LATEX_INCLUDE_DIRECTORIES ../doc ${LATEX_INCLUDE_DIRECTORIES} "")
+        set(LATEX_INCLUDE_DIRECTORIES . ${LATEX_INCLUDE_DIRECTORIES} "")
 
         # CMake separates items in a list with a semicolon. Lists of
         # directories on most systems are separated by colons, so we can do a
@@ -1713,7 +1712,7 @@ function(add_latex_targets_internal)
         add_custom_target(_${LATEX_TARGET_NAME} ALL DEPENDS ${LATEX_TARGET_NAME})
     endif()
 
-    set_directory_properties(../doc
+    set_directory_properties(.
             ADDITIONAL_MAKE_CLEAN_FILES "${auxiliary_clean_files}"
             )
 
@@ -1799,7 +1798,7 @@ if(LATEX_BUILD_COMMAND)
     endif()
 
 else()
-    # Must be part of the actual configure (included from GNUtoolchain.cmake).
+    # Must be part of the actual configure (included from CMakeLists.txt).
     latex_setup_variables()
     latex_setup_targets()
 endif()
