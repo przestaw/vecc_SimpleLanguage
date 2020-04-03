@@ -26,6 +26,6 @@ Return PrintStatement::run() {
             buffer << std::get<std::string>(it.value);
         }
     }
-    out_ << buffer.str();
+    out_ << buffer.str() << std::endl;
     return Return(Return::Type::Noting);
 }

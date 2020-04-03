@@ -72,7 +72,7 @@ namespace vecc {
         inline Variable parseVectorValue();
         
         // Statements
-        inline std::unique_ptr<Statement> parseAssignStatement(std::weak_ptr<Variable> variable);
+        inline std::unique_ptr<Statement> parseAssignStatement(const std::shared_ptr<Variable>& variable);
         inline std::unique_ptr<Statement> parseInitStatement();
         inline std::unique_ptr<Statement> parseIdentifier();
         inline std::unique_ptr<Statement> parseFunctionCall(const Token &function);

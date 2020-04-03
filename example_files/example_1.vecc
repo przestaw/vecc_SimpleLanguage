@@ -1,7 +1,7 @@
 fun licz(a) {
     a = a * 2;
     if (a < 80) {
-        print( "licz a = ", a, "\n");
+        print( "licz a = ", a);
         licz(a);
     }
     return a;
@@ -9,6 +9,6 @@ fun licz(a) {
 
 fun main() {
     if(11){
-        print("main : licz(2) = ", licz(2), "\n");
+        print("main : licz(2) = ", licz(2));
     }
 }

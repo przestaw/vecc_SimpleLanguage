@@ -9,9 +9,6 @@ set(TEST ${PROJECT_NAME}-test)
 set(CHECK ${TEST}-check)
 set(DOC ${PROJECT_NAME}-doc)
 
-#file(GLOB LIB_SRC  "src/*.cpp")
-#file(GLOB LIB_INC  "include/*.h")
-
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules/finders")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules")
 
@@ -20,14 +17,6 @@ enable_testing()
 
 find_package(Boost COMPONENTS program_options unit_test_framework REQUIRED)
 set(EXTERNAL_LIBS "Boost::program_options")
-
-if(CMAKE_BUILD_TYPE EQUAL Release)
-    cmake_policy(SET CMP0069 NEW)
-    include(CheckIPOSupported)
-    check_ipo_supported()
-
-    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
-endif()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     # using Clang
@@ -44,6 +33,14 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(CMAKE_CXX_ARCHIVE_FINISH true)
 
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    if(CMAKE_BUILD_TYPE EQUAL Release)
+        cmake_policy(SET CMP0069 NEW)
+        include(CheckIPOSupported)
+        check_ipo_supported()
+
+        set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+    endif()
+
     # using GCC
     set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   -O0 -Og -g -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions -fdevirtualize -fmerge-constants")
@@ -67,7 +64,7 @@ add_library(${LIBRARY} ${LIB_SRC} ${LIB_INC})
 add_dependencies(${LIBRARY} ${CHECK})
 
 #Program executable
-add_executable(${EXECUTABLE} main.cpp)
+add_executable(${EXECUTABLE} src/main.cpp)
 add_dependencies(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
@@ -76,6 +73,7 @@ find_package(LATEX)
 if(LATEX_FOUND)
     add_subdirectory(doc)
 endif()
+
 # "all" target
 if(LATEX_FOUND)
     add_custom_target(build-all DEPENDS ${DOC} ${PROGRAM} ${LIB} ${CHECK} ${TEST})

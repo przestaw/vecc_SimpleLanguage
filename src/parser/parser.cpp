@@ -124,7 +124,8 @@ void Parser::parseStatementBlock(StatementBlock &newBlock) {
                 newBlock.addInstruction(parsePrintStatement());
                 break;
             case Token::Type::CurlyBracketOpen :
-                auto internalBlock = std::make_unique<StatementBlock>();
+                auto internalBlock = std::make_unique<StatementBlock>(currentContext);
+                scanner_->parseToken(); //move to next token
                 parseStatementBlock(*internalBlock);
                 newBlock.addInstruction(std::move(internalBlock));
         }
@@ -135,26 +136,37 @@ void Parser::parseStatementBlock(StatementBlock &newBlock) {
 
 Variable Parser::parseVectorValue() {
     std::vector<int> variables;
-    auto addNumberLiteral = [&]() {
+
+    auto addNumberLiteral = [&](bool minus) {
         //need to convert value to integer
-        variables.push_back(std::stoi(scanner_->getToken().getLiteral()));
+        if(minus){
+            variables.push_back(-std::stoi(scanner_->getToken().getLiteral()));
+        } else {
+            variables.push_back(std::stoi(scanner_->getToken().getLiteral()));
+        }
     };
+
+    auto parseValue = [&](){
+        bool minus = tryToken(Token::Type::Minus);
+        expectToken(Token::Type::NumberString, [&](){ addNumberLiteral(minus);});
+    };
+
     scanner_->parseToken(); // parse token after vec
     expectToken(Token::Type::ParenthesisOpen);
-    expectToken(Token::Type::NumberString, addNumberLiteral);
+    parseValue();
     expectToken(Token::Type::Comma);
-    expectToken(Token::Type::NumberString, addNumberLiteral);
+    parseValue();
     //check if 3 dimensional vector
     //FIXME : could be any dim vector -> while
     if (tryToken(Token::Type::Comma)) {
-        expectToken(Token::Type::NumberString, addNumberLiteral);
+        parseValue();
     }
     expectToken(Token::Type::ParenthesisClose);
 
     return Variable(std::move(variables));
 }
 
-std::unique_ptr<Statement> Parser::parseAssignStatement(std::weak_ptr<Variable> variable) {
+std::unique_ptr<Statement> Parser::parseAssignStatement(const std::shared_ptr<Variable>& variable) {
     auto rValueParse = [&]() {
         expectToken(Token::Type::Assignment);
         std::unique_ptr<Expression> logicExpr(parseOrExpression());
@@ -170,10 +182,10 @@ std::unique_ptr<Statement> Parser::parseAssignStatement(std::weak_ptr<Variable> 
             val = static_cast<unsigned>(std::stoul(scanner_->getToken().getLiteral()));
         });
         expectToken(Token::Type::BracketClose);
-        return std::make_unique<AssignStatement>(*(variable.lock()), val, rValueParse());
+        return std::make_unique<AssignStatement>(*(variable), val, rValueParse());
     } else {
         // whole var/vec accesss
-        return std::make_unique<AssignStatement>(*(variable.lock()), rValueParse());
+        return std::make_unique<AssignStatement>(*(variable), rValueParse());
     }
 }
 
@@ -320,7 +332,7 @@ std::unique_ptr<Expression> Parser::parseOrExpression() {
 
     while (tryToken(Token::Type::Or)) {
         // add operands until other token will appear
-        orExpr->addOperand(parseRelationalExpression());
+        orExpr->addOperand(parseAndExpression());
     }
 
     return orExpr;
@@ -378,8 +390,9 @@ std::unique_ptr<Expression> Parser::parseRelationalExpression() {
 
 std::unique_ptr<Expression> Parser::parseBaseLogicExpression() {
     // return negated if Token: Negation occured
+    bool negated = tryToken(Token::Type::Negation);
     return std::make_unique<BaseLogicExpr>(parseAdditiveExpression(),
-                                           tryToken(Token::Type::Negation));
+                                           negated);
 }
 
 std::unique_ptr<Expression> Parser::parseAdditiveExpression() {
