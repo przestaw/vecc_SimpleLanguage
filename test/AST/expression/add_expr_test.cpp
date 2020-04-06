@@ -7,9 +7,9 @@
 #include <AST/expression/base_math_expr.h>
 #include <AST/expression/additive_expr.h>
 
-using vecc::AddExpr;
-using vecc::BaseMathExpr;
-using vecc::Variable;
+using namespace vecc;
+using namespace vecc::error;
+using namespace vecc::ast;
 
 using std::move;
 using std::unique_ptr;
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             expr.addOperand(make_unique<BaseMathExpr>(make_unique<Variable>(Variable({2, 2}))),
                             AddExpr::OperatorType::Add);
             Variable temp;
-            BOOST_CHECK_THROW(temp = expr.calculate(), vecc::MathException);
+            BOOST_CHECK_THROW(temp = expr.calculate(), MathException);
         }
 
         BOOST_AUTO_TEST_CASE(GivenWrongDimSubstract_Throws) {
@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             expr.addOperand(make_unique<BaseMathExpr>(make_unique<Variable>(Variable({2, 2}))),
                             AddExpr::OperatorType::Substract);
             Variable temp;
-            BOOST_CHECK_THROW(temp = expr.calculate(), vecc::MathException);
+            BOOST_CHECK_THROW(temp = expr.calculate(), MathException);
         }
 
     BOOST_AUTO_TEST_SUITE_END()

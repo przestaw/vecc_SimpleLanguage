@@ -30,10 +30,10 @@ Token Scanner::parseToken() {
 
             return currentToken;
         } else {
-            throw vecc::NotAToken(currentToken);
+            throw error::NotAToken(currentToken);
         }
     } else {
-        throw vecc::NoInputStream();
+        throw error::NoInputStream();
     }
 }
 
@@ -57,7 +57,7 @@ void Scanner::tryToken() {
         tryNumberString();
     } else if (reader_->peek() == '"') {
         tryCharString();
-        // FIXME  : throw if eof before second " ???
+        // FIXME  : throw error::if eof before second " ???
     } else if (isalnum(reader_->peek())) {
         tryKeyword();
         // if not keyword it is Identifier

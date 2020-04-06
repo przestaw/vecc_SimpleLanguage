@@ -10,21 +10,23 @@
 #include "statement_block.h"
 
 namespace vecc {
-    class IfStatement : public Statement {
-    public:
-        explicit IfStatement(std::unique_ptr<Expression> expression);
+    namespace ast {
+        class IfStatement : public Statement {
+        public:
+            explicit IfStatement(std::unique_ptr<Expression> expression);
 
-        StatementBlock &trueBlock();
+            StatementBlock &trueBlock();
 
-        StatementBlock &falseBlock();
+            StatementBlock &falseBlock();
 
-        Return run() override;
+            Return run() override;
 
-    private:
-        std::unique_ptr<Expression> expression_;
-        StatementBlock trueBlock_;
-        StatementBlock falseBlock_;
-    };
+        private:
+            std::unique_ptr<Expression> expression_;
+            StatementBlock trueBlock_;
+            StatementBlock falseBlock_;
+        };
+    }
 }
 
 #endif //VECC_LANG_IF_STMT_H

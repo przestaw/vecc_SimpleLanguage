@@ -8,12 +8,14 @@
 #include <AST/general/return.h>
 
 namespace vecc {
-    class Statement {
-    public:
-        virtual ~Statement() = default;
+    namespace ast {
+        class Statement {
+        public:
+            virtual ~Statement() = default;
 
-        virtual Return run() = 0;
-    };
+            virtual Return run() = 0;
+        };
+    }
 }
 
 #endif //VECC_LANG_STATEMENT_H

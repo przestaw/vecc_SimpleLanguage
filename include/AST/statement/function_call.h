@@ -10,22 +10,24 @@
 #include <AST/expression/expression.h>
 
 namespace vecc {
-    class FunctionCallStatement : public Statement {
-    public:
-        explicit FunctionCallStatement(Function &function);
+    namespace ast {
+        class FunctionCallStatement : public Statement {
+        public:
+            explicit FunctionCallStatement(Function &function);
 
-        void addArgument(std::unique_ptr<Expression> arg);
+            void addArgument(std::unique_ptr<Expression> arg);
 
-        [[nodiscard]] const Function &getFunction() const;
+            [[nodiscard]] const Function &getFunction() const;
 
-        Return run() override;
+            Return run() override;
 
-        [[nodiscard]] unsigned size() const;
+            [[nodiscard]] unsigned size() const;
 
-    private:
-        Function &function_;
-        std::list<std::unique_ptr<Expression>> arguments_;
-    };
+        private:
+            Function &function_;
+            std::list<std::unique_ptr<Expression>> arguments_;
+        };
+    }
 }
 
 #endif //VECC_LANG_FUNCTION_CALL_H

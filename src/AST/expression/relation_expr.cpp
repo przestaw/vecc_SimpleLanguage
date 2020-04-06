@@ -5,6 +5,7 @@
 #include <AST/expression/realtion_expr.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 RelationExpr::RelationExpr(std::unique_ptr<Expression> lVal, const RelationExpr::OperatorType &type,
                            std::unique_ptr<Expression> rVal, const Position &position)

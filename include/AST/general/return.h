@@ -9,20 +9,21 @@
 #include "variable.h"
 
 namespace vecc {
+    namespace ast {
+        struct Return {
+            enum class Type {
+                Noting,
+                Value
+            };
 
-    struct Return {
-        enum class Type {
-            Noting,
-            Value
+            explicit Return(const Type &type = Type::Noting) : type_(type) {}
+
+            explicit Return(const Type &type, Variable variable) : type_(type), variable_(std::move(variable)) {}
+
+            Type type_;
+            Variable variable_;
         };
-
-        explicit Return(const Type &type = Type::Noting) : type_(type) {}
-
-        explicit Return(const Type &type, Variable variable) : type_(type), variable_(std::move(variable)) {}
-
-        Type type_;
-        Variable variable_;
-    };
+    }
 }
 
 #endif //VECC_LANG_RETURN_H

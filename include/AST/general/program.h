@@ -12,34 +12,36 @@
 #include <error/exeception.h>
 
 namespace vecc {
-    class Program {
-    public:
-        Program() = default;
+    namespace ast {
+        class Program {
+        public:
+            Program() = default;
 
-        Function &findFunction(const std::string &identifier) {
-            return *functions.at(identifier);
-        }
-
-        bool existFunction(const std::string &identifier) const {
-            return static_cast<bool>(functions.count(identifier));
-        }
-
-        void addFunction(std::unique_ptr<Function> function) {
-            functions.insert({function->getIdentifier(), std::move(function)});
-        }
-
-        Return run() {
-            auto main = functions.find("main");
-            if(main != functions.end()){
-                return main->second->run();
-            } else {
-                throw UndefinedMain();
+            Function &findFunction(const std::string &identifier) {
+                return *functions.at(identifier);
             }
-        }
 
-    private:
-        std::unordered_map<std::string, std::unique_ptr<Function>> functions;
-    };
+            bool existFunction(const std::string &identifier) const {
+                return static_cast<bool>(functions.count(identifier));
+            }
+
+            void addFunction(std::unique_ptr<Function> function) {
+                functions.insert({function->getIdentifier(), std::move(function)});
+            }
+
+            Return run() {
+                auto main = functions.find("main");
+                if (main != functions.end()) {
+                    return main->second->run();
+                } else {
+                    throw error::UndefinedMain();
+                }
+            }
+
+        private:
+            std::unordered_map<std::string, std::unique_ptr<Function>> functions;
+        };
+    }
 }
 
 #endif //VECC_LANG_PROGRAM_H

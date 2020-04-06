@@ -10,18 +10,20 @@
 #include <AST/statement/statement_block.h>
 
 namespace vecc {
-    class WhileStatement : public Statement {
-    public:
-        explicit WhileStatement(std::unique_ptr<Expression> expression);
+    namespace ast {
+        class WhileStatement : public Statement {
+        public:
+            explicit WhileStatement(std::unique_ptr<Expression> expression);
 
-        StatementBlock &getWhileBody();
+            StatementBlock &getWhileBody();
 
-        Return run() override;
+            Return run() override;
 
-    private:
-        std::unique_ptr<Expression> expression_;
-        StatementBlock whileBody_;
-    };
+        private:
+            std::unique_ptr<Expression> expression_;
+            StatementBlock whileBody_;
+        };
+    }
 }
 
 #endif //VECC_LANG_WHILE_STMT_H

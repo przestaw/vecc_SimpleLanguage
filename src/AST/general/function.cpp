@@ -2,6 +2,7 @@
 #include <error/exeception.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 Function::Function(std::string identifier) : identifier_(std::move(identifier)) {}
 
@@ -12,7 +13,7 @@ void Function::addParameter(const std::string &identifier) {
 
 Return Function::run(const std::vector<Variable> &parameters) {
     if (parameters.size() != names_.size()) {
-        throw Exception("");
+        throw error::Exception("");
     } else {
         // Need to set parameters manually
         auto paramNameIt = names_.begin();

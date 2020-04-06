@@ -6,8 +6,9 @@
 #include <AST/general/variable.h>
 #include <error/exeception.h>
 
-using vecc::Variable;
-using vecc::MathException;
+using namespace vecc;
+using namespace vecc::error;
+using namespace vecc::ast;
 
 BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 

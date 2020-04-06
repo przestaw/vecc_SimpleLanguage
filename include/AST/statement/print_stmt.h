@@ -12,30 +12,32 @@
 #include <AST/statement/statement.h>
 
 namespace vecc {
-    class PrintStatement : public Statement {
-    public:
-        explicit PrintStatement(std::ostream &out = std::cout);
+    namespace ast {
+        class PrintStatement : public Statement {
+        public:
+            explicit PrintStatement(std::ostream &out = std::cout);
 
-        void addExpression(std::unique_ptr<Expression> expression);
+            void addExpression(std::unique_ptr<Expression> expression);
 
-        void addString(std::string string);
+            void addString(std::string string);
 
-        Return run() override;
+            Return run() override;
 
-    private:
-        std::ostream &out_;
+        private:
+            std::ostream &out_;
 
-        struct Printable {
-            explicit Printable(std::unique_ptr<Expression> val) : expression(true), value(std::move(val)) {}
+            struct Printable {
+                explicit Printable(std::unique_ptr<Expression> val) : expression(true), value(std::move(val)) {}
 
-            explicit Printable(std::string val) : expression(false), value(std::move(val)) {}
+                explicit Printable(std::string val) : expression(false), value(std::move(val)) {}
 
-            bool expression;
-            std::variant<std::unique_ptr<Expression>, std::string> value;
+                bool expression;
+                std::variant<std::unique_ptr<Expression>, std::string> value;
+            };
+
+            std::vector<Printable> printables;
         };
-
-        std::vector<Printable> printables;
-    };
+    }
 }
 
 #endif //VECC_LANG_PRINT_STMT_H

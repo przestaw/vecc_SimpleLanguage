@@ -5,6 +5,7 @@
 #include <AST/expression/additive_expr.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 AddExpr::AddExpr(std::unique_ptr<Expression> value) : baseValue(std::move(value)) {}
 

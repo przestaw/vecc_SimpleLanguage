@@ -27,15 +27,15 @@ namespace vecc {
         
         void parse();
         
-        std::unique_ptr<Program> getProgram();
+        std::unique_ptr<ast::Program> getProgram();
     
     private:
         LogLevel logLevel_;
         std::ostream &out_;
         std::unique_ptr<Scanner> scanner_;
-        std::unique_ptr<Program> currentProgram;
-        
-        Context *currentContext = nullptr;
+        std::unique_ptr<ast::Program> currentProgram;
+
+        ast::Context *currentContext = nullptr;
         
         /**
          * Check if next token is of given type and execute action if so
@@ -62,35 +62,35 @@ namespace vecc {
          */
         inline void expectToken(const Token::Type type, const std::function<void()>& ifTrue = std::function<void()>()) {
             if (!tryToken(type, ifTrue))
-                throw UnexpectedToken(scanner_->getToken(), {type});
+                throw error::UnexpectedToken(scanner_->getToken(), {type});
         };
         
         // Utility function
         inline void parseFunctionDef();
-        inline void parseParameters(Function &def);
-        inline void parseStatementBlock(StatementBlock &newBlock);
-        inline Variable parseVectorValue();
+        inline void parseParameters(ast::Function &def);
+        inline void parseStatementBlock(ast::StatementBlock &newBlock);
+        inline ast::Variable parseVectorValue();
         
         // Statements
-        inline std::unique_ptr<Statement> parseAssignStatement(const std::shared_ptr<Variable>& variable);
-        inline std::unique_ptr<Statement> parseInitStatement();
-        inline std::unique_ptr<Statement> parseIdentifier();
-        inline std::unique_ptr<Statement> parseFunctionCall(const Token &function);
-        inline std::unique_ptr<Statement> parseIfStatement();
-        inline std::unique_ptr<Statement> parseWhileStatement();
-        inline std::unique_ptr<Statement> parseReturnStatement();
-        inline std::unique_ptr<Statement> parsePrintStatement();
+        inline std::unique_ptr<ast::Statement> parseAssignStatement(const std::shared_ptr<ast::Variable>& variable);
+        inline std::unique_ptr<ast::Statement> parseInitStatement();
+        inline std::unique_ptr<ast::Statement> parseIdentifier();
+        inline std::unique_ptr<ast::Statement> parseFunctionCall(const Token &function);
+        inline std::unique_ptr<ast::Statement> parseIfStatement();
+        inline std::unique_ptr<ast::Statement> parseWhileStatement();
+        inline std::unique_ptr<ast::Statement> parseReturnStatement();
+        inline std::unique_ptr<ast::Statement> parsePrintStatement();
         
         // Expressions
-        inline std::unique_ptr<Expression> parseOrExpression();
-        inline std::unique_ptr<Expression> parseAndExpression();
-        inline std::unique_ptr<Expression> parseRelationalExpression();
-        inline std::unique_ptr<Expression> parseBaseLogicExpression();
-        inline std::unique_ptr<Expression> parseAdditiveExpression();
-        inline std::unique_ptr<Expression> parseMultiplyExpression();
-        inline std::unique_ptr<Expression> parseBaseMathExpression();
-        inline std::unique_ptr<Expression> parseParentExpression(const bool &unaryMathOp);
-        inline std::unique_ptr<Expression> parseIdentifierValue(const bool &unaryMathOp);
+        inline std::unique_ptr<ast::Expression> parseOrExpression();
+        inline std::unique_ptr<ast::Expression> parseAndExpression();
+        inline std::unique_ptr<ast::Expression> parseRelationalExpression();
+        inline std::unique_ptr<ast::Expression> parseBaseLogicExpression();
+        inline std::unique_ptr<ast::Expression> parseAdditiveExpression();
+        inline std::unique_ptr<ast::Expression> parseMultiplyExpression();
+        inline std::unique_ptr<ast::Expression> parseBaseMathExpression();
+        inline std::unique_ptr<ast::Expression> parseParentExpression(const bool &unaryMathOp);
+        inline std::unique_ptr<ast::Expression> parseIdentifierValue(const bool &unaryMathOp);
     };
 }
 

@@ -18,6 +18,7 @@
 #include <AST/expression/or_logic_expr.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 Parser::Parser(const LogLevel &logLevel, std::ostream &out)
         : logLevel_(logLevel), out_(out), scanner_(std::make_unique<Scanner>(nullptr, logLevel, out)),
@@ -71,7 +72,7 @@ void Parser::parseFunctionDef() {
             FCYN("" + funToken.getLiteral() + "") " has been created \n";
         }
     } else {
-        throw RedefinedFun(funToken);
+        throw error::RedefinedFun(funToken);
     }
 }
 
@@ -96,7 +97,7 @@ void Parser::parseStatementBlock(StatementBlock &newBlock) {
         Token token = scanner_->getToken();
         switch (token.getType()) {
             default:
-                throw UnexpectedToken(token, {Token::Type::If,
+                throw error::UnexpectedToken(token, {Token::Type::If,
                                               Token::Type::While,
                                               Token::Type::Return,
                                               Token::Type::Var,
@@ -213,7 +214,7 @@ std::unique_ptr<Statement> Parser::parseInitStatement() {
         expectToken(Token::Type::Semicolon);
         return assignStmt;
     } else {
-        throw RedefinedVar(identifier);
+        throw error::RedefinedVar(identifier);
     }
 }
 
@@ -239,7 +240,7 @@ std::unique_ptr<Statement> Parser::parseIdentifier() {
 
 std::unique_ptr<Statement> Parser::parseFunctionCall(const Token &function) {
     if (!currentProgram->existFunction(function.getLiteral())) {
-        throw UndefinedFun(function);
+        throw error::UndefinedFun(function);
     }
 
     Function &fun = currentProgram->findFunction(function.getLiteral());
@@ -257,7 +258,7 @@ std::unique_ptr<Statement> Parser::parseFunctionCall(const Token &function) {
     if (fun.size() == funCall->size()) {
         return funCall;
     } else {
-        throw MismachedArgumentsCount(function, fun.size(), funCall->size());
+        throw error::MismachedArgumentsCount(function, fun.size(), funCall->size());
     }
 }
 
@@ -479,7 +480,7 @@ std::unique_ptr<Expression> Parser::parseBaseMathExpression() {
             return parseParentExpression(unaryMathOp);
 
         default:
-            throw UnexpectedToken(scanner_->getToken(), {
+            throw error::UnexpectedToken(scanner_->getToken(), {
                     Token::Type::NumberString,
                     Token::Type::Vec,
                     Token::Type::Identifier,

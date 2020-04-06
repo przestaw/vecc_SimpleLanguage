@@ -11,45 +11,46 @@
 #include <AST/statement/statement.h>
 
 namespace vecc {
-    class BaseMathExpr : public Expression {
-    public:
-        BaseMathExpr() = delete;
-        
-        explicit BaseMathExpr(std::unique_ptr<Statement> functionCall, bool unaryMathOp = false);
-        
-        explicit BaseMathExpr(std::unique_ptr<Expression> expr, bool unaryMathOp = false);
-        
-        explicit BaseMathExpr(Variable constant, bool unaryMathOp = false);
+    namespace ast {
+        class BaseMathExpr : public Expression {
+        public:
+            BaseMathExpr() = delete;
 
-        explicit BaseMathExpr(std::shared_ptr<Variable> variable, bool unaryMathOp = false);
-        
-        BaseMathExpr(std::shared_ptr<Variable> variable, unsigned index, bool unaryMathOp = false);
-        
-        [[nodiscard]] Variable calculate() const override;
-    
-    private:
-        inline Variable getBaseValue() const;
-        
-        enum class Type {
-            Function,
-            Expression,
-            Constant,
-            Variable
+            explicit BaseMathExpr(std::unique_ptr<Statement> functionCall, bool unaryMathOp = false);
+
+            explicit BaseMathExpr(std::unique_ptr<Expression> expr, bool unaryMathOp = false);
+
+            explicit BaseMathExpr(Variable constant, bool unaryMathOp = false);
+
+            explicit BaseMathExpr(std::shared_ptr<Variable> variable, bool unaryMathOp = false);
+
+            BaseMathExpr(std::shared_ptr<Variable> variable, unsigned index, bool unaryMathOp = false);
+
+            [[nodiscard]] Variable calculate() const override;
+
+        private:
+            inline Variable getBaseValue() const;
+
+            enum class Type {
+                Function,
+                Expression,
+                Constant,
+                Variable
+            };
+
+            Type type_;             //!< determines type of expression
+            bool indexedAccess_;      //!< if variable is acessed with [] operator
+            bool invert_;            //!< if unarymathOperator was present
+
+            std::variant<
+                    std::unique_ptr<Statement>,
+                    std::unique_ptr<Expression>,
+                    Variable,
+                    std::shared_ptr<Variable> > value_;
+
+            unsigned index_;
         };
-        
-        Type type_;             //!< determines type of expression
-        bool indexedAccess_;      //!< if variable is acessed with [] operator
-        bool invert_;            //!< if unarymathOperator was present
-        
-        std::variant<
-            std::unique_ptr<Statement>,
-            std::unique_ptr<Expression>,
-            Variable,
-            std::shared_ptr<Variable> > value_;
-        
-        unsigned index_;
-    };
-  
+    }
 }
 
 #endif //VECC_LANG_BASE_MATH_EXPR_H

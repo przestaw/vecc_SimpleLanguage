@@ -5,6 +5,7 @@
 #include <AST/statement/if_stmt.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 IfStatement::IfStatement(std::unique_ptr<Expression> expression) : expression_(std::move(expression)) {}
 

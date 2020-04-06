@@ -4,6 +4,7 @@
 #include <AST/statement/return_stmt.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 ReturnStatement::ReturnStatement() : return_(Return::Type::Noting) {}
 

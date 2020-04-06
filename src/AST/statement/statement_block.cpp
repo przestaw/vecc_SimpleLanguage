@@ -5,6 +5,7 @@
 #include <AST/statement/statement_block.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 StatementBlock::StatementBlock(Context *parentContext) : context_(parentContext) {}
 

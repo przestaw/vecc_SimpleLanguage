@@ -1,7 +1,7 @@
 # Project VecC 
 ## Vector Capable Language
 
-###Program Usage
+### Program Usage
 
 - program is run from command line in following format
 
@@ -38,22 +38,24 @@
   can be specified on the command line multiple times including all definitions
   in the build options section below.
 - Example of configuring, building, reconfiguring, rebuilding:
-    ```
-  # Initial configuration
+
+
+  #### Initial configuration
     $ mkdir build
     $ cd build
     $ cmake -DCMAKE_CXX_COMPILER=clang++ ..  
     $ make
     ...
-  # Second configuration
+  #### Second configuration
     $ make clean
     $ cmake -DCMAKE_BUILD_TYPE=Debug ..                               
     $ make
     ...
-  # Third configuration
+  #### Third configuration
     $ rm -rf *
     $ cmake -DCMAKE_CXX_COMPILER=g++ ..        
     $ make
+
 
 - CMake variables
     - **CMAKE_BUILD_TYPE** = ``Release|Debug``

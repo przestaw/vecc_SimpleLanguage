@@ -10,17 +10,19 @@
 #include <AST/expression/expression.h>
 
 namespace vecc {
-    class AndLogicExpr : public Expression {
-    public:
-        explicit AndLogicExpr(std::unique_ptr<Expression> value);
+    namespace ast {
+        class AndLogicExpr : public Expression {
+        public:
+            explicit AndLogicExpr(std::unique_ptr<Expression> value);
 
-        void addOperand(std::unique_ptr<Expression> value);
+            void addOperand(std::unique_ptr<Expression> value);
 
-        Variable calculate() const override;
+            Variable calculate() const override;
 
-    private:
-        std::vector<std::unique_ptr<Expression>> operands;
-    };
+        private:
+            std::vector<std::unique_ptr<Expression>> operands;
+        };
+    }
 }
 
 #endif //VECC_LANG_AND_LOGIC_EXPR_H

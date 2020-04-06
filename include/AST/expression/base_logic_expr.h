@@ -10,16 +10,18 @@
 #include <AST/expression/expression.h>
 
 namespace vecc {
-    class BaseLogicExpr : public Expression {
-    public:
-        explicit BaseLogicExpr(std::unique_ptr<Expression> value, bool unaryLogicOp = false);
+    namespace ast {
+        class BaseLogicExpr : public Expression {
+        public:
+            explicit BaseLogicExpr(std::unique_ptr<Expression> value, bool unaryLogicOp = false);
 
-        [[nodiscard]] Variable calculate() const override;
+            [[nodiscard]] Variable calculate() const override;
 
-    private:
-        bool invert;
-        std::unique_ptr<Expression> value_;
-    };
+        private:
+            bool invert;
+            std::unique_ptr<Expression> value_;
+        };
+    }
 }
 
 #endif //VECC_LANG_BASE_LOGIC_EXPR_H

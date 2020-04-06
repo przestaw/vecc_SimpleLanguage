@@ -6,6 +6,7 @@
 #include <error/exeception.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 AssignStatement::AssignStatement(Variable &variable, std::unique_ptr<Expression> expression)
         : variable_(variable), expression_(std::move(expression)), indexedAccess(false), index_() {
@@ -22,7 +23,7 @@ Return AssignStatement::run() {
             variable_.setPosition(position_);
             variable_.at(index_) = value.at(0);
         } else {
-            throw MathException("Try to assign a n-dimensional vector to the int\n"
+            throw error::MathException("Try to assign a n-dimensional vector to the int\n"
                                 + (position_ != Position() ? "at " + position_.toString() : ""));
         }
     } else {

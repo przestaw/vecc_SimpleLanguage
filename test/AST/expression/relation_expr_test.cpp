@@ -7,9 +7,9 @@
 #include <AST/expression/base_math_expr.h>
 #include <AST/expression/realtion_expr.h>
 
-using vecc::RelationExpr;
-using vecc::BaseMathExpr;
-using vecc::Variable;
+using namespace vecc;
+using namespace vecc::error;
+using namespace vecc::ast;
 
 using std::move;
 using std::unique_ptr;
@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 //
 //            RelationExpr expr1(make_unique<BaseMathExpr>(move(variable)),
 //                              RelationExpr::OperatorType::PassValue,
-//                              unique_ptr<vecc::Expression>(nullptr));
+//                              unique_ptr<Expression>(nullptr));
 //
 //            variable = var);
 //            RelationExpr expr2(make_unique<BaseMathExpr>(move(variable)));
@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
                               make_unique<BaseMathExpr>(var2));
 
             Variable temp;
-            BOOST_CHECK_THROW(temp = expr.calculate(), vecc::MathException);
+            BOOST_CHECK_THROW(temp = expr.calculate(), MathException);
         }
 
         BOOST_AUTO_TEST_CASE(GivenTwoValues_InequalityReturnsCorrectValue) {
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
                               RelationExpr::OperatorType::NotEqual,
                               make_unique<BaseMathExpr>(var2));
             Variable temp;
-            BOOST_CHECK_THROW(temp=expr.calculate(), vecc::MathException);
+            BOOST_CHECK_THROW(temp=expr.calculate(), MathException);
         }
 
         BOOST_AUTO_TEST_CASE(GivenTwoValues_LessReturnsCorrectValue) {
@@ -186,9 +186,9 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
                                make_unique<BaseMathExpr>(var2));
 
             Variable temp;
-            BOOST_CHECK_THROW(temp=expr1.calculate(), vecc::MathException);
-            BOOST_CHECK_THROW(temp=expr2.calculate(), vecc::MathException);
-            BOOST_CHECK_THROW(temp=expr3.calculate(), vecc::MathException);
+            BOOST_CHECK_THROW(temp=expr1.calculate(), MathException);
+            BOOST_CHECK_THROW(temp=expr2.calculate(), MathException);
+            BOOST_CHECK_THROW(temp=expr3.calculate(), MathException);
         }
 
         BOOST_AUTO_TEST_CASE(GivenTwoValues_LessOrEqualReturnsCorrectValue) {
@@ -235,9 +235,9 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
                                make_unique<BaseMathExpr>(var2));
 
             Variable temp;
-            BOOST_CHECK_THROW(temp=expr1.calculate(), vecc::MathException);
-            BOOST_CHECK_THROW(temp=expr2.calculate(), vecc::MathException);
-            BOOST_CHECK_THROW(temp=expr3.calculate(), vecc::MathException);
+            BOOST_CHECK_THROW(temp=expr1.calculate(), MathException);
+            BOOST_CHECK_THROW(temp=expr2.calculate(), MathException);
+            BOOST_CHECK_THROW(temp=expr3.calculate(), MathException);
         }
 
     BOOST_AUTO_TEST_SUITE_END()

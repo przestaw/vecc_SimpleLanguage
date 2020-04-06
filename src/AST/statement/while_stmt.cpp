@@ -5,6 +5,7 @@
 #include <AST/statement/while_stmt.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 WhileStatement::WhileStatement(std::unique_ptr<Expression> expression) : expression_(std::move(expression)) {}
 

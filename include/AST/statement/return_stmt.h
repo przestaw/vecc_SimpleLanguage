@@ -10,18 +10,20 @@
 #include <AST/expression/expression.h>
 
 namespace vecc {
-    class ReturnStatement : public Statement {
-    public:
-        ReturnStatement();
+    namespace ast {
+        class ReturnStatement : public Statement {
+        public:
+            ReturnStatement();
 
-        explicit ReturnStatement(std::unique_ptr<Expression> expression);
+            explicit ReturnStatement(std::unique_ptr<Expression> expression);
 
-        Return run() override;
+            Return run() override;
 
-    private:
-        std::unique_ptr<Expression> expression_;
-        Return::Type return_;
-    };
+        private:
+            std::unique_ptr<Expression> expression_;
+            Return::Type return_;
+        };
+    }
 }
 
 #endif //VECC_LANG_RETURN_STMT_H

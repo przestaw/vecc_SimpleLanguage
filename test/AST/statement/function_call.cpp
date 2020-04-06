@@ -8,6 +8,7 @@
 #include <AST/statement/function_call.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 

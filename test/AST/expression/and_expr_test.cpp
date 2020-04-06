@@ -7,9 +7,8 @@
 #include <AST/expression/base_math_expr.h>
 #include <AST/expression/and_logic_expr.h>
 
-using vecc::AndLogicExpr;
-using vecc::BaseMathExpr;
-using vecc::Variable;
+using namespace vecc;
+using namespace vecc::ast;
 
 using std::move;
 using std::unique_ptr;

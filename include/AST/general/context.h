@@ -11,33 +11,34 @@
 #include <vector>
 
 namespace vecc {
-    class Context {
-    public:
-        explicit Context(Context *parent = nullptr) : parentContext_(parent) {}
+    namespace ast {
+        class Context {
+        public:
+            explicit Context(Context *parent = nullptr) : parentContext_(parent) {}
 
-        explicit Context(std::vector<std::pair<std::string, std::shared_ptr<Variable>>> variables);
+            explicit Context(std::vector<std::pair<std::string, std::shared_ptr<Variable>>> variables);
 
-        Context(const Context &context);
+            Context(const Context &context);
 
-        void addVariable(const std::string &identifier, const Variable &variable);
+            void addVariable(const std::string &identifier, const Variable &variable);
 
-        bool existVariable(const std::string &identifier) const;
+            bool existVariable(const std::string &identifier) const;
 
-        std::shared_ptr<Variable> findVariable(const std::string &identifier, const Token &token);
+            std::shared_ptr<Variable> findVariable(const std::string &identifier, const Token &token);
 
-        Context *getParentContext();
+            Context *getParentContext();
 
-        void setParentContext(Context *parentContext);
+            void setParentContext(Context *parentContext);
 
-        [[nodiscard]] std::vector<Variable> saveValues();
+            [[nodiscard]] std::vector<Variable> saveValues();
 
-        void restoreValues(const std::vector<Variable> &savedValues);
+            void restoreValues(const std::vector<Variable> &savedValues);
 
-    private:
-        Context *parentContext_; //!< used incases like if/while branch/just some code in curly brackets. In other cases nullptr
-        std::unordered_map<std::string, std::shared_ptr<Variable>> variables_;
-    };
-
+        private:
+            Context *parentContext_; //!< used incases like if/while branch/just some code in curly brackets. In other cases nullptr
+            std::unordered_map<std::string, std::shared_ptr<Variable>> variables_;
+        };
+    }
 }
 
 #endif //VECC_LANG_CONTEXT_H

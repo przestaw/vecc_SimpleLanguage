@@ -10,33 +10,36 @@
 #include <AST/expression/expression.h>
 
 namespace vecc {
-    class AddExpr : public Expression {
-    public:
-        enum class OperatorType {
-            Add,
-            Substract
+    namespace ast {
+        class AddExpr : public Expression {
+        public:
+            enum class OperatorType {
+                Add,
+                Substract
+            };
+
+            explicit AddExpr(std::unique_ptr<Expression> value);
+
+            void addOperand(std::unique_ptr<Expression> value, const OperatorType &type,
+                            const Position &position = Position());
+
+            [[nodiscard]] Variable calculate() const override;
+
+        private:
+            std::unique_ptr<Expression> baseValue;
+
+            struct Addable {
+                Addable(const OperatorType type, std::unique_ptr<Expression> value, const Position &position)
+                        : operation_(type), value_(std::move(value)), pos_(position) {}
+
+                OperatorType operation_;
+                std::unique_ptr<Expression> value_;
+                Position pos_;
+            };
+
+            std::vector<Addable> multiplyables;
         };
-
-        explicit AddExpr(std::unique_ptr<Expression> value);
-
-        void addOperand(std::unique_ptr<Expression> value, const OperatorType &type, const Position &position = Position());
-
-        [[nodiscard]] Variable calculate() const override;
-
-    private:
-        std::unique_ptr<Expression> baseValue;
-
-        struct Addable {
-            Addable(const OperatorType type, std::unique_ptr<Expression> value, const Position &position)
-                    : operation_(type), value_(std::move(value)), pos_(position) {}
-
-            OperatorType operation_;
-            std::unique_ptr<Expression> value_;
-            Position pos_;
-        };
-
-        std::vector<Addable> multiplyables;
-    };
+    }
 }
 
 #endif //VECC_LANG_MATH_EXPR_H

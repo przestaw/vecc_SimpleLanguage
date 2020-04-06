@@ -9,80 +9,82 @@
 #include <scanner/token.h>
 
 namespace vecc {
-    class Variable {
-    public:
-        Variable() = default;
+    namespace ast {
+        class Variable {
+        public:
+            Variable() = default;
 
-        explicit Variable(std::vector<int> values);
+            explicit Variable(std::vector<int> values);
 
-        Variable(const Variable &) = default;
+            Variable(const Variable &) = default;
 
-        Variable(Variable &&) = default;
+            Variable(Variable &&) = default;
 
-        Variable &operator=(const Variable &rhs) = default;
+            Variable &operator=(const Variable &rhs) = default;
 
-        int &operator[](int idx);
+            int &operator[](int idx);
 
-        const int &operator[](int idx) const;
+            const int &operator[](int idx) const;
 
-        std::vector<int> &operator*();
+            std::vector<int> &operator*();
 
-        [[nodiscard]] int &at(unsigned idx);
+            [[nodiscard]] int &at(unsigned idx);
 
-        [[nodiscard]] const int &at(unsigned idx) const;
+            [[nodiscard]] const int &at(unsigned idx) const;
 
-        [[nodiscard]] unsigned size() const;
+            [[nodiscard]] unsigned size() const;
 
-        Variable operator==(const Variable &rhs) const;
+            Variable operator==(const Variable &rhs) const;
 
-        Variable operator!=(const Variable &rhs) const;
+            Variable operator!=(const Variable &rhs) const;
 
-        Variable operator<(const Variable &rhs) const;
+            Variable operator<(const Variable &rhs) const;
 
-        Variable operator>(const Variable &rhs) const;
+            Variable operator>(const Variable &rhs) const;
 
-        Variable operator<=(const Variable &rhs) const;
+            Variable operator<=(const Variable &rhs) const;
 
-        Variable operator>=(const Variable &rhs) const;
+            Variable operator>=(const Variable &rhs) const;
 
-        Variable operator+() const;
+            Variable operator+() const;
 
-        Variable operator-() const;
+            Variable operator-() const;
 
-        Variable operator+(const Variable &rhs) const;
+            Variable operator+(const Variable &rhs) const;
 
-        Variable operator-(const Variable &rhs) const;
+            Variable operator-(const Variable &rhs) const;
 
-        Variable operator*(const Variable &rhs) const;
+            Variable operator*(const Variable &rhs) const;
 
-        Variable operator/(const Variable &rhs) const;
+            Variable operator/(const Variable &rhs) const;
 
-        Variable operator%(const Variable &rhs) const;
+            Variable operator%(const Variable &rhs) const;
 
-        Variable operator!() const;
+            Variable operator!() const;
 
-        Variable operator&&(const Variable &rhs) const;
+            Variable operator&&(const Variable &rhs) const;
 
-        Variable operator||(const Variable &rhs) const;
+            Variable operator||(const Variable &rhs) const;
 
-        explicit operator bool() const;
+            explicit operator bool() const;
 
-        void setPosition(const Position &position);
+            void setPosition(const Position &position);
 
-        [[nodiscard]] std::string toString() const;
+            [[nodiscard]] std::string toString() const;
 
-        inline std::ostream &operator<<(std::ostream &os) const {
-            os << toString();
-            return os;
-        }
+            inline std::ostream &operator<<(std::ostream &os) const {
+                os << toString();
+                return os;
+            }
 
-    private:
-        std::vector<int> values_; //!< can store normal value or 2,3(with possibility for more) dim vec
-        Position currentPosition;
+        private:
+            std::vector<int> values_; //!< can store normal value or 2,3(with possibility for more) dim vec
+            Position currentPosition;
 
-        static const Variable retTrue;
-        static const Variable retFalse;
-    };
+            static const Variable retTrue;
+            static const Variable retFalse;
+        };
+    }
 }
 
 #endif //VECC_LANG_VARIABLE_H
