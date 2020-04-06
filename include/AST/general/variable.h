@@ -71,9 +71,9 @@ namespace vecc {
 
         [[nodiscard]] std::string toString() const;
 
-        std::ostream &operator<<(std::ostream &out) {
-            out << this->toString();
-            return out;
+        inline std::ostream &operator<<(std::ostream &os) const {
+            os << toString();
+            return os;
         }
 
     private:

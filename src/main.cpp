@@ -34,7 +34,7 @@ inline void parseParams(int argc, char *argv[]) {
                 ("input,i", value<std::vector<std::string>>()->multitoken(), "Input file")
                 ("vec", bool_switch(&params.veccLib)->default_value(false), "Incude standard vecc::vec library")
                 ("fib", bool_switch(&params.fibLib)->default_value(false), "Incude Fibonacci library")
-                ("verbosity,v", value<uint8_t>()->default_value(static_cast<uint8_t>(vecc::LogLevel::FullLog)),
+                ("verbosity,v", value<uint8_t>()->default_value(static_cast<uint8_t>(vecc::LogLevel::NoLog)),
                  "verbosity level : \n"
                  "\t 0  -  no information\n"
                  "\t 1  -  errors\n"

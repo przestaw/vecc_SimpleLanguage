@@ -12,7 +12,6 @@ const std::unordered_map<Token::Type, std::string> Token::typeDescription = {
         {Token::Type::While,             "While"},
         {Token::Type::Else,              "Else"},
         {Token::Type::Return,            "Return"},
-        {Token::Type::Break,             "Break"},
 
         {Token::Type::Var,               "Var"},
         {Token::Type::Vec,               "Vec"},
@@ -61,7 +60,6 @@ const std::unordered_map<std::string, Token::Type> Token::keywords = {
         {"return", Token::Type::Return},
         {"and",    Token::Type::And},
         {"or",     Token::Type::Or},
-        {"break",  Token::Type::Break},
         {"var",    Token::Type::Var},
         {"vec",    Token::Type::Vec},
         {"print",  Token::Type::Print}
@@ -102,8 +100,8 @@ Token::Type Token::findKeywordType(const std::string &literal) {
     return type == keywords.end() ? Token::Type::NaT : type->second;
 }
 
-Token::Type Token::findSymbolType(const char &literal) {
-    auto type = specialCharacters.find(literal);
+Token::Type Token::findSymbolType(const char &symbol) {
+    auto type = specialCharacters.find(symbol);
     return type == specialCharacters.end() ? Token::Type::NaT : type->second;
 }
 

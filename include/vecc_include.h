@@ -22,6 +22,9 @@ namespace vecc {
     };
 
     namespace libraries {
+        /**
+         * Vecc Library source constant
+         */
         static const std::string &veccLibrary = "fun product2(vec1, vec2) {\n"
                                                 "    var res=vec(0,0);\n"
                                                 "    res[0] = vec1[0] * vec2[0] - vec1[1] * vec2[1];\n"
@@ -47,6 +50,9 @@ namespace vecc {
                                                 "    return res;\n"
                                                 "}\n";
 
+        /**
+         * Fib Library source constant
+         */
         static const std::string &fibLibrary = "fun fib_rec(n){\n"
                                                "    if(n <= 1){\n"
                                                "        return 1;\n"
