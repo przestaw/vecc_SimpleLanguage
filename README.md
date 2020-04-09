@@ -27,8 +27,10 @@
         - 3   -  errors & files & any created function
         - 4   -  errors & files & functions & any parsed token
         - 5+  -  full available log
-                                    
-###Build instructions
+        
+- run *./demo.sh* to see example files parse and output
+
+### Build instructions
 
 - Project uses *boost* library for testing and parsing program parameters 
   *[version 1.72 has been confirmed to work, older might work as well]*
