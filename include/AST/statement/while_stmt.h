@@ -9,21 +9,34 @@
 #include <AST/expression/expression.h>
 #include <AST/statement/statement_block.h>
 
-namespace vecc {
-    namespace ast {
-        class WhileStatement : public Statement {
-        public:
-            explicit WhileStatement(std::unique_ptr<Expression> expression);
+namespace vecc::ast {
+    /**
+     * While Statement class. Executes it's statement block if expression is true
+     */
+    class WhileStatement : public Statement {
+    public:
+        /**
+         * Constructor
+         * @param expression while expression
+         */
+        explicit WhileStatement(std::unique_ptr<Expression> expression);
 
-            StatementBlock &getWhileBody();
+        /**
+         * Returns reference to while body
+         * @return while body reference
+         */
+        StatementBlock &getWhileBody();
 
-            Return run() override;
+        /**
+         * Runs statement
+         * @return return value
+         */
+        Return run() override;
 
-        private:
-            std::unique_ptr<Expression> expression_;
-            StatementBlock whileBody_;
-        };
-    }
+    private:
+        std::unique_ptr<Expression> expression_;
+        StatementBlock whileBody_;
+    };
 }
 
 #endif //VECC_LANG_WHILE_STMT_H

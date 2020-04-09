@@ -128,6 +128,7 @@ namespace vecc {
         [[nodiscard]] std::string typeName() const;
 
         /**
+         * Static method
          * Returns keyword Type for given literal
          * @param literal literal
          * @return keyword Type or NaT
@@ -135,6 +136,7 @@ namespace vecc {
         static Type findKeywordType(const std::string &literal);
 
         /**
+         * Static method
          * Returns character Type for given symbol
          * @param symbol symbol
          * @return symbol Type or NaT
@@ -142,6 +144,7 @@ namespace vecc {
         static Type findSymbolType(const char &symbol);
 
         /**
+         * Static method
          * Returns Type of two symbol sequence
          * @param first first symbol
          * @param second second symbol
@@ -150,17 +153,19 @@ namespace vecc {
         static Type checkSecondSecond(const char &first, const char &second);
 
         /**
+         * Static method
          * Returns Type name
          * @param type Token Type
          * @return type name
          */
         static std::string getTypeName(const Type &type);
 
-    private:
+    protected:
         Position tokenPos_;   //!< position of the Token
         Type type_;           //!< type of token
         std::string literal_; //!< to distinguish identifiers
 
+    private:
         static const std::unordered_map<Type, std::string> typeDescription;
         static const std::unordered_map<std::string, Type> keywords;
         static const std::unordered_map<char, Type> specialCharacters;

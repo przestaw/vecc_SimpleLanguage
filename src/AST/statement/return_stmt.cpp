@@ -6,15 +6,13 @@
 using namespace vecc;
 using namespace vecc::ast;
 
-ReturnStatement::ReturnStatement() : return_(Return::Type::Noting) {}
-
 ReturnStatement::ReturnStatement(std::unique_ptr<Expression> expression)
-        : expression_(std::move(expression)), return_(Return::Type::Value) {}
+        : expression_(std::move(expression)) {}
 
 Return ReturnStatement::run() {
     if (expression_) {
         return Return(Return::Type::Value, expression_->calculate());
     } else {
-        return Return(return_);
+        return Return(Return::Type::Noting);
     }
 }

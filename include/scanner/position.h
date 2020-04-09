@@ -46,16 +46,46 @@ namespace vecc {
          */
         Position(const Position &other) = default;
 
+        /**
+         * Operator ==
+         * @param rhs right side of comparison
+         * @return true if equal
+         */
         bool operator==(const Position &rhs) const;
 
+        /**
+         * Operator !=
+         * @param rhs right side of comparison
+         * @return true if not equal
+         */
         bool operator!=(const Position &rhs) const;
 
+        /**
+         * Operator <
+         * @param rhs right side of comparison
+         * @return true if less
+         */
         bool operator<(const Position &rhs) const;
 
+        /**
+         * Operator >
+         * @param rhs right side of comparison
+         * @return true if greater
+         */
         bool operator>(const Position &rhs) const;
 
+        /**
+         * Operator <=
+         * @param rhs right side of comparison
+         * @return true if less or equal
+         */
         bool operator<=(const Position &rhs) const;
 
+        /**
+         * Operator >=
+         * @param rhs right side of comparison
+         * @return true if greater or equal
+         */
         bool operator>=(const Position &rhs) const;
 
         /**
@@ -93,11 +123,11 @@ namespace vecc {
         }
 
     private:
-        unsigned int lineNo;
-        unsigned int symbolNo;
+        unsigned int lineNo;    //!< Position in file lines
+        unsigned int symbolNo;  //!< Position in line
 
-        bool namedSource;
-        std::string sourceName;
+        bool namedSource;       //!< Determines if source is anonymous or named
+        std::string sourceName; //!< Name of the source if present
     };
 }
 

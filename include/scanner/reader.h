@@ -55,8 +55,9 @@ namespace vecc {
     private:
         std::istream &stream_;   //!< stream cannot be changed as Reader holds position in code
 
-        char symbol_ = 0x00;
-        Position position_;
+        char symbol_ = 0x00;     //!< current symbol
+        Position position_;      //!< current symbol position
+
         char lastSymbol_ = 0x00; //!< to detect different line endings
     };
 

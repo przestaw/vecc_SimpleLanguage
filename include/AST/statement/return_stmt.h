@@ -9,21 +9,27 @@
 #include <AST/statement/statement.h>
 #include <AST/expression/expression.h>
 
-namespace vecc {
-    namespace ast {
-        class ReturnStatement : public Statement {
-        public:
-            ReturnStatement();
+namespace vecc::ast {
+    /**
+     * Class describing return statement
+     */
+    class ReturnStatement : public Statement {
+    public:
+        /**
+         * Constructor
+         * @param expression Expression which value is returned
+         */
+        explicit ReturnStatement(std::unique_ptr<Expression> expression = std::unique_ptr<Expression>(nullptr));
 
-            explicit ReturnStatement(std::unique_ptr<Expression> expression);
+        /**
+         * Runs statement
+         * @return return value
+         */
+        Return run() override;
 
-            Return run() override;
-
-        private:
-            std::unique_ptr<Expression> expression_;
-            Return::Type return_;
-        };
-    }
+    private:
+        std::unique_ptr<Expression> expression_;
+    };
 }
 
 #endif //VECC_LANG_RETURN_STMT_H

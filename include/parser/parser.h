@@ -17,25 +17,51 @@
 #include <scanner/token.h>
 
 namespace vecc {
+    /**
+     * Class used to generate AST for given sources in form of vecc::ast::Program
+     */
     class Parser {
     public:
+        /**
+         * Constructor without initial source
+         * @param logLevel log level
+         * @param out output stream for logs
+         */
         explicit Parser(const LogLevel &logLevel = LogLevel::NoLog, std::ostream &out = std::cout);
-        
+
+        /**
+         * Constructor with initial source
+         * @param source initial source
+         * @param logLevel log level
+         * @param out output stream for logs
+         */
         explicit Parser(std::unique_ptr<Reader> source, const LogLevel &logLevel = LogLevel::NoLog, std::ostream &out = std::cout);
-        
+
+        /**
+         * Sets current source
+         * @param source source to be set
+         */
         void setSource(std::unique_ptr<Reader> source);
-        
+
+        /**
+         * Parses internal source
+         */
         void parse();
-        
+
+        /**
+         * Obtains program and clears Parser
+         * @return parsed program
+         */
         std::unique_ptr<ast::Program> getProgram();
     
     private:
-        LogLevel logLevel_;
-        std::ostream &out_;
-        std::unique_ptr<Scanner> scanner_;
-        std::unique_ptr<ast::Program> currentProgram;
+        LogLevel logLevel_;                             //!< Log level
+        std::ostream &out_;                             //!< output stream for logs
 
-        ast::Context *currentContext = nullptr;
+        std::unique_ptr<Scanner> scanner_;              //!< Internal scanner providing tokens stream
+        std::unique_ptr<ast::Program> currentProgram;   //!< Currently parsed Program
+
+        ast::Context *currentContext = nullptr;         //!< Current context [connected with code logic]
         
         /**
          * Check if next token is of given type and execute action if so

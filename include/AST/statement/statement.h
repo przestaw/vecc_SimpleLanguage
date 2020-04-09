@@ -7,15 +7,23 @@
 
 #include <AST/general/return.h>
 
-namespace vecc {
-    namespace ast {
-        class Statement {
-        public:
-            virtual ~Statement() = default;
+namespace vecc::ast {
+    /**
+     * Base virtual class for all statements
+     */
+    class Statement {
+    public:
+        /**
+         * Virtual destructor
+         */
+        virtual ~Statement() = default;
 
-            virtual Return run() = 0;
-        };
-    }
+        /**
+         * Runs statement
+         * @return return value
+         */
+        virtual Return run() = 0;
+    };
 }
 
 #endif //VECC_LANG_STATEMENT_H

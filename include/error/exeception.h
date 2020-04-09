@@ -12,28 +12,80 @@
 
 namespace vecc {
     namespace error {
+        /**
+         * Exception class used as base type for vecc exceptions
+         */
         class Exception : public std::runtime_error {
         public:
+            /**
+             * Constructor
+             * @param desc error description
+             */
             explicit Exception(const std::string &desc) : runtime_error(desc) {}
         };
 
-        class NotAToken : public Exception {
+        /**
+         * ParseException class used as base type for vecc parse phase exceptions
+         */
+        class ParseException : public Exception{
         public:
-            explicit NotAToken(const Token &token) : Exception(
+            /**
+             * Constructor
+             * @param desc error description
+             */
+            explicit ParseException(const std::string &desc) : Exception(desc) {}
+        };
+
+        /**
+         * RuntimeException class used as base type for vecc runtime phase exceptions
+         */
+        class RuntimeException : public Exception{
+        public:
+            /**
+             * Constructor
+             * @param desc error description
+             */
+            explicit RuntimeException(const std::string &desc) : Exception(desc) {}
+        };
+
+        /**
+         * Class describing undefined tokens exception
+         */
+        class NotAToken : public ParseException {
+        public:
+            /**
+             * Constructor
+             * @param token on which error occurred  
+             */
+            explicit NotAToken(const Token &token) : ParseException(
                     FMAG(BOLD("Token ERROR : \n")) "Unknown token : " + token.toString()) {}
         };
 
-        class NoInputStream : public Exception {
+        /**
+         * Class used to inform about missing input stream
+         */
+        class NoInputStream : public ParseException {
         public:
-            explicit NoInputStream() : Exception(
+            /**
+             * Constructor
+             */
+            explicit NoInputStream() : ParseException(
                     FMAG(BOLD("Stream ERROR : \n")) "No input stream to read - " FRED("nullptr")) {}
         };
 
-        class UnexpectedToken : public Exception {
+        /**
+         * Class describing unexpected tokens errors
+         */
+        class UnexpectedToken : public ParseException {
         public:
+            /**
+             * Constructor
+             * @param token on which error occurred  
+             * @param expected expected tokens
+             */
             explicit UnexpectedToken(const Token &token,
                                      const std::list<Token::Type> &expected = std::list<Token::Type>())
-                    : Exception(
+                    : ParseException(
                     [&]() {
                         std::string buf = FRED(BOLD("Unexpected Token ERROR : \n"));
                         buf.append("Got " + token.typeName());
@@ -48,64 +100,128 @@ namespace vecc {
                     + "at " + token.getTokenPos().toString()) {}
         };
 
-        class UndefinedVar : public Exception {
+        /**
+         * Class describing undefined variable errors
+         */
+        class UndefinedVar : public ParseException {
         public:
-            explicit UndefinedVar(const Token &token) : Exception(
+            /**
+             * Constructor
+             * @param token on which error occurred  
+             */
+            explicit UndefinedVar(const Token &token) : ParseException(
                     FRED(BOLD("Undefined Variable ERROR : \n")) "Variable " + token.getLiteral() + " not found"
                     + "\nat line: " + token.getTokenPos().toString()) {}
         };
 
-        class RedefinedVar : public Exception {
+        /**
+         * Class describing redefined variable errors
+         */
+        class RedefinedVar : public ParseException {
         public:
-            explicit RedefinedVar(const Token &token) : Exception(
+            /**
+             * Constructor
+             * @param token on which error occurred  
+             */
+            explicit RedefinedVar(const Token &token) : ParseException(
                     FRED(BOLD("Redefined Variable ERROR : \n")) "Variable " + token.getLiteral() + " has been redefined"
                     + "\nat line: " + token.getTokenPos().toString()) {}
         };
 
-        class UndefinedFun : public Exception {
+        /**
+         * Class describing undefined function errors
+         */
+        class UndefinedFun : public ParseException {
         public:
-            explicit UndefinedFun(const Token &function) : Exception(
+            /**
+             * Constructor
+             * @param token on which error occurred  
+             */
+            explicit UndefinedFun(const Token &function) : ParseException(
                     FRED(BOLD("Undefined Function ERROR : \n")) "Function " + function.getLiteral() +
                     " has not been defined\nat line: " + function.getTokenPos().toString()) {}
         };
 
-        class UndefinedMain : public Exception {
+        /**
+         * Class describing undefined main function errors
+         */
+        class UndefinedMain : public RuntimeException {
         public:
-            explicit UndefinedMain() : Exception(
+            /**
+             * Constructor
+             */
+            explicit UndefinedMain() : RuntimeException(
                     FRED(BOLD("Undefined Function ERROR : \n")) "Function main has not been defined") {}
         };
-
-        class RedefinedFun : public Exception {
+        
+        /**
+         * Class describing redefined function errors
+         */
+        class RedefinedFun : public ParseException {
         public:
-            explicit RedefinedFun(const Token &function) : Exception(
+            /**
+             * Constructor
+             * @param token on which error occurred  
+             */
+            explicit RedefinedFun(const Token &function) : ParseException(
                     FRED(BOLD("Redefined Function ERROR : \n")) "Function " + function.getLiteral() +
                     " is already defined"
                     + "\nat line: " + function.getTokenPos().toString()) {}
         };
 
-        class MismachedArgumentsCount : public Exception {
+        /**
+         * Class describing invalid function call errors - with mismatched arguments count
+         */
+        class MismatchedArgumentsCount : public ParseException {
         public:
-            explicit MismachedArgumentsCount(const Token &function, const unsigned &funCount, const unsigned &callCount)
-                    : Exception(
+            /**
+             * Constructor
+             * @param function function on which error occurred  
+             * @param funCount function arguments count
+             * @param callCount call arguments count
+             */
+            explicit MismatchedArgumentsCount(const Token &function, const unsigned &funCount, const unsigned &callCount)
+                    : ParseException(
                     FRED(BOLD("Function Call ERROR : \n")) "Function " + function.getLiteral() +
                     " has " + std::to_string(funCount) + " arguments but " + std::to_string(callCount) + "were provided"
                     + "\nat line: " + function.getTokenPos().toString()) {}
         };
 
-        class NoReturnValue : public Exception {
+        /**
+         * Class describing invalid function call errors - without return statement
+         */
+        class NoReturnValue : public RuntimeException {
         public:
-            explicit NoReturnValue(const std::string &desc) : Exception(
+            /**
+             * Constructor
+             * @param desc error description
+             */
+            explicit NoReturnValue(const std::string &desc) : RuntimeException(
                     FRED(BOLD("No Return Value ERROR : \n")) + desc) {}
         };
 
-        class MathException : public Exception {
+        /**
+         * Class describing all possible math related exceptions, like zero-division and invalid operands
+         */
+        class MathException : public RuntimeException {
         public:
-            explicit MathException(const std::string &desc) : Exception(FYEL(BOLD("Math ERROR : \n")) + desc) {}
+            /**
+             * Constructor
+             * @param desc error description
+             */
+            explicit MathException(const std::string &desc) : RuntimeException(FYEL(BOLD("Math ERROR : \n")) + desc) {}
         };
 
-        class RangeException : public Exception {
+        /**
+         * Class describing range exception when [] operator is used at invalid position
+         */
+        class RangeException : public RuntimeException {
         public:
-            explicit RangeException(const std::string &desc) : Exception(FYEL(BOLD("Range ERROR : \n")) + desc) {}
+            /**
+             * Constructor
+             * @param desc error description
+             */
+            explicit RangeException(const std::string &desc) : RuntimeException(FYEL(BOLD("Range ERROR : \n")) + desc) {}
         };
     }
 }

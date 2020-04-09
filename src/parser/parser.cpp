@@ -43,6 +43,7 @@ void Parser::parse() {
 std::unique_ptr<Program> Parser::getProgram() {
     std::unique_ptr<Program> temp = std::make_unique<Program>();
     std::swap(currentProgram, temp);
+    currentContext = nullptr;
     return temp;
 }
 
@@ -168,13 +169,15 @@ Variable Parser::parseVectorValue() {
 }
 
 std::unique_ptr<Statement> Parser::parseAssignStatement(const std::shared_ptr<Variable>& variable) {
+    Position position;
     auto rValueParse = [&]() {
-        expectToken(Token::Type::Assignment);
+        expectToken(Token::Type::Assignment,[&]() { position = scanner_->getToken().getTokenPos(); });
         std::unique_ptr<Expression> logicExpr(parseOrExpression());
         expectToken(Token::Type::Semicolon);
         return logicExpr;
     };
 
+    std::unique_ptr<AssignStatement> assignStmt;
     if (tryToken(Token::Type::BracketOpen)) {
         // indexed access identifier[position]
         unsigned val;
@@ -183,17 +186,20 @@ std::unique_ptr<Statement> Parser::parseAssignStatement(const std::shared_ptr<Va
             val = static_cast<unsigned>(std::stoul(scanner_->getToken().getLiteral()));
         });
         expectToken(Token::Type::BracketClose);
-        return std::make_unique<AssignStatement>(*(variable), val, rValueParse());
+        assignStmt = std::make_unique<AssignStatement>(*(variable), val, rValueParse());
     } else {
         // whole var/vec accesss
-        return std::make_unique<AssignStatement>(*(variable), rValueParse());
+        assignStmt = std::make_unique<AssignStatement>(*(variable), rValueParse());
     }
+    assignStmt->setPosition(position);
+    return assignStmt;
 }
 
 
 std::unique_ptr<Statement> Parser::parseInitStatement() {
     scanner_->parseToken();
     Token identifier;
+    Position position;
     expectToken(Token::Type::Identifier,
                 [&]() { identifier = scanner_->getToken(); });
 
@@ -201,18 +207,21 @@ std::unique_ptr<Statement> Parser::parseInitStatement() {
         std::unique_ptr<AssignStatement> assignStmt;
         currentContext->addVariable(identifier.getLiteral(), Variable());
 
-        if (tryToken(Token::Type::Assignment)) {
+        if (tryToken(Token::Type::Assignment,[&]() { position = scanner_->getToken().getTokenPos(); })) {
             assignStmt = std::make_unique<AssignStatement>(
                     *currentContext->findVariable(identifier.getLiteral(), identifier),
                     parseOrExpression());
+            assignStmt->setPosition(position);
         } else {
             assignStmt = std::make_unique<AssignStatement>(
                     *currentContext->findVariable(identifier.getLiteral(), identifier),
                     std::make_unique<BaseMathExpr>(std::make_unique<Variable>()));
+            assignStmt->setPosition(identifier.getTokenPos());
         }
 
         expectToken(Token::Type::Semicolon);
         return assignStmt;
+
     } else {
         throw error::RedefinedVar(identifier);
     }
@@ -258,7 +267,7 @@ std::unique_ptr<Statement> Parser::parseFunctionCall(const Token &function) {
     if (fun.size() == funCall->size()) {
         return funCall;
     } else {
-        throw error::MismachedArgumentsCount(function, fun.size(), funCall->size());
+        throw error::MismatchedArgumentsCount(function, fun.size(), funCall->size());
     }
 }
 

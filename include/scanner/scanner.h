@@ -54,10 +54,12 @@ namespace vecc {
         void setReader(std::unique_ptr<Reader> reader);
 
     private:
-        LogLevel logLevel_;
-        std::unique_ptr<Reader> reader_;
-        Token currentToken;
-        std::ostream &out_;
+        LogLevel logLevel_;                 //!< Log level
+        std::ostream &out_;                 //!< output stream for logs
+
+        std::unique_ptr<Reader> reader_;    //!< Internal reader
+        Token currentToken;                 //!< Current Token storage
+
 
         inline bool canRead(); // use built-in std::unique_ptr check if ptr is "valid" (!= nullptr)
 

@@ -9,26 +9,46 @@
 #include <AST/statement/statement.h>
 #include <AST/expression/expression.h>
 
-namespace vecc {
-    namespace ast {
-        class AssignStatement : public Statement {
-        public:
-            AssignStatement(Variable &variable, std::unique_ptr<Expression> expression);
+namespace vecc::ast {
+    /**
+     * Class describing Assign Statement
+     */
+    class AssignStatement : public Statement {
+    public:
+        /**
+         * Constructor
+         * @param variable Variable to which value will be assigned
+         * @param expression Expresion which value will be assigned
+         */
+        AssignStatement(Variable &variable, std::unique_ptr<Expression> expression);
 
-            AssignStatement(Variable &variable, const unsigned &index, std::unique_ptr<Expression> expression);
+        /**
+         * Constructor
+         * @param variable Variable to which value will be assigned
+         * @param index index at which value will be assigned
+         * @param expression Expresion which value will be assigned
+         */
+        AssignStatement(Variable &variable, const unsigned &index, std::unique_ptr<Expression> expression);
 
-            Return run() override;
+        /**
+         * Runs statement
+         * @return return value
+         */
+        Return run() override;
 
-            void setPosition(const Position &position);
+        /**
+         * Position in code where assignment occurs. used to inform about possible error
+         * @param position position in code where assignment occurs
+         */
+        void setPosition(const Position &position);
 
-        private:
-            Variable &variable_;
-            std::unique_ptr<Expression> expression_;
-            bool indexedAccess;      //!< if variable is acessed with [] operator
-            unsigned index_;
-            Position position_;
-        };
-    }
+    private:
+        Variable &variable_;
+        std::unique_ptr<Expression> expression_;
+        bool indexedAccess;      //!< if variable is acessed with [] operator
+        unsigned index_;
+        Position position_;
+    };
 }
 
 #endif //VECC_LANG_ASSIGN_STMT_H

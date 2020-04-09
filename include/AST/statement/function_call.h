@@ -9,25 +9,46 @@
 #include <AST/general/function.h>
 #include <AST/expression/expression.h>
 
-namespace vecc {
-    namespace ast {
-        class FunctionCallStatement : public Statement {
-        public:
-            explicit FunctionCallStatement(Function &function);
+namespace vecc::ast {
+    /**
+     * Class describing function call
+     */
+    class FunctionCallStatement : public Statement {
+    public:
+        /**
+         * Constructor
+         * @param function Function to be called
+         */
+        explicit FunctionCallStatement(Function &function);
 
-            void addArgument(std::unique_ptr<Expression> arg);
+        /**
+         * Adds argument to a call
+         * @param arg Argument Expression
+         */
+        void addArgument(std::unique_ptr<Expression> arg);
 
-            [[nodiscard]] const Function &getFunction() const;
+        /**
+         * Returns function definition
+         * @return function definition
+         */
+        [[nodiscard]] const Function &getFunction() const;
 
-            Return run() override;
+        /**
+         * Runs statement
+         * @return return value
+         */
+        Return run() override;
 
-            [[nodiscard]] unsigned size() const;
+        /**
+         * Returns number of arguments
+         * @return number of arguments
+         */
+        [[nodiscard]] unsigned size() const;
 
-        private:
-            Function &function_;
-            std::list<std::unique_ptr<Expression>> arguments_;
-        };
-    }
+    private:
+        Function &function_;
+        std::list<std::unique_ptr<Expression>> arguments_;
+    };
 }
 
 #endif //VECC_LANG_FUNCTION_CALL_H

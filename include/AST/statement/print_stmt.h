@@ -11,33 +11,50 @@
 #include <AST/expression/expression.h>
 #include <AST/statement/statement.h>
 
-namespace vecc {
-    namespace ast {
-        class PrintStatement : public Statement {
-        public:
-            explicit PrintStatement(std::ostream &out = std::cout);
+namespace vecc::ast {
+    /**
+     * Class describing print statement
+     */
+    class PrintStatement : public Statement {
+    public:
+        /**
+         * Constructor
+         * @param out stream where statement will be outputted
+         */
+        explicit PrintStatement(std::ostream &out = std::cout);
 
-            void addExpression(std::unique_ptr<Expression> expression);
+        /**
+         * Expression to be printed
+         * @param expression expression to be printed
+         */
+        void addExpression(std::unique_ptr<Expression> expression);
 
-            void addString(std::string string);
+        /**
+         * String constant to be printed
+         * @param string string to be printed
+         */
+        void addString(std::string string);
 
-            Return run() override;
+        /**
+         * Runs statement
+         * @return return value
+         */
+        Return run() override;
 
-        private:
-            std::ostream &out_;
+    private:
+        std::ostream &out_;
 
-            struct Printable {
-                explicit Printable(std::unique_ptr<Expression> val) : expression(true), value(std::move(val)) {}
+        struct Printable {
+            explicit Printable(std::unique_ptr<Expression> val) : expression(true), value(std::move(val)) {}
 
-                explicit Printable(std::string val) : expression(false), value(std::move(val)) {}
+            explicit Printable(std::string val) : expression(false), value(std::move(val)) {}
 
-                bool expression;
-                std::variant<std::unique_ptr<Expression>, std::string> value;
-            };
-
-            std::vector<Printable> printables;
+            bool expression;
+            std::variant<std::unique_ptr<Expression>, std::string> value;
         };
-    }
+
+        std::vector<Printable> printables;
+    };
 }
 
 #endif //VECC_LANG_PRINT_STMT_H
