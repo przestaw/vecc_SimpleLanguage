@@ -19,7 +19,7 @@ using namespace vecc::ast;
 struct Params {
     bool run = false;                                   //!< determines if there are files to parse&run
     std::vector<std::string> files;                     //!< files to be parsed
-    LogLevel verbosity = LogLevel::FullLog; //!< log level
+    LogLevel verbosity = LogLevel::NoLog;               //!< log level
     bool fibLib = false;                                //!< Fibonacci library
     bool veccLib = false;                               //!< vecc library
 } params;                                               //!< global Params object
@@ -58,11 +58,11 @@ inline void parseParams(int argc, char *argv[]) {
                 params.run = true;
 
                 params.files = vm["input"].as<std::vector<std::string>>();
-                uint8_t verbosity = vm["verbosity"].as<uint8_t>();
+                uint8_t verbosity = vm["verbosity"].as<uint8_t>() - '0';
                 if (verbosity >= static_cast<uint8_t>(LogLevel::FullLog)) {
                     params.verbosity = LogLevel::FullLog;
                 } else {
-                    params.verbosity = LogLevel{verbosity};
+                    params.verbosity = static_cast<LogLevel>(verbosity);
                 }
             }
         }

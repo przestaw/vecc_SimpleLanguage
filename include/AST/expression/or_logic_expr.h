@@ -9,20 +9,33 @@
 #include <AST/general/variable.h>
 #include <AST/expression/expression.h>
 
-namespace vecc {
-    namespace ast {
-        class OrLogicExpr : public Expression {
-        public:
-            explicit OrLogicExpr(std::unique_ptr<Expression> value);
+namespace vecc::ast {
+    /**
+     * Class describing Or Logical Expression
+     */
+    class OrLogicExpr : public Expression {
+    public:
+        /**
+         * Constructor
+         * @param value first value of Expression
+         */
+        explicit OrLogicExpr(std::unique_ptr<Expression> value);
 
-            void addOperand(std::unique_ptr<Expression> value);
+        /**
+         * Adds operand to expression
+         * @param value operand value
+         */
+        void addOperand(std::unique_ptr<Expression> value);
 
-            [[nodiscard]] Variable calculate() const override;
+        /**
+         * Calculate value of Expression
+         * @return Expression value
+         */
+        [[nodiscard]] Variable calculate() const override;
 
-        private:
-            std::vector<std::unique_ptr<Expression>> operands;
-        };
-    }
+    private:
+        std::vector<std::unique_ptr<Expression>> operands;
+    };
 }
 
 #endif //VECC_LANG_OR_LOGIC_EXP_H

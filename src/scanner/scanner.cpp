@@ -8,10 +8,10 @@
 using namespace vecc;
 
 Scanner::Scanner(const LogLevel &logLevel, std::ostream &out)
-        : logLevel_(logLevel), reader_(nullptr), out_(out) {}
+        : logLevel_(logLevel), out_(out), reader_(nullptr) {}
 
 Scanner::Scanner(std::unique_ptr<Reader> reader, const LogLevel &logLevel, std::ostream &out)
-        : logLevel_(logLevel), reader_(std::move(reader)), out_(out) {}
+        : logLevel_(logLevel), out_(out), reader_(std::move(reader)) {}
 
 bool Scanner::canRead() {
     return static_cast<bool>(reader_);

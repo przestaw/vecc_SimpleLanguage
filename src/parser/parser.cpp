@@ -406,12 +406,12 @@ std::unique_ptr<Expression> Parser::parseBaseLogicExpression() {
 }
 
 std::unique_ptr<Expression> Parser::parseAdditiveExpression() {
-    std::unique_ptr<AddExpr> addExpr =
-            std::make_unique<AddExpr>(parseMultiplyExpression());
+    std::unique_ptr<AdditiveExpr> addExpr =
+            std::make_unique<AdditiveExpr>(parseMultiplyExpression());
 
     Token token;
 
-    auto addOp = [&](const AddExpr::OperatorType &operatorType) {
+    auto addOp = [&](const AdditiveExpr::OperatorType &operatorType) {
         scanner_->parseToken();
         addExpr->addOperand(parseMultiplyExpression(),
                             operatorType,
@@ -422,10 +422,10 @@ std::unique_ptr<Expression> Parser::parseAdditiveExpression() {
         token = scanner_->getToken();
         switch (token.getType()) {
             case Token::Type::Plus:
-                addOp(AddExpr::OperatorType::Add);
+                addOp(AdditiveExpr::OperatorType::Add);
                 break;
             case Token::Type::Minus:
-                addOp(AddExpr::OperatorType::Substract);
+                addOp(AdditiveExpr::OperatorType::Substract);
                 break;
             default:
                 //NOTE : when no more operands - return

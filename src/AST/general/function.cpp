@@ -37,3 +37,7 @@ Return Function::run(const std::vector<Variable> &parameters) {
 StatementBlock &Function::getFunctionBody() {
     return functionBody_;
 }
+
+const std::string &Function::getIdentifier() const { return identifier_; }
+
+unsigned Function::size() const { return names_.size(); }

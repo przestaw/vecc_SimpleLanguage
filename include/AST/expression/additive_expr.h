@@ -9,37 +9,55 @@
 #include <AST/general/variable.h>
 #include <AST/expression/expression.h>
 
-namespace vecc {
-    namespace ast {
-        class AddExpr : public Expression {
-        public:
-            enum class OperatorType {
-                Add,
-                Substract
-            };
-
-            explicit AddExpr(std::unique_ptr<Expression> value);
-
-            void addOperand(std::unique_ptr<Expression> value, const OperatorType &type,
-                            const Position &position = Position());
-
-            [[nodiscard]] Variable calculate() const override;
-
-        private:
-            std::unique_ptr<Expression> baseValue;
-
-            struct Addable {
-                Addable(const OperatorType type, std::unique_ptr<Expression> value, const Position &position)
-                        : operation_(type), value_(std::move(value)), pos_(position) {}
-
-                OperatorType operation_;
-                std::unique_ptr<Expression> value_;
-                Position pos_;
-            };
-
-            std::vector<Addable> multiplyables;
+namespace vecc::ast {
+    /**
+     * Class describing Additive Mathematical Expression
+     */
+    class AdditiveExpr : public Expression {
+    public:
+        /**
+         * Type of operation
+         */
+        enum class OperatorType {
+            Add,        //!< +
+            Substract   //!< -
         };
-    }
+
+        /**
+         * Constructor
+         * @param value first value of Expression
+         */
+        explicit AdditiveExpr(std::unique_ptr<Expression> value);
+
+        /**
+         * Adds operand to Expression
+         * @param value operand value
+         * @param type operation type
+         * @param position position used to inform about errors
+         */
+        void addOperand(std::unique_ptr<Expression> value, const OperatorType &type,
+                        const Position &position = Position());
+
+        /**
+         * Calculate value of Expression
+         * @return Expression value
+         */
+        [[nodiscard]] Variable calculate() const override;
+
+    private:
+        std::unique_ptr<Expression> baseValue;
+
+        struct Addable {
+            Addable(const OperatorType type, std::unique_ptr<Expression> value, const Position &position)
+                    : operation_(type), value_(std::move(value)), pos_(position) {}
+
+            OperatorType operation_;
+            std::unique_ptr<Expression> value_;
+            Position pos_;
+        };
+
+        std::vector<Addable> multiplyables;
+    };
 }
 
 #endif //VECC_LANG_MATH_EXPR_H

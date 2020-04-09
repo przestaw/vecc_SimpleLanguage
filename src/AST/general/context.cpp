@@ -22,12 +22,6 @@ std::shared_ptr<Variable> Context::findVariable(const std::string &identifier, c
     }
 }
 
-Context::Context(std::vector<std::pair<std::string, std::shared_ptr<Variable>>> variables) : parentContext_(nullptr) {
-    for (auto &variable : variables) {
-        this->variables_.insert(variable);
-    }
-}
-
 Context::Context(const Context &context) : parentContext_(context.parentContext_) {
     for (auto &variable : context.variables_) {
         this->variables_.insert(variable);

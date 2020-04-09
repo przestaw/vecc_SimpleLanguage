@@ -9,19 +9,29 @@
 #include <AST/general/variable.h>
 #include <AST/expression/expression.h>
 
-namespace vecc {
-    namespace ast {
-        class BaseLogicExpr : public Expression {
-        public:
-            explicit BaseLogicExpr(std::unique_ptr<Expression> value, bool unaryLogicOp = false);
+namespace vecc::ast {
+    /**
+     * Class describing Base Logical Expression
+     */
+    class BaseLogicExpr : public Expression {
+    public:
+        /**
+         * Constructor
+         * @param value value of Expression
+         * @param unaryLogicOp determines is vale should be negated
+         */
+        explicit BaseLogicExpr(std::unique_ptr<Expression> value, bool unaryLogicOp = false);
 
-            [[nodiscard]] Variable calculate() const override;
+        /**
+         * Calculate value of Expression
+         * @return Expression value
+         */
+        [[nodiscard]] Variable calculate() const override;
 
-        private:
-            bool invert;
-            std::unique_ptr<Expression> value_;
-        };
-    }
+    private:
+        bool invert;
+        std::unique_ptr<Expression> value_;
+    };
 }
 
 #endif //VECC_LANG_BASE_LOGIC_EXPR_H

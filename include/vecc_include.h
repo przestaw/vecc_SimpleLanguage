@@ -14,11 +14,11 @@ namespace vecc {
      */
     enum class LogLevel : uint8_t {
         NoLog = 0,                       //!< no information outputed to stderr
-        Errors,                          //!< runtime and compile errors
-        ParsedFiles,                     //!< Errors & information about parsed files
-        CreatedFunctions,                //!< ParsedFiles & any created function
-        ParsedTokens,                    //!< ParsedFiles & any Token
-        FullLog,                         //!< All available logs
+        Errors = 1,                          //!< runtime and compile errors
+        ParsedFiles = 2,                     //!< Errors & information about parsed files
+        CreatedFunctions = 3,                //!< ParsedFiles & any created function
+        ParsedTokens = 4,                    //!< ParsedFiles & any Token
+        FullLog = 5,                         //!< All available logs
     };
 
     namespace libraries {

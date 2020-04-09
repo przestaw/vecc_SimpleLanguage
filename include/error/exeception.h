@@ -135,7 +135,7 @@ namespace vecc {
         public:
             /**
              * Constructor
-             * @param token on which error occurred  
+             * @param function function on which error occurred
              */
             explicit UndefinedFun(const Token &function) : ParseException(
                     FRED(BOLD("Undefined Function ERROR : \n")) "Function " + function.getLiteral() +
@@ -161,7 +161,7 @@ namespace vecc {
         public:
             /**
              * Constructor
-             * @param token on which error occurred  
+             * @param function function on which error occurred
              */
             explicit RedefinedFun(const Token &function) : ParseException(
                     FRED(BOLD("Redefined Function ERROR : \n")) "Function " + function.getLiteral() +

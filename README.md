@@ -72,7 +72,7 @@
 - Project targets :
 
     - **build-all** - builds all available targets
-    - **vecc-doc** - available if *LaTeX* is found on device
+    - **vecc-doc** - available if *LaTeX*  or *Doxygen* is found on device
     - **vecc-test** - UnitTest made with *boost*
     - **vecc-check** - dummy target for test run during library compilation
     - **vecc-library** - library containing all classes excluding parameters

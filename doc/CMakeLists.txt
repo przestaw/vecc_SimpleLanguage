@@ -42,8 +42,6 @@ if (LATEX_FOUND)
         add_custom_target(${DOC} command echo "Documentation : polish pdf")
         add_dependencies(${DOC} ${DOC}-latex)
     endif()
-
-
 elseif(DOXYGEN_FOUND)
     DOXYGEN(NO)
 

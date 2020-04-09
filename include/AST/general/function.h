@@ -11,28 +11,53 @@
 #include <AST/general/return.h>
 #include <AST/statement/statement_block.h>
 
-namespace vecc {
-    namespace ast {
-        class Function {
-        public:
-            explicit Function(std::string identifier);
+namespace vecc::ast {
+    /**
+     * Class describin Function definition
+     */
+    class Function {
+    public:
+        /**
+         * Constructor
+         * @param identifier function name
+         */
+        explicit Function(std::string identifier);
 
-            void addParameter(const std::string &identifier);
+        /**
+         * Adds function parameter
+         * @param identifier parameter name
+         */
+        void addParameter(const std::string &identifier);
 
-            unsigned size() const { return names_.size(); }
+        /**
+         * Returns number of arguments
+         * @return number of arguments
+         */
+        unsigned size() const;
 
-            const std::string &getIdentifier() const { return identifier_; }
+        /**
+         * Returns function name
+         * @return function name
+         */
+        const std::string &getIdentifier() const;
 
-            Return run(const std::vector<Variable> &parameters = std::vector<Variable>());
+        /**
+         * Runs statement
+         * @return return value
+         */
+        Return run(const std::vector<Variable> &parameters = std::vector<Variable>());
 
-            StatementBlock &getFunctionBody();
+        /**
+         * Returns reference to function body
+         * @return function body reference
+         */
+        StatementBlock &getFunctionBody();
 
-        private:
-            const std::string identifier_;      //!< function identifier/name
-            std::vector<std::string> names_; //!< Parameters names
-            StatementBlock functionBody_;
-        };
-    }
+    private:
+        const std::string identifier_;      //!< function identifier/name
+        std::vector<std::string> names_;    //!< Parameters names
+        StatementBlock functionBody_;       //!< Function Body
+    };
 }
 
 #endif //VECC_LANG_FUNCTION_H

@@ -11,37 +11,46 @@
 #include <AST/general/function.h>
 #include <error/exeception.h>
 
-namespace vecc {
-    namespace ast {
-        class Program {
-        public:
-            Program() = default;
+namespace vecc::ast {
+    /**
+     * Class describing Program in form of AST
+     */
+    class Program {
+    public:
+        /**
+         * Constructor
+         */
+        Program() = default;
 
-            Function &findFunction(const std::string &identifier) {
-                return *functions.at(identifier);
-            }
+        /**
+         * Finds function
+         * @param identifier function identifier
+         * @return Function definition reference
+         */
+        Function &findFunction(const std::string &identifier);
 
-            bool existFunction(const std::string &identifier) const {
-                return static_cast<bool>(functions.count(identifier));
-            }
+        /**
+         * Checks for function existence
+         * @param identifier function identifier
+         * @return true if function exists in Program
+         */
+        bool existFunction(const std::string &identifier) const;
 
-            void addFunction(std::unique_ptr<Function> function) {
-                functions.insert({function->getIdentifier(), std::move(function)});
-            }
+        /**
+         * Adds function to program
+         * @param function function to be added
+         */
+        void addFunction(std::unique_ptr<Function> function);
 
-            Return run() {
-                auto main = functions.find("main");
-                if (main != functions.end()) {
-                    return main->second->run();
-                } else {
-                    throw error::UndefinedMain();
-                }
-            }
+        /**
+         * Runs Program
+         * @return return value
+         */
+        Return run();
 
-        private:
-            std::unordered_map<std::string, std::unique_ptr<Function>> functions;
-        };
-    }
+    private:
+        std::unordered_map<std::string, std::unique_ptr<Function>> functions;
+    };
 }
 
 #endif //VECC_LANG_PROGRAM_H
