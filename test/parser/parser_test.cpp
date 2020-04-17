@@ -6,6 +6,8 @@
 #include <parser/parser.h>
 
 using namespace vecc;
+using namespace vecc::error;
+using namespace vecc::ast;
 
 BOOST_AUTO_TEST_SUITE(Parser_Test_Suite)
 
@@ -450,7 +452,7 @@ BOOST_AUTO_TEST_SUITE(Parser_Test_Suite)
             Parser parser(std::make_unique<Reader>(stream));
 
             std::unique_ptr<Program> program;
-            BOOST_CHECK_THROW(parser.parse(), MismachedArgumentsCount);
+            BOOST_CHECK_THROW(parser.parse(), MismatchedArgumentsCount);
         }
 
         BOOST_AUTO_TEST_CASE(InvalidFunctionCall_Throws_2) {
@@ -463,7 +465,7 @@ BOOST_AUTO_TEST_SUITE(Parser_Test_Suite)
             Parser parser(std::make_unique<Reader>(stream));
 
             std::unique_ptr<Program> program;
-            BOOST_CHECK_THROW(parser.parse(), MismachedArgumentsCount);
+            BOOST_CHECK_THROW(parser.parse(), MismatchedArgumentsCount);
         }
 
         BOOST_AUTO_TEST_CASE(InvalidMath_Throws_1) {

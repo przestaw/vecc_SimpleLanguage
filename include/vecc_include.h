@@ -14,15 +14,16 @@ namespace vecc {
      */
     enum class LogLevel : uint8_t {
         NoLog = 0,                       //!< no information outputed to stderr
-        Errors,                          //!< runtime and compile errors
-        ParsedFiles,                     //!< Errors & information about parsed files
-        CreatedFunctions,                //!< ParsedFiles & any created function
-        ParsedTokens,                    //!< ParsedFiles & any Token
-        FullLog,                         //!< All available logs
+        Errors = 1,                          //!< runtime and compile errors
+        ParsedFiles = 2,                     //!< Errors & information about parsed files
+        CreatedFunctions = 3,                //!< ParsedFiles & any created function
+        ParsedTokens = 4,                    //!< ParsedFiles & any Token
+        FullLog = 5,                         //!< All available logs
     };
 
     namespace libraries {
-        static const std::string &veccLibrary = "fun product2(vec1, vec2) {\n"
+        static const std::string &veccLibrary =                                 //!<Vecc Library source constant
+                                                "fun product2(vec1, vec2) {\n"
                                                 "    var res=vec(0,0);\n"
                                                 "    res[0] = vec1[0] * vec2[0] - vec1[1] * vec2[1];\n"
                                                 "    res[1] = vec1[0] * vec2[1] + vec1[1] * vec2[0];\n"
@@ -47,7 +48,9 @@ namespace vecc {
                                                 "    return res;\n"
                                                 "}\n";
 
-        static const std::string &fibLibrary = "fun fib_rec(n){\n"
+
+        static const std::string &fibLibrary =                                  //!< Fib Library source constant
+                                               "fun fib_rec(n){\n"
                                                "    if(n <= 1){\n"
                                                "        return 1;\n"
                                                "    } else {\n"

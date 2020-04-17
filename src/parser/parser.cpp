@@ -18,6 +18,7 @@
 #include <AST/expression/or_logic_expr.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 Parser::Parser(const LogLevel &logLevel, std::ostream &out)
         : logLevel_(logLevel), out_(out), scanner_(std::make_unique<Scanner>(nullptr, logLevel, out)),
@@ -42,6 +43,7 @@ void Parser::parse() {
 std::unique_ptr<Program> Parser::getProgram() {
     std::unique_ptr<Program> temp = std::make_unique<Program>();
     std::swap(currentProgram, temp);
+    currentContext = nullptr;
     return temp;
 }
 
@@ -71,7 +73,7 @@ void Parser::parseFunctionDef() {
             FCYN("" + funToken.getLiteral() + "") " has been created \n";
         }
     } else {
-        throw RedefinedFun(funToken);
+        throw error::RedefinedFun(funToken);
     }
 }
 
@@ -96,7 +98,7 @@ void Parser::parseStatementBlock(StatementBlock &newBlock) {
         Token token = scanner_->getToken();
         switch (token.getType()) {
             default:
-                throw UnexpectedToken(token, {Token::Type::If,
+                throw error::UnexpectedToken(token, {Token::Type::If,
                                               Token::Type::While,
                                               Token::Type::Return,
                                               Token::Type::Var,
@@ -167,13 +169,15 @@ Variable Parser::parseVectorValue() {
 }
 
 std::unique_ptr<Statement> Parser::parseAssignStatement(const std::shared_ptr<Variable>& variable) {
+    Position position;
     auto rValueParse = [&]() {
-        expectToken(Token::Type::Assignment);
+        expectToken(Token::Type::Assignment,[&]() { position = scanner_->getToken().getTokenPos(); });
         std::unique_ptr<Expression> logicExpr(parseOrExpression());
         expectToken(Token::Type::Semicolon);
         return logicExpr;
     };
 
+    std::unique_ptr<AssignStatement> assignStmt;
     if (tryToken(Token::Type::BracketOpen)) {
         // indexed access identifier[position]
         unsigned val;
@@ -182,17 +186,20 @@ std::unique_ptr<Statement> Parser::parseAssignStatement(const std::shared_ptr<Va
             val = static_cast<unsigned>(std::stoul(scanner_->getToken().getLiteral()));
         });
         expectToken(Token::Type::BracketClose);
-        return std::make_unique<AssignStatement>(*(variable), val, rValueParse());
+        assignStmt = std::make_unique<AssignStatement>(*(variable), val, rValueParse());
     } else {
         // whole var/vec accesss
-        return std::make_unique<AssignStatement>(*(variable), rValueParse());
+        assignStmt = std::make_unique<AssignStatement>(*(variable), rValueParse());
     }
+    assignStmt->setPosition(position);
+    return assignStmt;
 }
 
 
 std::unique_ptr<Statement> Parser::parseInitStatement() {
     scanner_->parseToken();
     Token identifier;
+    Position position;
     expectToken(Token::Type::Identifier,
                 [&]() { identifier = scanner_->getToken(); });
 
@@ -200,20 +207,23 @@ std::unique_ptr<Statement> Parser::parseInitStatement() {
         std::unique_ptr<AssignStatement> assignStmt;
         currentContext->addVariable(identifier.getLiteral(), Variable());
 
-        if (tryToken(Token::Type::Assignment)) {
+        if (tryToken(Token::Type::Assignment,[&]() { position = scanner_->getToken().getTokenPos(); })) {
             assignStmt = std::make_unique<AssignStatement>(
                     *currentContext->findVariable(identifier.getLiteral(), identifier),
                     parseOrExpression());
+            assignStmt->setPosition(position);
         } else {
             assignStmt = std::make_unique<AssignStatement>(
                     *currentContext->findVariable(identifier.getLiteral(), identifier),
                     std::make_unique<BaseMathExpr>(std::make_unique<Variable>()));
+            assignStmt->setPosition(identifier.getTokenPos());
         }
 
         expectToken(Token::Type::Semicolon);
         return assignStmt;
+
     } else {
-        throw RedefinedVar(identifier);
+        throw error::RedefinedVar(identifier);
     }
 }
 
@@ -239,7 +249,7 @@ std::unique_ptr<Statement> Parser::parseIdentifier() {
 
 std::unique_ptr<Statement> Parser::parseFunctionCall(const Token &function) {
     if (!currentProgram->existFunction(function.getLiteral())) {
-        throw UndefinedFun(function);
+        throw error::UndefinedFun(function);
     }
 
     Function &fun = currentProgram->findFunction(function.getLiteral());
@@ -257,7 +267,7 @@ std::unique_ptr<Statement> Parser::parseFunctionCall(const Token &function) {
     if (fun.size() == funCall->size()) {
         return funCall;
     } else {
-        throw MismachedArgumentsCount(function, fun.size(), funCall->size());
+        throw error::MismatchedArgumentsCount(function, fun.size(), funCall->size());
     }
 }
 
@@ -396,12 +406,12 @@ std::unique_ptr<Expression> Parser::parseBaseLogicExpression() {
 }
 
 std::unique_ptr<Expression> Parser::parseAdditiveExpression() {
-    std::unique_ptr<AddExpr> addExpr =
-            std::make_unique<AddExpr>(parseMultiplyExpression());
+    std::unique_ptr<AdditiveExpr> addExpr =
+            std::make_unique<AdditiveExpr>(parseMultiplyExpression());
 
     Token token;
 
-    auto addOp = [&](const AddExpr::OperatorType &operatorType) {
+    auto addOp = [&](const AdditiveExpr::OperatorType &operatorType) {
         scanner_->parseToken();
         addExpr->addOperand(parseMultiplyExpression(),
                             operatorType,
@@ -412,10 +422,10 @@ std::unique_ptr<Expression> Parser::parseAdditiveExpression() {
         token = scanner_->getToken();
         switch (token.getType()) {
             case Token::Type::Plus:
-                addOp(AddExpr::OperatorType::Add);
+                addOp(AdditiveExpr::OperatorType::Add);
                 break;
             case Token::Type::Minus:
-                addOp(AddExpr::OperatorType::Substract);
+                addOp(AdditiveExpr::OperatorType::Substract);
                 break;
             default:
                 //NOTE : when no more operands - return
@@ -479,7 +489,7 @@ std::unique_ptr<Expression> Parser::parseBaseMathExpression() {
             return parseParentExpression(unaryMathOp);
 
         default:
-            throw UnexpectedToken(scanner_->getToken(), {
+            throw error::UnexpectedToken(scanner_->getToken(), {
                     Token::Type::NumberString,
                     Token::Type::Vec,
                     Token::Type::Identifier,

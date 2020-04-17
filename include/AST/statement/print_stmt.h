@@ -11,15 +11,34 @@
 #include <AST/expression/expression.h>
 #include <AST/statement/statement.h>
 
-namespace vecc {
+namespace vecc::ast {
+    /**
+     * Class describing print statement
+     */
     class PrintStatement : public Statement {
     public:
+        /**
+         * Constructor
+         * @param out stream where statement will be outputted
+         */
         explicit PrintStatement(std::ostream &out = std::cout);
 
+        /**
+         * Expression to be printed
+         * @param expression expression to be printed
+         */
         void addExpression(std::unique_ptr<Expression> expression);
 
+        /**
+         * String constant to be printed
+         * @param string string to be printed
+         */
         void addString(std::string string);
 
+        /**
+         * Runs statement
+         * @return return value
+         */
         Return run() override;
 
     private:

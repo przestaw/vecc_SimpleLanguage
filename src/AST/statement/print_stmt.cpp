@@ -6,6 +6,7 @@
 #include <sstream>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 PrintStatement::PrintStatement(std::ostream &out) : out_(out) {}
 

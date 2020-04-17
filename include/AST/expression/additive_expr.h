@@ -9,18 +9,39 @@
 #include <AST/general/variable.h>
 #include <AST/expression/expression.h>
 
-namespace vecc {
-    class AddExpr : public Expression {
+namespace vecc::ast {
+    /**
+     * Class describing Additive Mathematical Expression
+     */
+    class AdditiveExpr : public Expression {
     public:
+        /**
+         * Type of operation
+         */
         enum class OperatorType {
-            Add,
-            Substract
+            Add,        //!< +
+            Substract   //!< -
         };
 
-        explicit AddExpr(std::unique_ptr<Expression> value);
+        /**
+         * Constructor
+         * @param value first value of Expression
+         */
+        explicit AdditiveExpr(std::unique_ptr<Expression> value);
 
-        void addOperand(std::unique_ptr<Expression> value, const OperatorType &type, const Position &position = Position());
+        /**
+         * Adds operand to Expression
+         * @param value operand value
+         * @param type operation type
+         * @param position position used to inform about errors
+         */
+        void addOperand(std::unique_ptr<Expression> value, const OperatorType &type,
+                        const Position &position = Position());
 
+        /**
+         * Calculate value of Expression
+         * @return Expression value
+         */
         [[nodiscard]] Variable calculate() const override;
 
     private:

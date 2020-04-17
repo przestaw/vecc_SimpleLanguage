@@ -5,7 +5,7 @@
 #include <AST/expression/base_logic_expr.h>
 
 using namespace vecc;
-
+using namespace vecc::ast;
 
 BaseLogicExpr::BaseLogicExpr(std::unique_ptr<Expression> value, bool unaryLogicOp) : invert(unaryLogicOp),
                                                                                      value_(std::move(value)) {}

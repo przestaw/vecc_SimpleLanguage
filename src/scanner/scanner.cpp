@@ -8,10 +8,10 @@
 using namespace vecc;
 
 Scanner::Scanner(const LogLevel &logLevel, std::ostream &out)
-        : logLevel_(logLevel), reader_(nullptr), out_(out) {}
+        : logLevel_(logLevel), out_(out), reader_(nullptr) {}
 
 Scanner::Scanner(std::unique_ptr<Reader> reader, const LogLevel &logLevel, std::ostream &out)
-        : logLevel_(logLevel), reader_(std::move(reader)), out_(out) {}
+        : logLevel_(logLevel), out_(out), reader_(std::move(reader)) {}
 
 bool Scanner::canRead() {
     return static_cast<bool>(reader_);
@@ -30,10 +30,10 @@ Token Scanner::parseToken() {
 
             return currentToken;
         } else {
-            throw vecc::NotAToken(currentToken);
+            throw error::NotAToken(currentToken);
         }
     } else {
-        throw vecc::NoInputStream();
+        throw error::NoInputStream();
     }
 }
 
@@ -57,7 +57,7 @@ void Scanner::tryToken() {
         tryNumberString();
     } else if (reader_->peek() == '"') {
         tryCharString();
-        // FIXME  : throw if eof before second " ???
+        // FIXME  : throw error::if eof before second " ???
     } else if (isalnum(reader_->peek())) {
         tryKeyword();
         // if not keyword it is Identifier

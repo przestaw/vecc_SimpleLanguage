@@ -5,6 +5,7 @@
 #include "scanner/position.h"
 
 #include <sstream>
+#include <utility>
 
 using namespace vecc;
 
@@ -13,22 +14,22 @@ Position::Position()
           symbolNo(0),
           namedSource(false) {}
 
-Position::Position(const std::string &streamName)
+Position::Position(std::string source)
         : lineNo(1),
           symbolNo(0),
           namedSource(true),
-          sourceName(streamName) {}
+          sourceName(std::move(source)) {}
 
 Position::Position(unsigned line, unsigned symbol)
         : lineNo(line),
           symbolNo(symbol),
           namedSource(false) {}
 
-Position::Position(unsigned line, unsigned symbol, const std::string &streamName)
+Position::Position(unsigned line, unsigned symbol, std::string streamName)
         : lineNo(line),
           symbolNo(symbol),
           namedSource(true),
-          sourceName(streamName) {}
+          sourceName(std::move(streamName)) {}
 
 bool Position::operator==(const Position &rhs) const {
     return lineNo == rhs.lineNo &&

@@ -86,6 +86,17 @@ Projekt zakłada wykonanie interpretera prostego języka z obsługą wbudowanego
 		Wartości logiczne sa reprezentowane przez liczby gdzie 0 = fałsz, !0 = prawda. Każdy wektor niezerowy jest ewaluowany do prawdy.
 	\item
 		Język wspierać ma operację \textsl{print(...)} przyjmująca oprócz typów numerycznych stałe tekstowe \textsl{[w cudzysłowach " "]} istniejące wyłącznie na potrzeby \textsl{print}.
+	\item
+		Dany jest następujący priorytet operatorów :
+		\begin{enumerate}
+			\item - ! \textit{unarna negacja}
+			\item or
+			\item and
+			\item == != < > <= >= \textit{porównania}
+			\item * / \%
+			\item + -
+			\item = \textit{przypisania}
+		\end{enumerate}
 \end{itemize}
 \subsection{Funkcje Biblioteczne}
 Funkcje biblioteczne miały być ładowane przed właściwym programem i zaimplementowane w docelowym języku. 
@@ -194,6 +205,49 @@ fun scalar3(vec1, vec2) {
 }
 \end{verbatim}
 
+\paragraph{Przykład 8 - fib\_rec}
+\begin{verbatim}
+fun fib_rec(n){
+    if(n <= 1){
+        return 1;
+    } else {
+        return fib_rec(n-1) + fib_rec(n-2);
+    }
+}
+\end{verbatim}
+
+\paragraph{Przykład 9 - fib\_it}
+\begin{verbatim}
+fun fib_it(n){
+    var a = 0;
+    if( n == 0){
+        return a;
+    }
+    var b = 1;
+    var c = a + b;
+
+    while(0 < n){
+        c = a + b;
+        a = b;
+        b = c;
+
+        n = n - 1;
+    }
+    return b;
+}
+\end{verbatim}
+
+\paragraph{Przykład 10}
+\begin{verbatim}
+fun main() {
+    var i = 0;
+    while( i <= 20){
+        print("fib_it(", i, ")  = ", fib_it(i));
+        print("fib_rec(", i, ") = ", fib_rec(i));
+        i = i + 1;
+    }
+}
+\end{verbatim}
 \section{Opis Struktury Języka}
 
 \textsl{\textbf{program} = \{ functionDef \} ;\\
@@ -257,12 +311,86 @@ Program miałby składać się z następujących modułów :
 \begin{itemize}
 	\item analizator leksykalny
 	\item analizator składniowy
-	\item interpreter
+	\item interpreter \textit{[w formie drzewa AST]}
 \end{itemize}
 
 \section{Instrukcja Kompilacji i Użytkowania}
 \subsection{Instrukcja Kompilacji}
 Projekt kompilowany jest z użyciem narzędzia \textsl{CMake}.
-	
+
+\paragraph{Przykładowa konfiguracja}
+\begin{verbatim}
+# Initial configuration
+$ mkdir build
+$ cd build
+$ cmake -DCMAKE_CXX_COMPILER=clang++ ..
+$ make
+...
+# Second configuration
+$ make clean
+$ cmake -DCMAKE_BUILD_TYPE=Debug ..
+$ make
+...
+# Third configuration
+$ rm -rf *
+$ cmake -DCMAKE_CXX_COMPILER=g++ ..
+$ make
+\end{verbatim}
+
+\paragraph{Zmienne CMake}
+\begin{itemize}
+    \item CMAKE\_BUILD\_TYPE = \textsl{Release|Debug} \\
+    Typ kompilacji może być Finalny \textsl{Release} lub Deweloperski Finalny \textsl{Debug}. Steruje to poziomem optymalizacji, obecnością ostrzeżeń oraz flag debugowania.
+
+    \item CMAKE\_CXX\_COMPILER = \textsl{<C++ compiler name>} \\
+Określa kompilator kodu C++
+    \item pełna informacja o zmiennej : \\
+CMake --help-variable VARIABLE\_NAME
+    \item pełna dokumentacja dostepna jest na stronach CMake-a
+\end{itemize}
+\subsubsection{Polecenia}
+
+\begin{itemize}
+
+\item \textbf{build-all} - builds all available targets
+\item \textbf{vecc-doc} - available if *LaTeX*  and/or "Doxygen" is found on device
+\item \textbf{vecc-test} - UnitTest made with *boost*
+\item \textbf{vecc-check} - dummy target for test run during library compilation
+\item \textbf{vecc-library} - library containing all classes excluding parameters
+\item \textbf{vecc-program} - program available for command line usage
+
+\end{itemize}
 \subsection{Instrukcja Użycia}
+Program jest uruchamiany z linii poleceń w następujący sposób :
+\begin{verbatim}
+$ ./vecc-program <options> <files list>
+\end{verbatim}
+
+
+przykład :
+\begin{verbatim}
+$ ./vecc-program --vec -i file1.vecc file2.vecc main.vecc
+\end{verbatim}
+
+\subsubsection{Parametry}
+\begin{itemize}
+\item \textit{-h [ --help ]} - ekran pomocy           
+
+\item \textit{-i [ --input ]} - lista plikóœ wejściowych          
+
+\item \textit{--vec} - dołączenie biblioteki standardowej \textit{vecc::vec}                      
+
+\item \textit{--fib} - dołączenie biblioteki Fibonacci      
+
+\item \textit{-v [ --verbosity ]} (=0)    
+Dostępne poziomy :
+\begin{itemize}
+	\item 0  -  bez logów
+	\item 1  -  błędy wykonania i kompilacji
+	\item 2  -  błędy i parsowane strumienie
+	\item 3  -  błędy, pliki i tworzone funkcje
+	\item 4  -  błędy, pliki, tworzone funkcje i odczytane tokeny
+	\item 5+ -  wszystkie dostępne logi
+\end{itemize} 
+\end{itemize}
 \end{document}

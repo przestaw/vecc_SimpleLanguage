@@ -8,6 +8,7 @@
 #include <AST/statement/function_call.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 BaseMathExpr::BaseMathExpr(std::unique_ptr<Statement> functionCall, bool unaryMathOp)
         : type_(Type::Function), indexedAccess_(false), invert_(unaryMathOp),
@@ -58,7 +59,7 @@ Variable BaseMathExpr::getBaseValue() const {
                 return ret.variable_;
             } else {
                 // TODO : remove? rework?
-                throw NoReturnValue("Function " +
+                throw error::NoReturnValue("Function " +
                                     dynamic_cast<FunctionCallStatement *>(std::get<std::unique_ptr<Statement>>(
                                             value_).get())->getFunction().getIdentifier() +
                                     " does not return any value");

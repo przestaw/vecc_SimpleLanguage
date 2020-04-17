@@ -2,6 +2,7 @@
 #include <error/exeception.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 const Variable Variable::retTrue = Variable({1});
 const Variable Variable::retFalse = Variable({0});
@@ -24,7 +25,7 @@ int &Variable::at(unsigned idx) {
     if (idx < values_.size()) {
         return values_.at(idx);
     } else {
-        throw RangeException("index out of range on " +
+        throw error::RangeException("index out of range on " +
                              ((size() != 1) ? (std::to_string(size()) + "-dimension vector's \n") : "variable")
                              + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));
     }
@@ -34,7 +35,7 @@ const int &Variable::at(unsigned idx) const {
     if (idx < values_.size()) {
         return values_.at(idx);
     } else {
-        throw RangeException("index out of range on " +
+        throw error::RangeException("index out of range on " +
                              ((size() != 1) ? (std::to_string(size()) + "-dimension vector's \n") : "variable")
                              + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));
     }
@@ -52,7 +53,7 @@ Variable Variable::operator==(const Variable &rhs) const {
             return retFalse;
         }
     } else {
-        throw MathException("Can't compare "
+        throw error::MathException("Can't compare "
                             + std::to_string(values_.size()) + "-dimension vector and "
                             + std::to_string(rhs.values_.size()) + "-dimension vector\n"
                             + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));
@@ -71,7 +72,7 @@ Variable Variable::operator<(const Variable &rhs) const {
             return retFalse;
         }
     } else {
-        throw MathException("Can't compare vectors to be greater/less from each other\n"
+        throw error::MathException("Can't compare vectors to be greater/less from each other\n"
                             + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));
     }
 }
@@ -108,7 +109,7 @@ Variable Variable::operator+(const Variable &rhs) const {
             var[i] += rhs.values_[i];
         }
     } else {
-        throw MathException("Can't add "
+        throw error::MathException("Can't add "
                             + std::to_string(values_.size()) + "-dimension vector and "
                             + std::to_string(rhs.values_.size()) + "-dimension vector\n"
                             + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));
@@ -125,7 +126,7 @@ Variable Variable::operator-(const Variable &rhs) const {
             var[i] -= rhs.values_[i];
         }
     } else {
-        throw MathException("Can't add "
+        throw error::MathException("Can't add "
                             + std::to_string(values_.size()) + "-dimension vector and "
                             + std::to_string(rhs.values_.size()) + "-dimension vector\n"
                             + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));
@@ -147,7 +148,7 @@ Variable Variable::operator*(const Variable &rhs) const {
             variable *= rhs.values_[0];
         }
     } else {
-        throw MathException("Can't multiply "
+        throw error::MathException("Can't multiply "
                             + std::to_string(values_.size()) + "-dimension vector by "
                             + std::to_string(rhs.values_.size()) + "-dimension vector\n"
                             + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));
@@ -164,12 +165,12 @@ Variable Variable::operator/(const Variable &rhs) const {
             if (rhs.values_[0]) {
                 variable /= rhs.values_[0];
             } else {
-                throw MathException("Can't divide by 0 \n"
+                throw error::MathException("Can't divide by 0 \n"
                                     + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));
             }
         }
     } else {
-        throw MathException("Can't divide "
+        throw error::MathException("Can't divide "
                             + std::to_string(values_.size()) + "-dimension vector by "
                             + std::to_string(rhs.values_.size()) + "-dimension vector\n"
                             + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));
@@ -186,12 +187,12 @@ Variable Variable::operator%(const Variable &rhs) const {
             if (rhs.values_[0]) {
                 variable %= rhs.values_[0];
             } else {
-                throw MathException("Can't modulo by 0 \n"
+                throw error::MathException("Can't modulo by 0 \n"
                                     + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));
             }
         }
     } else {
-        throw MathException("Can't modulo "
+        throw error::MathException("Can't modulo "
                             + std::to_string(values_.size()) + "-dimension vector by "
                             + std::to_string(rhs.values_.size()) + "-dimension vector\n"
                             + (currentPosition != Position() ? "at " + currentPosition.toString() : ""));

@@ -6,6 +6,7 @@
 #include <error/exeception.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 void Context::addVariable(const std::string &identifier, const Variable &variable) {
     variables_.insert({identifier, std::make_shared<Variable>(variable)});
@@ -17,13 +18,7 @@ std::shared_ptr<Variable> Context::findVariable(const std::string &identifier, c
     } else if (parentContext_) {
         return parentContext_->findVariable(identifier, token);
     } else { // parent context?
-        throw UndefinedVar(token);
-    }
-}
-
-Context::Context(std::vector<std::pair<std::string, std::shared_ptr<Variable>>> variables) : parentContext_(nullptr) {
-    for (auto &variable : variables) {
-        this->variables_.insert(variable);
+        throw error::UndefinedVar(token);
     }
 }
 
@@ -61,6 +56,6 @@ void Context::restoreValues(const std::vector<Variable> &savedValues) {
             ++val;
         }
     } else {
-        throw Exception("Unknown runtime exception during restoring context\n");
+        throw error::Exception("Unknown runtime exception during restoring context\n");
     }
 }

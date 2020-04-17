@@ -7,6 +7,8 @@
 #include <error/exeception.h>
 
 using namespace vecc;
+using namespace vecc::error;
+using namespace vecc::ast;
 
 BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 

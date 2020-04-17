@@ -5,8 +5,8 @@
 #include <boost/test/unit_test.hpp>
 #include <AST/expression/base_math_expr.h>
 
-using vecc::BaseMathExpr;
-using vecc::Variable;
+using namespace vecc;
+using namespace vecc::ast;
 
 BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 

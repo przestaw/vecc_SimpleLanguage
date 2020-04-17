@@ -9,19 +9,40 @@
 #include <AST/expression/expression.h>
 #include <AST/expression/base_math_expr.h>
 
-namespace vecc {
+namespace vecc::ast {
+    /**
+     * Class describing Multiplicative Mathematical Expression
+     */
     class MultiplyExpr : public Expression {
     public:
+        /**
+         * Type of operation
+         */
         enum class OperatorType {
-            Multiply,
-            Divide,
-            Modulo
+            Multiply,   //!< *
+            Divide,     //!< /
+            Modulo      //!< %
         };
 
+        /**
+         * Constructor
+         * @param value first value of Expression
+         */
         explicit MultiplyExpr(std::unique_ptr<Expression> value);
 
-        void addOperand(std::unique_ptr<Expression> value, const OperatorType &type, const Position &position = Position());
+        /**
+         * Adds operand to Expression
+         * @param value operand value
+         * @param type operation type
+         * @param position position used to inform about errors
+         */
+        void addOperand(std::unique_ptr<Expression> value, const OperatorType &type,
+                        const Position &position = Position());
 
+        /**
+         * Calculate value of Expression
+         * @return Expression value
+         */
         [[nodiscard]] Variable calculate() const override;
 
     private:
@@ -29,7 +50,7 @@ namespace vecc {
 
         struct Multiplyable {
             Multiplyable(const OperatorType type, std::unique_ptr<Expression> value, const Position &position)
-                : operation_(type), value_(std::move(value)), pos_(position) {}
+                    : operation_(type), value_(std::move(value)), pos_(position) {}
 
             OperatorType operation_;
             std::unique_ptr<Expression> value_;

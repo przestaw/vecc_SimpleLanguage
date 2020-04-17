@@ -5,6 +5,7 @@
 #include <AST/expression/or_logic_expr.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 OrLogicExpr::OrLogicExpr(std::unique_ptr<Expression> value) {
     operands.emplace_back(std::move(value));

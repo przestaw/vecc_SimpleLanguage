@@ -5,6 +5,7 @@
 #include <AST/expression/multiply_expr.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 MultiplyExpr::MultiplyExpr(std::unique_ptr<Expression> value) : baseValue(std::move(value)) {}
 

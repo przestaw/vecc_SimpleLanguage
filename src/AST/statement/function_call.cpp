@@ -5,6 +5,7 @@
 #include <AST/statement/function_call.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 FunctionCallStatement::FunctionCallStatement(Function &function) : function_(function) {}
 

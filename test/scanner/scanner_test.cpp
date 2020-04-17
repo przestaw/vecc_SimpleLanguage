@@ -7,51 +7,54 @@
 #include "scanner/scanner.h"
 #include "error/exeception.h"
 
+using namespace vecc;
+using namespace vecc::error;
+
 BOOST_AUTO_TEST_SUITE(Lexer_Test_Suite)
 
     BOOST_AUTO_TEST_CASE(ScannerWithoutReader_Throws1) {
-        vecc::Scanner scanner;
-        BOOST_CHECK_THROW(scanner.parseToken(), vecc::NoInputStream);
+        Scanner scanner;
+        BOOST_CHECK_THROW(scanner.parseToken(), NoInputStream);
     }
 
     BOOST_AUTO_TEST_CASE(ScannerWithoutReader_Throws2) {
         std::stringstream stream;
 
-        vecc::Scanner scanner(std::make_unique<vecc::Reader>(stream));
+        Scanner scanner(std::make_unique<Reader>(stream));
         scanner.setReader(nullptr);
-        BOOST_CHECK_THROW(scanner.parseToken(), vecc::NoInputStream);
+        BOOST_CHECK_THROW(scanner.parseToken(), NoInputStream);
     }
 
     BOOST_AUTO_TEST_CASE(ScannerWithReader_GivenEmptyReturnEoF) {
         std::stringstream stream("");
 
-        vecc::Scanner scanner(std::make_unique<vecc::Reader>(stream));
+        Scanner scanner(std::make_unique<Reader>(stream));
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::EoF);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
     }
 
     BOOST_AUTO_TEST_CASE(ScannerWithReader_GivenSpacesReturnEoF) {
         std::stringstream stream("  \t");
 
-        vecc::Scanner scanner(std::make_unique<vecc::Reader>(stream));
+        Scanner scanner(std::make_unique<Reader>(stream));
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::EoF);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
     }
 
     BOOST_AUTO_TEST_CASE(ScannerWithReader_GivenEmptyMultilineReturnEoF1) {
         std::stringstream stream("  \n  \r \t");
 
-        vecc::Scanner scanner(std::make_unique<vecc::Reader>(stream));
+        Scanner scanner(std::make_unique<Reader>(stream));
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::EoF);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
     }
 
     BOOST_AUTO_TEST_CASE(ScannerWithReader_GivenEmptyMultilineReturnEoF2) {
         std::stringstream stream("  \n\r  \t\r\r ");
 
-        vecc::Scanner scanner(std::make_unique<vecc::Reader>(stream));
+        Scanner scanner(std::make_unique<Reader>(stream));
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::EoF);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
     }
 
     BOOST_AUTO_TEST_CASE(ScannerGivenSpecialCharacterString_ReturnsTokens1) {
@@ -67,29 +70,29 @@ BOOST_AUTO_TEST_SUITE(Lexer_Test_Suite)
                                   "! ";
 
         std::istringstream istream(streamValue);
-        vecc::Scanner scanner(std::make_unique<vecc::Reader>(istream));
+        Scanner scanner(std::make_unique<Reader>(istream));
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::ParenthesisOpen);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::ParenthesisOpen);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::ParenthesisClose);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::ParenthesisClose);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::BracketOpen);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::BracketOpen);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::BracketClose);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::BracketClose);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::CurlyBracketOpen);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::CurlyBracketOpen);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::CurlyBracketClose);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::CurlyBracketClose);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Comma);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Comma);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Assignment);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Assignment);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Semicolon);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Semicolon);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Negation);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Negation);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::EoF);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
     }
 
 
@@ -107,40 +110,40 @@ BOOST_AUTO_TEST_SUITE(Lexer_Test_Suite)
                                   "% ";
 
         std::istringstream istream(streamValue);
-        vecc::Scanner scanner(std::make_unique<vecc::Reader>(istream));
+        Scanner scanner(std::make_unique<Reader>(istream));
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Equality);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Equality);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Inequality);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Inequality);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Less);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Less);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Greater);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Greater);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::LessOrEqual);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::LessOrEqual);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::GreaterOrEqual);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::GreaterOrEqual);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Plus);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Plus);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Minus);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Minus);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Multiply);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Multiply);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Divide);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Divide);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Modulo);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Modulo);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::EoF);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
     }
 
     BOOST_AUTO_TEST_CASE(ScannerGivenCharacterString_ReturnsToken) {
         std::string value = "Alan ma Koticzke 123456 @";
 
         std::istringstream istream("\"" + value + "\"");
-        vecc::Scanner scanner(std::make_unique<vecc::Reader>(istream));
+        Scanner scanner(std::make_unique<Reader>(istream));
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::CharacterString);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::CharacterString);
         BOOST_CHECK_EQUAL(scanner.getToken().getLiteral(), value);
     }
 
@@ -148,9 +151,9 @@ BOOST_AUTO_TEST_SUITE(Lexer_Test_Suite)
         std::string value = "Alan \t ma \rKoticzke\n 123456 \t@\n";
 
         std::istringstream istream("\"" + value + "\"");
-        vecc::Scanner scanner(std::make_unique<vecc::Reader>(istream));
+        Scanner scanner(std::make_unique<Reader>(istream));
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::CharacterString);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::CharacterString);
         BOOST_CHECK_EQUAL(scanner.getToken().getLiteral(), value);
     }
 
@@ -158,19 +161,19 @@ BOOST_AUTO_TEST_SUITE(Lexer_Test_Suite)
         std::string value = "Alan ma Koticzke 123456 @";
 
         std::istringstream istream("\"" + value);
-        vecc::Scanner scanner(std::make_unique<vecc::Reader>(istream));
-        BOOST_CHECK_THROW(scanner.parseToken(), vecc::NotAToken);
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::NaT);
+        Scanner scanner(std::make_unique<Reader>(istream));
+        BOOST_CHECK_THROW(scanner.parseToken(), NotAToken);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::NaT);
     }
 
     BOOST_AUTO_TEST_CASE(ScannerGivenNotDefined_Throws) {
         std::string value = "@|&$#";
 
         std::istringstream istream(value);
-        vecc::Scanner scanner(std::make_unique<vecc::Reader>(istream));
+        Scanner scanner(std::make_unique<Reader>(istream));
         for (auto &it : value) {
-            BOOST_CHECK_THROW(scanner.parseToken(), vecc::NotAToken);
-            BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::NaT);
+            BOOST_CHECK_THROW(scanner.parseToken(), NotAToken);
+            BOOST_CHECK(scanner.getToken().getType() == Token::Type::NaT);
             std::string check(1, it);
             BOOST_CHECK_EQUAL(scanner.getToken().getLiteral(), check);
         }
@@ -187,26 +190,26 @@ BOOST_AUTO_TEST_SUITE(Lexer_Test_Suite)
                                   "print ";
 
         std::istringstream istream(streamValue);
-        vecc::Scanner scanner(std::make_unique<vecc::Reader>(istream));
+        Scanner scanner(std::make_unique<Reader>(istream));
 
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Function);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Function);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::If);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::If);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::While);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::While);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Else);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Else);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Return);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Return);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Var);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Var);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Vec);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Vec);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Print);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Print);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::EoF);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
     }
 
     BOOST_AUTO_TEST_CASE(ScannerGivenWords_ReturnsIdentifierTokens) {
@@ -216,18 +219,18 @@ BOOST_AUTO_TEST_SUITE(Lexer_Test_Suite)
                                   "Rzecka__ ";
 
         std::istringstream istream(streamValue);
-        vecc::Scanner scanner(std::make_unique<vecc::Reader>(istream));
+        Scanner scanner(std::make_unique<Reader>(istream));
 
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Identifier);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Identifier);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Identifier);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Identifier);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Identifier);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Identifier);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Identifier);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Identifier);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::EoF);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
     }
 
     BOOST_AUTO_TEST_CASE(ScannerGivenNumbers_ReturnsNumbersTokens) {
@@ -237,18 +240,18 @@ BOOST_AUTO_TEST_SUITE(Lexer_Test_Suite)
                                   "32632462346 ";
 
         std::istringstream istream(streamValue);
-        vecc::Scanner scanner(std::make_unique<vecc::Reader>(istream));
+        Scanner scanner(std::make_unique<Reader>(istream));
 
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::NumberString);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::NumberString);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::NumberString);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::NumberString);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::EoF);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
     }
 
     BOOST_AUTO_TEST_CASE(ScannerGivenNumbers_ReturnsTokens) {
@@ -258,28 +261,28 @@ BOOST_AUTO_TEST_SUITE(Lexer_Test_Suite)
                                   "32632462346)";
 
         std::istringstream istream(streamValue);
-        vecc::Scanner scanner(std::make_unique<vecc::Reader>(istream));
+        Scanner scanner(std::make_unique<Reader>(istream));
 
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::ParenthesisOpen);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::ParenthesisOpen);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::NumberString);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Comma);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Comma);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::NumberString);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Comma);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Comma);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::NumberString);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Comma);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Comma);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::NumberString);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::ParenthesisClose);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::ParenthesisClose);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::EoF);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
     }
 
     BOOST_AUTO_TEST_CASE(ScannerGivenKeywords_ReturnsTokens2) {
@@ -290,30 +293,30 @@ BOOST_AUTO_TEST_SUITE(Lexer_Test_Suite)
                                   "KalOsz";
 
         std::istringstream istream(streamValue);
-        vecc::Scanner scanner(std::make_unique<vecc::Reader>(istream));
+        Scanner scanner(std::make_unique<Reader>(istream));
 
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::If);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::If);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::While);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::While);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::ParenthesisOpen);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::ParenthesisOpen);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Identifier);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Identifier);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::ParenthesisClose);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::ParenthesisClose);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::CurlyBracketOpen);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::CurlyBracketOpen);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::CurlyBracketClose);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::CurlyBracketClose);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Else);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Else);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Return);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Return);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::Identifier);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::Identifier);
         BOOST_CHECK_NO_THROW(scanner.parseToken());
-        BOOST_CHECK(scanner.getToken().getType() == vecc::Token::Type::EoF);
+        BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
     }
 
 BOOST_AUTO_TEST_SUITE_END()

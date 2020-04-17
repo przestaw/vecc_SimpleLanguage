@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
-project(vecc)
+set(PROJECT_NAME vecc)
+project(${PROJECT_NAME})
+
+set(PROJECT_DESCRIPTION "Vector Capable Simple Language")
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -70,12 +73,11 @@ target_link_libraries(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
 
 find_package(LATEX)
-if(LATEX_FOUND)
-    add_subdirectory(doc)
-endif()
+find_package(Doxygen)
 
 # "all" target
-if(LATEX_FOUND)
+if(LATEX_FOUND OR DOXYGEN_FOUND)
+    add_subdirectory(doc)
     add_custom_target(build-all DEPENDS ${DOC} ${PROGRAM} ${LIB} ${CHECK} ${TEST})
 else()
     add_custom_target(build-all DEPENDS ${PROGRAM} ${LIB} ${CHECK} ${TEST})

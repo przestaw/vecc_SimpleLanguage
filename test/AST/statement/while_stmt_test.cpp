@@ -10,6 +10,7 @@
 #include <AST/statement/return_stmt.h>
 
 using namespace vecc;
+using namespace vecc::ast;
 
 BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
@@ -25,10 +26,10 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
             WhileStatement whileStmt(std::move(cond));
 
-            auto addExpr = std::make_unique<AddExpr>(std::make_unique<BaseMathExpr>(var1));
+            auto addExpr = std::make_unique<AdditiveExpr>(std::make_unique<BaseMathExpr>(var1));
             addExpr->addOperand(std::make_unique<BaseMathExpr>(
                     Variable({1})),
-                    AddExpr::OperatorType::Add);
+                                AdditiveExpr::OperatorType::Add);
 
             whileStmt.getWhileBody().addInstruction(
                     std::make_unique<AssignStatement>(
@@ -50,10 +51,10 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
             WhileStatement whileStmt(std::move(cond));
 
-            auto addExpr = std::make_unique<AddExpr>(std::make_unique<BaseMathExpr>(var1));
+            auto addExpr = std::make_unique<AdditiveExpr>(std::make_unique<BaseMathExpr>(var1));
             addExpr->addOperand(std::make_unique<BaseMathExpr>(
                     Variable({1})),
-                                AddExpr::OperatorType::Substract);
+                                AdditiveExpr::OperatorType::Substract);
 
             whileStmt.getWhileBody().addInstruction(
                     std::make_unique<AssignStatement>(
@@ -78,10 +79,10 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
             whileStmt.getWhileBody().addInstruction(
                     std::make_unique<ReturnStatement>(std::make_unique<BaseMathExpr>(Variable({123}))));
 
-            auto addExpr = std::make_unique<AddExpr>(std::make_unique<BaseMathExpr>(var1));
+            auto addExpr = std::make_unique<AdditiveExpr>(std::make_unique<BaseMathExpr>(var1));
             addExpr->addOperand(std::make_unique<BaseMathExpr>(
                     Variable({1})),
-                                AddExpr::OperatorType::Substract);
+                                AdditiveExpr::OperatorType::Substract);
 
             whileStmt.getWhileBody().addInstruction(
                     std::make_unique<AssignStatement>(

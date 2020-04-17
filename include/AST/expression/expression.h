@@ -7,11 +7,21 @@
 
 #include <AST/general/variable.h>
 
-namespace vecc {
+namespace vecc::ast {
+    /**
+     * Base virtual class for all Expressions
+     */
     class Expression {
     public:
+        /**
+         * Virtual destructor
+         */
         virtual ~Expression() = default;
 
+        /**
+         * Calculate value of Expression
+         * @return Expression value
+         */
         [[nodiscard]] virtual Variable calculate() const = 0;
     };
 }
