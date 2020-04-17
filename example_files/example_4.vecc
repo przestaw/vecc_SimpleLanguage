@@ -1,0 +1,11 @@
+fun main() {
+    var a = vec(1,2,3);
+    var b = vec(6,5,4);
+    print("a = ", a);
+    print("b = ", b);
+    print("a + b = ", a+b);
+    print("a * b = ", scalar3(a, b));
+    print("a o b = ", product3(a, b));
+    print("7 * a = ", 7*a);
+    print("a * 7 = ", a*7);
+}

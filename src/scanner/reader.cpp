@@ -6,24 +6,23 @@
 
 using namespace vecc;
 
-Reader::Reader(std::istream &input, const std::string &source) : stream_(input), sourceName(source) {}
+Reader::Reader(std::istream &input) : stream_(input) {}
+
+Reader::Reader(std::istream &input, const std::string &source) : stream_(input), position_(source) {}
 
 char Reader::get() {
-    //TODO read next, calc position
     stream_.get(symbol_);
     if (symbol_ == '\n' || symbol_ == '\r') {
         if (lastSymbol_ == symbol_ ||
             (lastSymbol_ != '\n' && lastSymbol_ != '\r')) {
             // to allow LF CR an CRLF line endings
-            position_.lineNo++;
-            position_.symbolNo = 0;
-            position_.linePos = stream_.tellg();
+            position_.incrementLine();
+
         } // else -> CRLF LFCR
     } else {
-        position_.symbolNo++;
+        position_.incrementSymbol();
     }
     lastSymbol_ = symbol_;
-    position_.symbolPos = stream_.tellg();
 
     return symbol_;
 }

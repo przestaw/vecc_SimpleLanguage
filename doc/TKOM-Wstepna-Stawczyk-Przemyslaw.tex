@@ -88,7 +88,7 @@ Projekt zakłada wykonanie interpretera prostego języka z obsługą wbudowanego
 		Język wspierać ma operację \textsl{print(...)} przyjmująca oprócz typów numerycznych stałe tekstowe \textsl{[w cudzysłowach " "]} istniejące wyłącznie na potrzeby \textsl{print}.
 \end{itemize}
 \subsection{Funkcje Biblioteczne}
-Funkcje biblioteczne miały być ładowane przed właściwym programem.
+Funkcje biblioteczne miały być ładowane przed właściwym programem i zaimplementowane w docelowym języku. 
 \begin{itemize}
 	\item fun \textbf{product3}(vec1, vec2) - \textit{iloczyn wektorowy wektorów wymiaru 3}
 	\item fun \textbf{product2}(vec1, vec2) - \textit{iloczyn wektorowy wektorów wymiaru 2}
@@ -98,7 +98,7 @@ Funkcje biblioteczne miały być ładowane przed właściwym programem.
 
 \section{Przykłady}
 
-\paragraph{Przykład 1 funkcja z rekurencją}
+\paragraph{Przykład 1 - funkcja z rekurencją}
 \begin{verbatim}
 fun licz(a) {
     a = a * 2;
@@ -115,22 +115,7 @@ fun main() {
 }					
 \end{verbatim}
 
-\paragraph{Przykład 2 funkcje biblioteczne}
-\begin{verbatim}
-fun main() {
-    var a = vec(1,2);
-    var b = vec(3,4);
-    print("a = ", a);
-    print("b = ", b);
-    print("a + b = ", a+b);
-    print("a * b = ", scalar2(a, b));
-    print("a o b = ", product2(a, b));
-    print("2 * a = ", 2*a);
-    print("a * 2 = ", a*2);
-}   
-\end{verbatim}
-
-\paragraph{Przykład 3 zmienne}
+\paragraph{Przykład 2 - zmienne}
 \begin{verbatim}
 fun printAndRet(a) {
     print(a);
@@ -143,7 +128,6 @@ fun main() {
         print("a");
         print(a);
     }
-
     print(vec(1,2));
     print(vec(1,2,3));
 
@@ -158,13 +142,54 @@ fun main() {
 }   
 \end{verbatim}
 
-\paragraph{Product3}
+\paragraph{Przykład 3 - funkcje biblioteczne}
+\begin{verbatim}
+fun main() {
+    var a = vec(1,2);
+    var b = vec(3,4);
+    print("a = ", a);
+    print("b = ", b);
+    print("a + b = ", a+b);
+    print("a * b = ", scalar2(a, b));
+    print("a o b = ", product2(a, b));
+    print("2 * a = ", 2*a);
+    print("a * 2 = ", a*2);
+}
+\end{verbatim}
+
+\paragraph{Przykład 4 - product2}
+\begin{verbatim}
+fun product2(vec1, vec2) {
+    var res=vec(0,0);
+    res[0] = vec1[0] * vec2[0] - vec1[1] * vec2[1];
+    res[1] = vec1[0] * vec2[1] + vec1[1] * vec2[0];
+    return res;
+}
+\end{verbatim}
+
+\paragraph{Przykład 5 - product3}
 \begin{verbatim}
 fun product3(vec1, vec2) {
-    var res=vec(0,0,0);
-    res[0]=vec1[1]*vec2[2] - vec1[2]*vec2[1];
-    res[1]=vec1[2]*vec2[0] - vec1[0]*vec2[2];
-    res[2]=vec1[0]*vec2[1] - vec1[1]*vec2[0];
+    var res = vec(0,0,0);
+    res[0] = vec1[1] * vec2[2] - vec1[2] * vec2[1];
+    res[1] = vec1[2] * vec2[0] - vec1[0] * vec2[2];
+    res[2] = vec1[0] * vec2[1] - vec1[1] * vec2[0];
+    return res;
+}
+\end{verbatim}
+
+\paragraph{Przykład 6 - scalar2}
+\begin{verbatim}
+fun scalar2(vec1, vec2) {
+    var res = vec1[0] * vec2[0] + vec1[1] * vec2[1];
+    return res;
+}
+\end{verbatim}
+
+\paragraph{Przykład 7 - scalar3}
+\begin{verbatim}
+fun scalar3(vec1, vec2) {
+    var res = vec1[0] * vec2[0] + vec1[1] * vec2[1] + vec1[2] * vec2[2];
     return res;
 }
 \end{verbatim}
@@ -177,20 +202,20 @@ fun product3(vec1, vec2) {
 \\
 \textbf{statementBlock} = ''\{'' \{ initStatement | assignStatement | returnStatement |
 ifStatement | whileStatement | functionCallStatement |  printStatement | statementBlock \} ''\}'' ;\\
-\textbf{returnStatement} = ''return'' expression '';'' ;\\
+\textbf{returnStatement} = ''return'' orExpr '';'' ;\\
 \\
-\textbf{initStatement} = ''var'' identifier [ ''='' expression ] '';'' ;\\
-\textbf{assignStatement} = variable ''='' expression '';'' ;\\
-\textbf{ifStatement} = ''if'' ''('' expression '')'' statementBlock [ ''else'' statementBlock ] ;\\
-\textbf{whileStatement} = ''while'' ''('' expression '')'' statementBlock ;\\
+\textbf{initStatement} = ''var'' identifier [ ''='' orExpr ] '';'' ;\\
+\textbf{assignStatement} = variable ''='' orExpr '';'' ;\\
+\textbf{ifStatement} = ''if'' ''('' orExpr '')'' statementBlock [ ''else'' statementBlock ] ;\\
+\textbf{whileStatement} = ''while'' ''('' orExpr '')'' statementBlock ;\\
 \textbf{functionCallStatement} =  functionCall '';''\\
+\textbf{printStatement} = ''print'' ''('' (charString | orExpr) \{'','' (charString | orExpr)\} '')'' '';'';\\
+\\
 \textbf{functionCall} = identifier arguments ;\\
-\textbf{arguments} = ''('' [ expression \{ '','' expression \} ] '')'' ;\\
+\textbf{arguments} = ''('' [ orExpr \{ '','' orExpr \} ] '')'' ;\\
 \\
-\textbf{printStatement} = ''print'' ''('' (charString | expression) \{'','' (charString | expression)\} '')'' '';'';\\
-\\
-\textbf{parentExpr} = ''('' expression '')'' ;\\
-\textbf{expression} = andExpr \{ orOp andExpr \} ;\\
+\textbf{parentExpr} = ''('' orExpr '')'' ;\\
+\textbf{orExpr} = andExpr \{ orOp andExpr \} ;\\
 \textbf{andExpr} = relationalExpr \{ andOp relationalExpr \} ;\\
 \textbf{relationalExpr} = baseLogicExpr [ relationOp baseLogicExpr ] ;\\
 \textbf{baseLogicExpr} = [ unaryNegation ] additiveExpr ;\\
@@ -235,4 +260,9 @@ Program miałby składać się z następujących modułów :
 	\item interpreter
 \end{itemize}
 
+\section{Instrukcja Kompilacji i Użytkowania}
+\subsection{Instrukcja Kompilacji}
+Projekt kompilowany jest z użyciem narzędzia \textsl{CMake}.
+	
+\subsection{Instrukcja Użycia}
 \end{document}

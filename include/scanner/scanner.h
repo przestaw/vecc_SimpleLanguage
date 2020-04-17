@@ -6,6 +6,7 @@
 #define VECC_LANG_SCANNER_H
 
 #include <memory>
+#include <vecc_include.h>
 #include "scanner/token.h"
 #include "scanner/reader.h"
 
@@ -13,11 +14,12 @@ namespace vecc {
 
     class Scanner {
     public:
-        Scanner();
+        explicit Scanner(const LogLevel &logLevel = LogLevel::NoLog, std::ostream &out = std::cout);
 
-        Scanner(std::unique_ptr<Reader> reader);
+        explicit Scanner(std::unique_ptr<Reader> reader, const LogLevel &logLevel = LogLevel::NoLog, std::ostream &out = std::cout);
 
         Token getToken();
+
         Token parseToken();
 
         // I assume that diffrent readers will be used only to load error-free libraries
@@ -26,19 +28,25 @@ namespace vecc {
         // TODO : consider information about source (file/stream)
         //  in Exceptions (reader or position with origin info - file/lib)
         void setReader(std::unique_ptr<Reader> reader);
+
     private:
+        LogLevel logLevel_;
+        std::unique_ptr<Reader> reader_;
         Token currentToken;
+        std::ostream &out_;
+
         // use built-in std::unique_ptr check if ptr is "valid" (!= nullptr)
         inline bool canRead();
 
         inline void tryToken();
 
         inline void tryKeyword();
-        inline void tryCharString();
-        inline void tryNumberString();
-        inline void tryOperatorOrBracket();
 
-        std::unique_ptr<Reader> reader_;
+        inline void tryCharString();
+
+        inline void tryNumberString();
+
+        inline void tryOperatorOrBracket();
     };
 }
 #endif //VECC_LANG_SCANNER_H

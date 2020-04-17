@@ -1,37 +1,57 @@
-cmake_minimum_required(VERSION 3.15)
-project(vecc_lang)
+cmake_minimum_required(VERSION 3.10)
+project(vecc)
 
 set(CMAKE_CXX_STANDARD 17)
 
 set(EXECUTABLE ${PROJECT_NAME}-program)
-set(LIBRARY ${PROJECT_NAME})
+set(LIBRARY ${PROJECT_NAME}-lib)
 set(TEST ${PROJECT_NAME}-test)
 set(CHECK ${TEST}-check)
+set(DOC ${PROJECT_NAME}-doc)
 
-file(GLOB LIB_SRC "src/*.cpp")
-file(GLOB LIB_INC "include/*.h")
-file(GLOB TEST_SRC "test/*.cpp")
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules/finders")
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules")
 
 include(CTest)
 enable_testing()
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og -g3 -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions")
+find_package(Boost COMPONENTS program_options unit_test_framework REQUIRED)
+set(EXTERNAL_LIBS "Boost::program_options")
 
-if(${CMAKE_BUILD_TYPE} EQUAL Release)
-    cmake_policy(SET CMP0069 NEW)
-    include(CheckIPOSupported)
-    check_ipo_supported()
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    # using Clang
+    set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   -O0 -g -Wextra-tokens -Wambiguous-member-template -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions -fmerge-all-constants -fvectorize -flto")
 
-    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+    include(LLVMtoolchain)
+
+    set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=gold)
+
+    set(CMAKE_C_ARCHIVE_CREATE "<CMAKE_AR> qcs <TARGET> <LINK_FLAGS> <OBJECTS>")
+    set(CMAKE_C_ARCHIVE_FINISH   true)
+    set(CMAKE_CXX_ARCHIVE_CREATE "<CMAKE_AR> qcs <TARGET> <LINK_FLAGS> <OBJECTS>")
+    set(CMAKE_CXX_ARCHIVE_FINISH true)
+
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    if(CMAKE_BUILD_TYPE EQUAL Release)
+        cmake_policy(SET CMP0069 NEW)
+        include(CheckIPOSupported)
+        check_ipo_supported()
+
+        set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+    endif()
+
+    # using GCC
+    set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   -O0 -Og -g -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions -fdevirtualize -fmerge-constants")
+
+    include(GNUtoolchain)
 endif()
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 
-
-find_package(Boost COMPONENTS program_options unit_test_framework REQUIRED)
-set(EXTERNAL_LIBS "Boost::program_options")
 include_directories("${PROJECT_SOURCE_DIR}/include" ${BOOST_INCLUDE_DIR})
 
 #Include src and test for library and test-check
@@ -44,6 +64,19 @@ add_library(${LIBRARY} ${LIB_SRC} ${LIB_INC})
 add_dependencies(${LIBRARY} ${CHECK})
 
 #Program executable
-add_executable(${EXECUTABLE} main.cpp)
+add_executable(${EXECUTABLE} src/main.cpp)
 add_dependencies(${EXECUTABLE} ${LIBRARY})
-target_link_libraries(${EXECUTABLE} ${LIBRARY} ${EXTERNAL_LIBS})
+target_link_libraries(${EXECUTABLE} ${LIBRARY})
+target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
+
+find_package(LATEX)
+if(LATEX_FOUND)
+    add_subdirectory(doc)
+endif()
+
+# "all" target
+if(LATEX_FOUND)
+    add_custom_target(build-all DEPENDS ${DOC} ${PROGRAM} ${LIB} ${CHECK} ${TEST})
+else()
+    add_custom_target(build-all DEPENDS ${PROGRAM} ${LIB} ${CHECK} ${TEST})
+endif()

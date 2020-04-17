@@ -1,3 +1,7 @@
+!UseLATEX.cmake
+!Find*.cmake
+!cmake_modules/finders/*
+!cmake_modules/*
 
 #directories
 *Doxygen/
@@ -12,8 +16,7 @@
 
 #CMake files
 CMakeFiles/*
-cmake*
-*.cmake
+cmake-*
 CMakeCache.txt
 [Mm]akefile
 

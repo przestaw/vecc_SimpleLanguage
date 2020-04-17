@@ -12,30 +12,52 @@ namespace vecc {
 
     struct Position {
         Position();
-        Position(const Position& other) = default;
+
+        Position(unsigned line, unsigned symbol);
+
+        explicit Position(const std::string &streamName);
+
+        Position(unsigned line, unsigned symbol, const std::string &streamName);
+
+        Position(const Position &other) = default;
 
         bool operator==(const Position &rhs) const;
+
         bool operator!=(const Position &rhs) const;
 
         bool operator<(const Position &rhs) const;
+
         bool operator>(const Position &rhs) const;
+
         bool operator<=(const Position &rhs) const;
+
         bool operator>=(const Position &rhs) const;
 
-        //private ? make class ?
-        unsigned int lineNo;
-        unsigned int symbolNo;
-        std::streampos linePos;
-        std::streampos symbolPos;
+        inline void incrementLine(){
+            ++lineNo;
+            symbolNo = 0;
+        }
 
-        inline std::string toString() const{
-            return BOLD("line number : ") + std::to_string(lineNo) + ", " BOLD("position : ") + std::to_string(symbolNo);
+        inline void incrementSymbol(){
+            ++symbolNo;
+        }
+
+        [[nodiscard]] inline std::string toString() const {
+            return BOLD("line number : ") + std::to_string(lineNo) + ", " BOLD("position : ") +
+                   std::to_string(symbolNo) + (namedSource ? BOLD("\n\tin file : ") + sourceName : "");
         }
 
         inline std::ostream &operator<<(std::ostream &os) {
             os << toString();
             return os;
         }
+    private:
+        //private ? make class ?
+        unsigned int lineNo;
+        unsigned int symbolNo;
+
+        bool namedSource;
+        std::string sourceName;
     };
 }
 

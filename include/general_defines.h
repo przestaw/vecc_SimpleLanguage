@@ -2,8 +2,8 @@
 #define PRZESTAW_GENERAL_DEFINES_H
 
 #ifndef CONSOLE_COLORS_POSIX
-#if ( defined(WIN32) || defined(__WIN32__) || defined(_WIN32) || defined(_MSC_VER) )
-#define CONSOLE_COLORS_POSIX FALSE
+#if (defined(WIN32) || defined(__WIN32__) || defined(_WIN32) || defined(_MSC_VER))
+#define CONSOLE_COLORS_POSIX WIN
 #else
 #define CONSOLE_COLORS_POSIX UNIX
 #endif
@@ -50,7 +50,7 @@
 
 /* FONT */
 #define BOLD(x) "\x1B[1m" x "\x1B[21m"
-#define DIM(x) "\x1B[2m" x "\x1B[22m"
+#define DIM(x)  "\x1B[2m" x "\x1B[22m"
 #define UNDL(x) "\x1B[4m" x "\x1B[24m"
 
 /* INVERSE */
