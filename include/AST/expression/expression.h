@@ -8,22 +8,22 @@
 #include <AST/general/variable.h>
 
 namespace vecc::ast {
+  /**
+   * Base virtual class for all Expressions
+   */
+  class Expression {
+  public:
     /**
-     * Base virtual class for all Expressions
+     * Virtual destructor
      */
-    class Expression {
-    public:
-        /**
-         * Virtual destructor
-         */
-        virtual ~Expression() = default;
+    virtual ~Expression() = default;
 
-        /**
-         * Calculate value of Expression
-         * @return Expression value
-         */
-        [[nodiscard]] virtual Variable calculate() const = 0;
-    };
-}
+    /**
+     * Calculate value of Expression
+     * @return Expression value
+     */
+    [[nodiscard]] virtual Variable calculate() const = 0;
+  };
+} // namespace vecc::ast
 
-#endif //VECC_LANG_EXPRESSION_H
+#endif // VECC_LANG_EXPRESSION_H

@@ -8,22 +8,22 @@
 #include <AST/general/return.h>
 
 namespace vecc::ast {
+  /**
+   * Base virtual class for all statements
+   */
+  class Statement {
+  public:
     /**
-     * Base virtual class for all statements
+     * Virtual destructor
      */
-    class Statement {
-    public:
-        /**
-         * Virtual destructor
-         */
-        virtual ~Statement() = default;
+    virtual ~Statement() = default;
 
-        /**
-         * Runs statement
-         * @return return value
-         */
-        virtual Return run() = 0;
-    };
-}
+    /**
+     * Runs statement
+     * @return return value
+     */
+    virtual Return run() = 0;
+  };
+} // namespace vecc::ast
 
-#endif //VECC_LANG_STATEMENT_H
+#endif // VECC_LANG_STATEMENT_H

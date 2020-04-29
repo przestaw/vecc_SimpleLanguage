@@ -5,37 +5,37 @@
 #ifndef VECC_LANG_AND_LOGIC_EXPR_H
 #define VECC_LANG_AND_LOGIC_EXPR_H
 
-#include <memory>
-#include <AST/general/variable.h>
 #include <AST/expression/expression.h>
+#include <AST/general/variable.h>
+#include <memory>
 
 namespace vecc::ast {
+  /**
+   * Class describing And Logical Expression
+   */
+  class AndLogicExpr : public Expression {
+  public:
     /**
-     * Class describing And Logical Expression
+     * Constructor
+     * @param value first value of Expression
      */
-    class AndLogicExpr : public Expression {
-    public:
-        /**
-         * Constructor
-         * @param value first value of Expression
-         */
-        explicit AndLogicExpr(std::unique_ptr<Expression> value);
+    explicit AndLogicExpr(std::unique_ptr<Expression> value);
 
-        /**
-         * Adds operand to expression
-         * @param value operand value
-         */
-        void addOperand(std::unique_ptr<Expression> value);
+    /**
+     * Adds operand to expression
+     * @param value operand value
+     */
+    void addOperand(std::unique_ptr<Expression> value);
 
-        /**
-         * Calculate value of Expression
-         * @return Expression value
-         */
-        Variable calculate() const override;
+    /**
+     * Calculate value of Expression
+     * @return Expression value
+     */
+    Variable calculate() const override;
 
-    private:
-        std::vector<std::unique_ptr<Expression>> operands;
-    };
-}
+  private:
+    std::vector<std::unique_ptr<Expression>> operands;
+  };
+} // namespace vecc::ast
 
-#endif //VECC_LANG_AND_LOGIC_EXPR_H
+#endif // VECC_LANG_AND_LOGIC_EXPR_H

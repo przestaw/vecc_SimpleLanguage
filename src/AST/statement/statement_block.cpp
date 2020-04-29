@@ -7,33 +7,33 @@
 using namespace vecc;
 using namespace vecc::ast;
 
-StatementBlock::StatementBlock(Context *parentContext) : context_(parentContext) {}
+StatementBlock::StatementBlock(Context *parentContext)
+    : context_(parentContext) {}
 
 void StatementBlock::addInstruction(std::unique_ptr<Statement> statement) {
-    this->statements_.push_back(std::move(statement));
+  this->statements_.push_back(std::move(statement));
 }
 
 void StatementBlock::addVariable(const std::string &identifier) {
-    this->context_.addVariable(identifier, Variable());
+  this->context_.addVariable(identifier, Variable());
 }
 
-std::shared_ptr<Variable> StatementBlock::findVariable(const std::string &identifier) {
-    return context_.findVariable(identifier, Token()); //TODO ??
+std::shared_ptr<Variable>
+StatementBlock::findVariable(const std::string &identifier) {
+  return context_.findVariable(identifier, Token()); // TODO ??
 }
 
 Return StatementBlock::run() {
-    Return ret;
+  Return ret;
 
-    for (auto &it : statements_) {
-        ret = it->run();
-        if (ret.type_ != Return::Type::Noting) {
-            break;
-        }
+  for (auto &it : statements_) {
+    ret = it->run();
+    if (ret.type_ != Return::Type::Noting) {
+      break;
     }
+  }
 
-    return ret;
+  return ret;
 }
 
-Context &StatementBlock::getContext() {
-    return context_;
-}
+Context &StatementBlock::getContext() { return context_; }

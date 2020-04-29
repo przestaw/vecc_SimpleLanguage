@@ -7,21 +7,20 @@
 using namespace vecc;
 using namespace vecc::ast;
 
-WhileStatement::WhileStatement(std::unique_ptr<Expression> expression) : expression_(std::move(expression)) {}
+WhileStatement::WhileStatement(std::unique_ptr<Expression> expression)
+    : expression_(std::move(expression)) {}
 
-StatementBlock &WhileStatement::getWhileBody() {
-    return whileBody_;
-}
+StatementBlock &WhileStatement::getWhileBody() { return whileBody_; }
 
 Return WhileStatement::run() {
-    Return ret;
+  Return ret;
 
-    while (static_cast<bool>(expression_->calculate())) {
-        ret = whileBody_.run();
-        if(ret.type_ == Return::Type::Value){
-            break;
-        }
+  while (static_cast<bool>(expression_->calculate())) {
+    ret = whileBody_.run();
+    if (ret.type_ == Return::Type::Value) {
+      break;
     }
+  }
 
-    return ret;
+  return ret;
 }

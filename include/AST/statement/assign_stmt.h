@@ -5,50 +5,52 @@
 #ifndef VECC_LANG_ASSIGN_STMT_H
 #define VECC_LANG_ASSIGN_STMT_H
 
-#include <memory>
-#include <AST/statement/statement.h>
 #include <AST/expression/expression.h>
+#include <AST/statement/statement.h>
+#include <memory>
 
 namespace vecc::ast {
+  /**
+   * Class describing Assign Statement
+   */
+  class AssignStatement : public Statement {
+  public:
     /**
-     * Class describing Assign Statement
+     * Constructor
+     * @param variable Variable to which value will be assigned
+     * @param expression Expresion which value will be assigned
      */
-    class AssignStatement : public Statement {
-    public:
-        /**
-         * Constructor
-         * @param variable Variable to which value will be assigned
-         * @param expression Expresion which value will be assigned
-         */
-        AssignStatement(Variable &variable, std::unique_ptr<Expression> expression);
+    AssignStatement(Variable &variable, std::unique_ptr<Expression> expression);
 
-        /**
-         * Constructor
-         * @param variable Variable to which value will be assigned
-         * @param index index at which value will be assigned
-         * @param expression Expresion which value will be assigned
-         */
-        AssignStatement(Variable &variable, const unsigned &index, std::unique_ptr<Expression> expression);
+    /**
+     * Constructor
+     * @param variable Variable to which value will be assigned
+     * @param index index at which value will be assigned
+     * @param expression Expresion which value will be assigned
+     */
+    AssignStatement(Variable &variable, const unsigned &index,
+                    std::unique_ptr<Expression> expression);
 
-        /**
-         * Runs statement
-         * @return return value
-         */
-        Return run() override;
+    /**
+     * Runs statement
+     * @return return value
+     */
+    Return run() override;
 
-        /**
-         * Position in code where assignment occurs. used to inform about possible error
-         * @param position position in code where assignment occurs
-         */
-        void setPosition(const Position &position);
+    /**
+     * Position in code where assignment occurs. used to inform about possible
+     * error
+     * @param position position in code where assignment occurs
+     */
+    void setPosition(const Position &position);
 
-    private:
-        Variable &variable_;
-        std::unique_ptr<Expression> expression_;
-        bool indexedAccess;      //!< if variable is acessed with [] operator
-        unsigned index_;
-        Position position_;
-    };
-}
+  private:
+    Variable &variable_;
+    std::unique_ptr<Expression> expression_;
+    bool indexedAccess; //!< if variable is acessed with [] operator
+    unsigned index_;
+    Position position_;
+  };
+} // namespace vecc::ast
 
-#endif //VECC_LANG_ASSIGN_STMT_H
+#endif // VECC_LANG_ASSIGN_STMT_H

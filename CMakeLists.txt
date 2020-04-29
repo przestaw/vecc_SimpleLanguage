@@ -18,6 +18,8 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules")
 include(CTest)
 enable_testing()
 
+find_package(LATEX)
+find_package(Doxygen)
 find_package(Boost COMPONENTS program_options unit_test_framework REQUIRED)
 set(EXTERNAL_LIBS "Boost::program_options")
 
@@ -71,9 +73,6 @@ add_executable(${EXECUTABLE} src/main.cpp)
 add_dependencies(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
-
-find_package(LATEX)
-find_package(Doxygen)
 
 # "all" target
 if(LATEX_FOUND OR DOXYGEN_FOUND)
