@@ -16,30 +16,35 @@
 #include <AST/statement/return_stmt.h>
 #include <AST/statement/while_stmt.h>
 #include <parser/parser.h>
+#include <utility>
 
 using namespace vecc;
 using namespace vecc::ast;
 
 Parser::Parser(const LogLevel &logLevel, std::ostream &out)
     : logLevel_(logLevel), out_(out),
-      scanner_(std::make_unique<Scanner>(nullptr, logLevel, out)),
+      scanner_(std::unique_ptr<Scanner>(nullptr)),
       currentProgram(std::make_unique<Program>()), currentContext(nullptr) {}
 
-Parser::Parser(std::unique_ptr<Reader> source, const LogLevel &logLevel,
-               std::ostream &out)
+Parser::Parser(Reader source, const LogLevel &logLevel, std::ostream &out)
     : logLevel_(logLevel), out_(out),
       scanner_(std::make_unique<Scanner>(std::move(source), logLevel, out)),
       currentProgram(std::make_unique<Program>()), currentContext(nullptr) {}
 
-void Parser::setSource(std::unique_ptr<Reader> source) {
-  scanner_->setReader(std::move(source));
+void Parser::setSource(Reader source) {
+  scanner_ =
+      std::make_unique<Scanner>(Scanner(std::move(source), logLevel_, out_));
 }
 
 void Parser::parse() {
-  scanner_->parseToken();
-  while (scanner_->getToken().getType() != Token::Type::EoF) {
-    expectToken(Token::Type::Function);
-    parseFunctionDef();
+  if (scanner_) {
+    scanner_->parseToken();
+    while (scanner_->getToken().getType() != Token::Type::EoF) {
+      expectToken(Token::Type::Function);
+      parseFunctionDef();
+    }
+  } else {
+    throw error::NoInputStream();
   }
 }
 

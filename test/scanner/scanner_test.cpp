@@ -12,18 +12,10 @@ using namespace vecc::error;
 
 BOOST_AUTO_TEST_SUITE(Lexer_Test_Suite)
 
-BOOST_AUTO_TEST_CASE(ScannerWithoutReader_Throws2) {
-  std::stringstream stream;
-
-  Scanner scanner(std::make_unique<Reader>(stream));
-  scanner.setReader(nullptr);
-  BOOST_CHECK_THROW(scanner.parseToken(), NoInputStream);
-}
-
 BOOST_AUTO_TEST_CASE(ScannerWithReader_GivenEmptyReturnEoF) {
   std::stringstream stream("");
 
-  Scanner scanner(std::make_unique<Reader>(stream));
+  Scanner scanner(stream);
   scanner.parseToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
 }
@@ -31,7 +23,7 @@ BOOST_AUTO_TEST_CASE(ScannerWithReader_GivenEmptyReturnEoF) {
 BOOST_AUTO_TEST_CASE(ScannerWithReader_GivenSpacesReturnEoF) {
   std::stringstream stream("  \t");
 
-  Scanner scanner(std::make_unique<Reader>(stream));
+  Scanner scanner(stream);
   scanner.parseToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
 }
@@ -39,7 +31,7 @@ BOOST_AUTO_TEST_CASE(ScannerWithReader_GivenSpacesReturnEoF) {
 BOOST_AUTO_TEST_CASE(ScannerWithReader_GivenEmptyMultilineReturnEoF1) {
   std::stringstream stream("  \n  \r \t");
 
-  Scanner scanner(std::make_unique<Reader>(stream));
+  Scanner scanner(stream);
   scanner.parseToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
 }
@@ -47,7 +39,7 @@ BOOST_AUTO_TEST_CASE(ScannerWithReader_GivenEmptyMultilineReturnEoF1) {
 BOOST_AUTO_TEST_CASE(ScannerWithReader_GivenEmptyMultilineReturnEoF2) {
   std::stringstream stream("  \n\r  \t\r\r ");
 
-  Scanner scanner(std::make_unique<Reader>(stream));
+  Scanner scanner(stream);
   scanner.parseToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
 }
@@ -65,7 +57,7 @@ BOOST_AUTO_TEST_CASE(ScannerGivenSpecialCharacterString_ReturnsTokens1) {
                             "! ";
 
   std::istringstream istream(streamValue);
-  Scanner scanner(std::make_unique<Reader>(istream));
+  Scanner scanner(istream);
   scanner.parseToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::ParenthesisOpen);
   scanner.parseToken();
@@ -104,7 +96,7 @@ BOOST_AUTO_TEST_CASE(ScannerGivenSpecialCharacterString_ReturnsTokens2) {
                             "% ";
 
   std::istringstream istream(streamValue);
-  Scanner scanner(std::make_unique<Reader>(istream));
+  Scanner scanner(istream);
   scanner.parseToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Equality);
   scanner.parseToken();
@@ -135,7 +127,7 @@ BOOST_AUTO_TEST_CASE(ScannerGivenCharacterString_ReturnsToken) {
   std::string value = "Alan ma Koticzke 123456 @";
 
   std::istringstream istream("\"" + value + "\"");
-  Scanner scanner(std::make_unique<Reader>(istream));
+  Scanner scanner(istream);
   scanner.parseToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::CharacterString);
   BOOST_CHECK_EQUAL(scanner.getToken().getLiteral(), value);
@@ -145,7 +137,7 @@ BOOST_AUTO_TEST_CASE(ScannerGivenCharacterStringWithNewline_ReturnsToken) {
   std::string value = "Alan \t ma \rKoticzke\n 123456 \t@\n";
 
   std::istringstream istream("\"" + value + "\"");
-  Scanner scanner(std::make_unique<Reader>(istream));
+  Scanner scanner(istream);
   scanner.parseToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::CharacterString);
   BOOST_CHECK_EQUAL(scanner.getToken().getLiteral(), value);
@@ -155,7 +147,7 @@ BOOST_AUTO_TEST_CASE(ScannerGivenInvalidCharacterString_Throws) {
   std::string value = "Alan ma Koticzke 123456 @";
 
   std::istringstream istream("\"" + value);
-  Scanner scanner(std::make_unique<Reader>(istream));
+  Scanner scanner(istream);
   BOOST_CHECK_THROW(scanner.parseToken(), NotAToken);
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::NaT);
 }
@@ -164,7 +156,7 @@ BOOST_AUTO_TEST_CASE(ScannerGivenNotDefined_Throws) {
   std::string value = "@|&$#";
 
   std::istringstream istream(value);
-  Scanner scanner(std::make_unique<Reader>(istream));
+  Scanner scanner(istream);
   for (auto &it : value) {
     BOOST_CHECK_THROW(scanner.parseToken(), NotAToken);
     BOOST_CHECK(scanner.getToken().getType() == Token::Type::NaT);
@@ -184,7 +176,7 @@ BOOST_AUTO_TEST_CASE(ScannerGivenKeywords_ReturnsTokens1) {
                             "print ";
 
   std::istringstream istream(streamValue);
-  Scanner scanner(std::make_unique<Reader>(istream));
+  Scanner scanner(istream);
 
   scanner.parseToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Function);
@@ -213,7 +205,7 @@ BOOST_AUTO_TEST_CASE(ScannerGivenWords_ReturnsIdentifierTokens) {
                             "Rzecka__ ";
 
   std::istringstream istream(streamValue);
-  Scanner scanner(std::make_unique<Reader>(istream));
+  Scanner scanner(istream);
 
   scanner.parseToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Identifier);
@@ -234,7 +226,7 @@ BOOST_AUTO_TEST_CASE(ScannerGivenNumbers_ReturnsNumbersTokens) {
                             "3263246 ";
 
   std::istringstream istream(streamValue);
-  Scanner scanner(std::make_unique<Reader>(istream));
+  Scanner scanner(istream);
 
   scanner.parseToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
@@ -253,7 +245,7 @@ BOOST_AUTO_TEST_CASE(ScannerGivenNumbers_ReturnsNumbersTokens) {
                               "9010203040506 ";
 
     std::istringstream istream(streamValue);
-    Scanner scanner(std::make_unique<Reader>(istream));
+    Scanner scanner(istream);
 
     BOOST_CHECK_THROW(scanner.parseToken(), InvalidNumberLiteral);
     BOOST_CHECK_THROW(scanner.parseToken(), InvalidNumberLiteral);
@@ -268,7 +260,7 @@ BOOST_AUTO_TEST_CASE(ScannerGivenNumbers_ReturnsTokens) {
                             "326346)";
 
   std::istringstream istream(streamValue);
-  Scanner scanner(std::make_unique<Reader>(istream));
+  Scanner scanner(istream);
 
   scanner.parseToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::ParenthesisOpen);
@@ -300,7 +292,7 @@ BOOST_AUTO_TEST_CASE(ScannerGivenKeywords_ReturnsTokens2) {
                             "KalOsz";
 
   std::istringstream istream(streamValue);
-  Scanner scanner(std::make_unique<Reader>(istream));
+  Scanner scanner(istream);
 
   scanner.parseToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::If);

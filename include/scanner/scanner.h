@@ -15,17 +15,24 @@ namespace vecc {
   /**
    * Scanner abstraction providing stream of Tokens from given source
    */
-  class Scanner {
+  class Scanner : private Reader {
   public:
     /**
-     *
-     * @param reader initial Reader
+     * @param input input stream
      * @param logLevel LogLevel determining if anything needs to be logged
      * @param out log out stream
      */
-    explicit Scanner(std::unique_ptr<Reader> reader,
+    explicit Scanner(std::istream &input,
                      const LogLevel &logLevel = LogLevel::NoLog,
                      std::ostream &out        = std::cout);
+
+    /**
+     * @param reader Reader
+     * @param logLevel LogLevel determining if anything needs to be logged
+     * @param out log out stream
+     */
+    explicit Scanner(Reader reader, const LogLevel &logLevel = LogLevel::NoLog,
+                     std::ostream &out = std::cout);
 
     /**
      * Obtains current Token
@@ -39,21 +46,10 @@ namespace vecc {
      */
     Token parseToken();
 
-    /**
-     * Sets current Reader
-     * @param reader Reader
-     */
-    void setReader(std::unique_ptr<Reader> reader);
-
   private:
     LogLevel logLevel_; //!< Log level
     std::ostream &out_; //!< output stream for logs
-
-    std::unique_ptr<Reader> reader_; //!< Internal reader
     Token currentToken;              //!< Current Token storage
-
-    inline bool canRead(); // use built-in std::unique_ptr check if ptr is
-                           // "valid" (!= nullptr)
 
     inline void tryToken();
 

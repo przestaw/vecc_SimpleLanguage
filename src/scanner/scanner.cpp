@@ -7,86 +7,84 @@
 #include <scanner/scanner.h>
 
 using namespace vecc;
+//
+// Scanner::Scanner(std::unique_ptr<Reader> reader, const LogLevel &logLevel,
+//                 std::ostream &out)
+//    : Reader(std::cin), out_(out) {}
 
-Scanner::Scanner(std::unique_ptr<Reader> reader, const LogLevel &logLevel,
+Scanner::Scanner(std::istream &input, const LogLevel &logLevel,
                  std::ostream &out)
-    : logLevel_(logLevel), out_(out), reader_(std::move(reader)) {}
+    : Reader(input), logLevel_(logLevel), out_(out) {}
 
-bool Scanner::canRead() { return static_cast<bool>(reader_); }
+Scanner::Scanner(Reader reader, const LogLevel &logLevel, std::ostream &out)
+    : Reader(std::move(reader)), logLevel_(logLevel), out_(out) {}
 
 Token Scanner::parseToken() {
-  if (canRead()) {
-    currentToken = Token(reader_->getCurrentPos());
 
-    tryToken(); // Note:  Handles EOF as first possible case
+  currentToken = Token(this->getCurrentPos());
 
-    if (currentToken.getType() != Token::Type::NaT) {
-      if (logLevel_ >= LogLevel::ParsedTokens) {
-        out_ << FCYN(BOLD("Token Log : \n")) "Parsed token : "
-                    + currentToken.toString() + "\n";
-      }
+  tryToken(); // Note:  Handles EOF as first possible case
 
-      return currentToken;
-    } else {
-      throw error::NotAToken(currentToken);
+  if (currentToken.getType() != Token::Type::NaT) {
+    if (logLevel_ >= LogLevel::ParsedTokens) {
+      out_ << FCYN(BOLD("Token Log : \n")) "Parsed token : "
+                  + currentToken.toString() + "\n";
     }
+
+    return currentToken;
   } else {
-    throw error::NoInputStream();
+    throw error::NotAToken(currentToken);
   }
 }
 
 Token Scanner::getToken() { return currentToken; }
 
-void Scanner::setReader(std::unique_ptr<Reader> reader) {
-  reader_ = std::move(reader);
-}
-
 void Scanner::tryToken() {
-  while (std::isspace(reader_->peek()) && !reader_->isEoF()) reader_->get();
-  
-  if (reader_->isEoF()) {
-    currentToken = Token(reader_->getCurrentPos(), Token::Type::EoF);
+  while (std::isspace(this->peek()) && !this->isEoF()) this->get();
+
+  if (this->isEoF()) {
+    currentToken = Token(this->getCurrentPos(), Token::Type::EoF);
   } else {
-    if (isdigit(reader_->peek())) {
-      tryNumberString(reader_->getCurrentPos());
-    } else if (reader_->peek() == '"') {
-      tryCharString(reader_->getCurrentPos());
-    } else if (isalnum(reader_->peek())) {
-      tryKeywordOrIdentifier(reader_->getCurrentPos());
+    if (isdigit(this->peek())) {
+      tryNumberString(this->getCurrentPos());
+    } else if (this->peek() == '"') {
+      tryCharString(this->getCurrentPos());
+    } else if (isalnum(this->peek())) {
+      tryKeywordOrIdentifier(this->getCurrentPos());
     } else {
-      tryOperatorOrBracket(reader_->getCurrentPos());
+      tryOperatorOrBracket(this->getCurrentPos());
     }
   }
 }
 
 void Scanner::tryCharString(const Position &tokenStartPos) {
-  reader_->get(); // consume first ' " '
+  this->get(); // consume first ' " '
   std::string buf;
 
-  while ((std::isprint(reader_->peek()) || std::isspace(reader_->peek()))
-         && reader_->peek() != '"' && !reader_->isEoF()) {
-    if (reader_->peek() == '\\') {
-      reader_->get();
+  while ((std::isprint(this->peek()) || std::isspace(this->peek()))
+         && this->peek() != '"' && !this->isEoF()) {
+    if (this->peek() == '\\') {
+      this->get();
       // check for escaped ' " ' character -> \"
-      if (reader_->peek() == '"') {
+      if (this->peek() == '"') {
         // consume escaped ' " '
-        buf.push_back(reader_->get());
-      } else if (reader_->peek() == 'n') {
-        reader_->get();
+        buf.push_back(this->get());
+      } else if (this->peek() == 'n') {
+        this->get();
         buf.push_back('\n');
       } else {
         // push back ' \ ' character
         buf.push_back('\\');
       }
     } else {
-      buf.push_back(reader_->get());
+      buf.push_back(this->get());
     }
   }
 
   // check for closing ' " '
-  if (reader_->peek() == '"') {
+  if (this->peek() == '"') {
     // consume last ' " '
-    reader_->get();
+    this->get();
     currentToken = Token(buf, tokenStartPos, Token::Type::CharacterString);
   } else {
     // not properly closed
@@ -96,9 +94,9 @@ void Scanner::tryCharString(const Position &tokenStartPos) {
 
 void Scanner::tryNumberString(const Position &tokenStartPos) {
   std::string buf;
-  buf.push_back(reader_->get());
+  buf.push_back(this->get());
 
-  while (std::isdigit(reader_->peek())) { buf.push_back(reader_->get()); }
+  while (std::isdigit(this->peek())) { buf.push_back(this->get()); }
 
   unsigned val;
   try {
@@ -112,14 +110,13 @@ void Scanner::tryNumberString(const Position &tokenStartPos) {
 
 void Scanner::tryOperatorOrBracket(const Position &tokenStartPos) {
   std::string buf;
-  buf.push_back(reader_->get());
+  buf.push_back(this->get());
   auto firstSymbolType = Token::findSymbolType(buf.front());
   if (firstSymbolType != Token::Type::NaT) {
-    auto testForTwoSymbol =
-        Token::checkSecondSecond(buf.front(), reader_->peek());
+    auto testForTwoSymbol = Token::checkSecondSecond(buf.front(), this->peek());
     if (testForTwoSymbol != Token::Type::NaT) {
       // consume
-      buf.push_back(reader_->get());
+      buf.push_back(this->get());
       currentToken = Token(buf, tokenStartPos, testForTwoSymbol);
     } else {
       // orginal one-symbol type untouched, reader in same pos
@@ -133,9 +130,9 @@ void Scanner::tryOperatorOrBracket(const Position &tokenStartPos) {
 
 void Scanner::tryKeywordOrIdentifier(const Position &tokenStartPos) {
   std::string buf;
-  while (!reader_->isEoF()
-         && (std::isalnum(reader_->peek()) || reader_->peek() == '_')) {
-    buf.push_back(reader_->get());
+  while (!this->isEoF()
+         && (std::isalnum(this->peek()) || this->peek() == '_')) {
+    buf.push_back(this->get());
   }
 
   auto tokType = Token::findKeywordType(buf);
@@ -143,7 +140,6 @@ void Scanner::tryKeywordOrIdentifier(const Position &tokenStartPos) {
   if (tokType != Token::Type::NaT) {
     currentToken = Token(buf, tokenStartPos, tokType);
   } else {
-    currentToken =
-        Token(buf, tokenStartPos, Token::Type::Identifier);
+    currentToken = Token(buf, tokenStartPos, Token::Type::Identifier);
   }
 }

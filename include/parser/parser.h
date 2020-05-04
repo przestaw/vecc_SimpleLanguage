@@ -36,15 +36,14 @@ namespace vecc {
      * @param logLevel log level
      * @param out output stream for logs
      */
-    explicit Parser(std::unique_ptr<Reader> source,
-                    const LogLevel &logLevel = LogLevel::NoLog,
-                    std::ostream &out        = std::cout);
+    explicit Parser(Reader source, const LogLevel &logLevel = LogLevel::NoLog,
+                    std::ostream &out = std::cout);
 
     /**
      * Sets current source
      * @param source source to be set
      */
-    void setSource(std::unique_ptr<Reader> source);
+    void setSource(Reader source);
 
     /**
      * Parses internal source

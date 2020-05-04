@@ -82,7 +82,7 @@ inline void parseParams(int argc, char *argv[]) {
 inline void parseStream(Parser &parser, const std::string &name,
                         std::istream &stream) {
   try {
-    parser.setSource(std::make_unique<Reader>(stream, name));
+    parser.setSource(Reader(stream, name));
     parser.parse();
   } catch (Exception &error) {
     if (params.verbosity >= LogLevel::Errors) {
