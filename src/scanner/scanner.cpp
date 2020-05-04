@@ -7,21 +7,20 @@
 #include <scanner/scanner.h>
 
 using namespace vecc;
-//
-// Scanner::Scanner(std::unique_ptr<Reader> reader, const LogLevel &logLevel,
-//                 std::ostream &out)
-//    : Reader(std::cin), out_(out) {}
 
 Scanner::Scanner(std::istream &input, const LogLevel &logLevel,
                  std::ostream &out)
-    : Reader(input), logLevel_(logLevel), out_(out) {}
+    : reader_(std::make_unique<Reader>(input)), logLevel_(logLevel), out_(out) {
+}
 
-Scanner::Scanner(Reader reader, const LogLevel &logLevel, std::ostream &out)
-    : Reader(std::move(reader)), logLevel_(logLevel), out_(out) {}
+Scanner::Scanner(std::unique_ptr<Reader> reader, const LogLevel &logLevel,
+                 std::ostream &out)
+    : reader_(std::move(reader)), logLevel_(logLevel), out_(out) {
+}
 
 Token Scanner::parseToken() {
 
-  currentToken = Token(this->getCurrentPos());
+  currentToken = Token(reader_->getCurrentPos());
 
   tryToken(); // Note:  Handles EOF as first possible case
 
@@ -40,51 +39,51 @@ Token Scanner::parseToken() {
 Token Scanner::getToken() { return currentToken; }
 
 void Scanner::tryToken() {
-  while (std::isspace(this->peek()) && !this->isEoF()) this->get();
+  while (std::isspace(reader_->peek()) && !reader_->isEoF()) reader_->get();
 
-  if (this->isEoF()) {
-    currentToken = Token(this->getCurrentPos(), Token::Type::EoF);
+  if (reader_->isEoF()) {
+    currentToken = Token(reader_->getCurrentPos(), Token::Type::EoF);
   } else {
-    if (isdigit(this->peek())) {
-      tryNumberString(this->getCurrentPos());
-    } else if (this->peek() == '"') {
-      tryCharString(this->getCurrentPos());
-    } else if (isalnum(this->peek())) {
-      tryKeywordOrIdentifier(this->getCurrentPos());
+    if (isdigit(reader_->peek())) {
+      tryNumberString(reader_->getCurrentPos());
+    } else if (reader_->peek() == '"') {
+      tryCharString(reader_->getCurrentPos());
+    } else if (isalnum(reader_->peek())) {
+      tryKeywordOrIdentifier(reader_->getCurrentPos());
     } else {
-      tryOperatorOrBracket(this->getCurrentPos());
+      tryOperatorOrBracket(reader_->getCurrentPos());
     }
   }
 }
 
 void Scanner::tryCharString(const Position &tokenStartPos) {
-  this->get(); // consume first ' " '
+  reader_->get(); // consume first ' " '
   std::string buf;
 
-  while ((std::isprint(this->peek()) || std::isspace(this->peek()))
-         && this->peek() != '"' && !this->isEoF()) {
-    if (this->peek() == '\\') {
-      this->get();
+  while ((std::isprint(reader_->peek()) || std::isspace(reader_->peek()))
+         && reader_->peek() != '"' && !reader_->isEoF()) {
+    if (reader_->peek() == '\\') {
+      reader_->get();
       // check for escaped ' " ' character -> \"
-      if (this->peek() == '"') {
+      if (reader_->peek() == '"') {
         // consume escaped ' " '
-        buf.push_back(this->get());
-      } else if (this->peek() == 'n') {
-        this->get();
+        buf.push_back(reader_->get());
+      } else if (reader_->peek() == 'n') {
+        reader_->get();
         buf.push_back('\n');
       } else {
         // push back ' \ ' character
         buf.push_back('\\');
       }
     } else {
-      buf.push_back(this->get());
+      buf.push_back(reader_->get());
     }
   }
 
   // check for closing ' " '
-  if (this->peek() == '"') {
+  if (reader_->peek() == '"') {
     // consume last ' " '
-    this->get();
+    reader_->get();
     currentToken = Token(buf, tokenStartPos, Token::Type::CharacterString);
   } else {
     // not properly closed
@@ -94,9 +93,9 @@ void Scanner::tryCharString(const Position &tokenStartPos) {
 
 void Scanner::tryNumberString(const Position &tokenStartPos) {
   std::string buf;
-  buf.push_back(this->get());
+  buf.push_back(reader_->get());
 
-  while (std::isdigit(this->peek())) { buf.push_back(this->get()); }
+  while (std::isdigit(reader_->peek())) { buf.push_back(reader_->get()); }
 
   unsigned val;
   try {
@@ -110,13 +109,14 @@ void Scanner::tryNumberString(const Position &tokenStartPos) {
 
 void Scanner::tryOperatorOrBracket(const Position &tokenStartPos) {
   std::string buf;
-  buf.push_back(this->get());
+  buf.push_back(reader_->get());
   auto firstSymbolType = Token::findSymbolType(buf.front());
   if (firstSymbolType != Token::Type::NaT) {
-    auto testForTwoSymbol = Token::checkSecondSecond(buf.front(), this->peek());
+    auto testForTwoSymbol =
+        Token::checkSecondSecond(buf.front(), reader_->peek());
     if (testForTwoSymbol != Token::Type::NaT) {
       // consume
-      buf.push_back(this->get());
+      buf.push_back(reader_->get());
       currentToken = Token(buf, tokenStartPos, testForTwoSymbol);
     } else {
       // orginal one-symbol type untouched, reader in same pos
@@ -130,9 +130,9 @@ void Scanner::tryOperatorOrBracket(const Position &tokenStartPos) {
 
 void Scanner::tryKeywordOrIdentifier(const Position &tokenStartPos) {
   std::string buf;
-  while (!this->isEoF()
-         && (std::isalnum(this->peek()) || this->peek() == '_')) {
-    buf.push_back(this->get());
+  while (!reader_->isEoF()
+         && (std::isalnum(reader_->peek()) || reader_->peek() == '_')) {
+    buf.push_back(reader_->get());
   }
 
   auto tokType = Token::findKeywordType(buf);

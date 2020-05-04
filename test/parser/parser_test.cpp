@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_CASE(EmptyParser_Throws) {
 
 BOOST_AUTO_TEST_CASE(EmptyStreamInParser_DoesNotThrow) {
   std::stringstream stream;
-  Parser parser((Reader(stream)));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   BOOST_CHECK_NO_THROW(parser.parse());
 }
@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_SUITE(Invalid_Examples_Test_Suite)
 BOOST_AUTO_TEST_CASE(NoFunctionDef_Throws_1) {
   std::stringstream stream;
   stream << " var\n";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
 }
@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(NoFunctionDef_Throws_1) {
 BOOST_AUTO_TEST_CASE(NoFunctionDef_Throws_2) {
   std::stringstream stream;
   stream << "\nvec(1,2)";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
 }
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(NoFunctionDef_Throws_2) {
 BOOST_AUTO_TEST_CASE(NoFunctionDef_Throws_3) {
   std::stringstream stream;
   stream << " while(1){}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
 }
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(NoFunctionDef_Throws_3) {
 BOOST_AUTO_TEST_CASE(NoFunctionDef_Throws_4) {
   std::stringstream stream;
   stream << "fun";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
 }
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE(NoFunctionDef_Throws_4) {
 BOOST_AUTO_TEST_CASE(InvalidFunctionDef_Throws_1) {
   std::stringstream stream;
   stream << "fun{}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
 }
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(InvalidFunctionDef_Throws_1) {
 BOOST_AUTO_TEST_CASE(InvalidFunctionDef_Throws_2) {
   std::stringstream stream;
   stream << "fun main";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
 }
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(InvalidFunctionDef_Throws_2) {
 BOOST_AUTO_TEST_CASE(InvalidFunctionDef_Throws_3) {
   std::stringstream stream;
   stream << "fun main()";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
 }
@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(InvalidFunctionDef_Throws_3) {
 BOOST_AUTO_TEST_CASE(InvalidFunctionDef_Throws_4) {
   std::stringstream stream;
   stream << "fun main(a, f)";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
 }
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(InvalidFunctionDef_Throws_4) {
 BOOST_AUTO_TEST_CASE(InvalidFunctionDef_Throws_5) {
   std::stringstream stream;
   stream << "fun main(){";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
 }
@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE(InvalidFunctionDef_Throws_5) {
 BOOST_AUTO_TEST_CASE(InvalidFunctionDef_Throws_6) {
   std::stringstream stream;
   stream << "fun main(a){";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
 }
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(InvalidFunctionDef_Throws_6) {
 BOOST_AUTO_TEST_CASE(InvalidFunctionDef_Throws_7) {
   std::stringstream stream;
   stream << "fun main()[]";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
 }
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE(InvalidFunctionDef_Throws_7) {
 BOOST_AUTO_TEST_CASE(InvalidFunctionDef_Throws_8) {
   std::stringstream stream;
   stream << "fun main[]{}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
 }
@@ -125,7 +125,7 @@ BOOST_AUTO_TEST_CASE(InvalidFunctionDef_Throws_8) {
 BOOST_AUTO_TEST_CASE(NoMainFunction_Throws_1) {
   std::stringstream stream;
   stream << "fun kotek(){}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_CASE(NoMainFunction_Throws_1) {
 BOOST_AUTO_TEST_CASE(NoMainFunction_Throws_2) {
   std::stringstream stream;
   stream << "fun kotek(a,b,c){}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE(InvalidVariableInit_Throws_1) {
   stream << "fun func() {"
             "var"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE(InvalidVariableInit_Throws_2) {
   stream << "fun func() {"
             "var a"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -176,7 +176,7 @@ BOOST_AUTO_TEST_CASE(InvalidVariableInit_Throws_3) {
   stream << "fun func() {"
             "var a ="
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -188,7 +188,7 @@ BOOST_AUTO_TEST_CASE(InvalidVariableInit_Throws_4) {
   stream << "fun func() {"
             "var a = 2"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(VariableRedefinition_Throws_1) {
             "var a;"
             "var a;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), RedefinedVar);
@@ -212,7 +212,7 @@ BOOST_AUTO_TEST_CASE(VariableRedefinition_Throws_2) {
             "var a = 2;"
             "var a;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), RedefinedVar);
@@ -224,7 +224,7 @@ BOOST_AUTO_TEST_CASE(VariableRedefinition_Throws_3) {
             "var a;"
             "var a = 2;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), RedefinedVar);
@@ -235,7 +235,7 @@ BOOST_AUTO_TEST_CASE(InvalidRelationExpr_Throws_1) {
   stream << "fun main() {"
             "12 > var;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -246,7 +246,7 @@ BOOST_AUTO_TEST_CASE(InvalidRelationExpr_Throws_2) {
   stream << "fun main() {"
             "12 ==;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -257,7 +257,7 @@ BOOST_AUTO_TEST_CASE(NotClosedStmtBlock_Throws_1) {
   stream << "fun main() {"
             "{ var a;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -268,7 +268,7 @@ BOOST_AUTO_TEST_CASE(InvalidVec_Throws_1) {
   stream << "fun main() {"
             "  var a = vec();"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -279,7 +279,7 @@ BOOST_AUTO_TEST_CASE(InvalidVec_Throws_2) {
   stream << "fun main() {"
             "  var a = vec(1);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -290,7 +290,7 @@ BOOST_AUTO_TEST_CASE(InvalidVec_Throws_3) {
   stream << "fun main() {"
             "  var a = vec(1 2);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -301,7 +301,7 @@ BOOST_AUTO_TEST_CASE(InvalidVec_Throws_4) {
   stream << "fun main() {"
             "  var a = vec(1, );"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -311,7 +311,7 @@ BOOST_AUTO_TEST_CASE(InvalidIf_Throws_1) {
   std::stringstream stream;
   stream << "fun func() {"
             "if()";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -322,7 +322,7 @@ BOOST_AUTO_TEST_CASE(InvalidIf_Throws_2) {
   stream << "fun func() {"
             "if("
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -333,7 +333,7 @@ BOOST_AUTO_TEST_CASE(InvalidIf_Throws_3) {
   stream << "fun func() {"
             "if(2"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -344,7 +344,7 @@ BOOST_AUTO_TEST_CASE(InvalidIf_Throws_4) {
   stream << "fun func() {"
             "if(if"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -355,7 +355,7 @@ BOOST_AUTO_TEST_CASE(InvalidIf_Throws_5) {
   stream << "fun func() {"
             "if(2)"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -366,7 +366,7 @@ BOOST_AUTO_TEST_CASE(InvalidIf_Throws_6) {
   stream << "fun func() {"
             "if(2 > 1){"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -377,7 +377,7 @@ BOOST_AUTO_TEST_CASE(InvalidIf_Throws_7) {
   stream << "fun func() {"
             "if(0){123}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -389,7 +389,7 @@ BOOST_AUTO_TEST_CASE(InvalidIf_Throws_8) {
             "if(1){}"
             "else"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -401,7 +401,7 @@ BOOST_AUTO_TEST_CASE(InvalidIf_Throws_9) {
             "if(1){}"
             "else{var"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -412,7 +412,7 @@ BOOST_AUTO_TEST_CASE(InvalidWhile_Throws_1) {
   stream << "fun func() {"
             "while(1)"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -424,7 +424,7 @@ BOOST_AUTO_TEST_CASE(InvalidWhile_Throws_2) {
             "while{"
             "}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -436,7 +436,7 @@ BOOST_AUTO_TEST_CASE(InvalidWhile_Throws_3) {
             "while(){"
             "}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -449,7 +449,7 @@ BOOST_AUTO_TEST_CASE(InvalidFunctionCall_Throws_1) {
             "fun main(){"
             "func(1,23);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), MismatchedArgumentsCount);
@@ -462,7 +462,7 @@ BOOST_AUTO_TEST_CASE(InvalidFunctionCall_Throws_2) {
             "fun main(){"
             "func(1);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), MismatchedArgumentsCount);
@@ -473,7 +473,7 @@ BOOST_AUTO_TEST_CASE(InvalidMath_Throws_1) {
   stream << "fun main(){"
             "var a = 1+;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -484,7 +484,7 @@ BOOST_AUTO_TEST_CASE(InvalidMath_Throws_2) {
   stream << "fun main(){"
             "var a = 1-;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -495,7 +495,7 @@ BOOST_AUTO_TEST_CASE(InvalidMath_Throws_3) {
   stream << "fun main(){"
             "var a = 1*;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -506,7 +506,7 @@ BOOST_AUTO_TEST_CASE(InvalidMath_Throws_4) {
   stream << "fun main(){"
             "var a = 1/;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -517,7 +517,7 @@ BOOST_AUTO_TEST_CASE(InvalidMath_Throws_5) {
   stream << "fun main(){"
             "var a = 1%;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -528,7 +528,7 @@ BOOST_AUTO_TEST_CASE(InvalidMath_Throws_6) {
   stream << "fun main(){"
             "var a = 1+1*;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -539,7 +539,7 @@ BOOST_AUTO_TEST_CASE(InvalidMath_Throws_7) {
   stream << "fun main(){"
             "var a = 1+1-;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -550,7 +550,7 @@ BOOST_AUTO_TEST_CASE(InvalidMath_Throws_8) {
   stream << "fun main(){"
             "var a = 1-1+;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -561,7 +561,7 @@ BOOST_AUTO_TEST_CASE(InvalidMath_Throws_9) {
   stream << "fun main(){"
             "var a = 1*1+;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -572,7 +572,7 @@ BOOST_AUTO_TEST_CASE(InvalidMath_Throws_10) {
   stream << "fun main(){"
             "var a = 1*1/;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -583,7 +583,7 @@ BOOST_AUTO_TEST_CASE(InvalidMath_Throws_11) {
   stream << "fun main(){"
             "var a = (1*(5/3);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -594,7 +594,7 @@ BOOST_AUTO_TEST_CASE(InvalidMath_Throws_12) {
   stream << "fun main(){"
             "var a = (1*(5/3)+);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -605,7 +605,7 @@ BOOST_AUTO_TEST_CASE(InvalidMath_Throws_13) {
   stream << "fun main(){"
             "var a = (1*(5/3)%9;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -616,7 +616,7 @@ BOOST_AUTO_TEST_CASE(InvalidMath_Throws_14) {
   stream << "fun main(){"
             "var a = 1*(5+3)%9);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -627,7 +627,7 @@ BOOST_AUTO_TEST_CASE(InvalidMath_Throws_15) {
   stream << "fun main(){"
             "var a = (1*(5/3)%9+5-%7)*(1+2);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -638,7 +638,7 @@ BOOST_AUTO_TEST_CASE(InvalidVecMath_Throws_1) {
   stream << "fun main(){"
             "var a = vec(1,2)+vec(1,2)-;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -649,7 +649,7 @@ BOOST_AUTO_TEST_CASE(InvalidVecMath_Throws_2) {
   stream << "fun main(){"
             "var a = (vec(1,2)+vec(1,2))-vec(3,4));"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -660,7 +660,7 @@ BOOST_AUTO_TEST_CASE(InvalidLogic_Throws_1) {
   stream << "fun main(){"
             "if(1 and){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -671,7 +671,7 @@ BOOST_AUTO_TEST_CASE(InvalidLogic_Throws_2) {
   stream << "fun main(){"
             "if(and 4){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -682,7 +682,7 @@ BOOST_AUTO_TEST_CASE(InvalidLogic_Throws_3) {
   stream << "fun main(){"
             "if(1 or){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -693,7 +693,7 @@ BOOST_AUTO_TEST_CASE(InvalidLogic_Throws_4) {
   stream << "fun main(){"
             "if(or !4){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -704,7 +704,7 @@ BOOST_AUTO_TEST_CASE(InvalidLogic_Throws_5) {
   stream << "fun main(){"
             "if(1 and 2 or ){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -715,7 +715,7 @@ BOOST_AUTO_TEST_CASE(InvalidLogic_Throws_6) {
   stream << "fun main(){"
             "if(2 and !4 or ){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -726,7 +726,7 @@ BOOST_AUTO_TEST_CASE(InvalidLogic_Throws_7) {
   stream << "fun main(){"
             "if(2 and (!4 or) ){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -737,7 +737,7 @@ BOOST_AUTO_TEST_CASE(InvalidLogic_Throws_8) {
   stream << "fun main(){"
             "if((1 and 2 == 3) or ){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -748,7 +748,7 @@ BOOST_AUTO_TEST_CASE(InvalidLogic_Throws_9) {
   stream << "fun main(){"
             "if(1 or (and 4) or 12 > 9){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -759,7 +759,7 @@ BOOST_AUTO_TEST_CASE(InvalidLogic_Throws_10) {
   stream << "fun main(){"
             "if(1 or (12 > 9) and !==4){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -770,7 +770,7 @@ BOOST_AUTO_TEST_CASE(InvalidPrint_Throws_1) {
   stream << "fun main(){"
             "print(\"string\",);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -781,7 +781,7 @@ BOOST_AUTO_TEST_CASE(InvalidReturn_Throws_1) {
   stream << "fun main(){"
             "return;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -794,7 +794,7 @@ BOOST_AUTO_TEST_CASE(InvalidReturn_Throws_2) {
             "fun main(){"
             "return 6"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_THROW(parser.parse(), UnexpectedToken);
@@ -807,7 +807,7 @@ BOOST_AUTO_TEST_SUITE(Valid_Examples_Test_Suite)
 BOOST_AUTO_TEST_CASE(FunctionDef_Works_1) {
   std::stringstream stream;
   stream << "fun kotek(){}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -819,7 +819,7 @@ BOOST_AUTO_TEST_CASE(FunctionDef_Works_1) {
 BOOST_AUTO_TEST_CASE(FunctionDef_Works_2) {
   std::stringstream stream;
   stream << "fun kotek(a,b,c){}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -840,7 +840,7 @@ BOOST_AUTO_TEST_CASE(MultipleFunctionDef_Works_1) {
             "  barka();"
             "  karmelek();"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -857,7 +857,7 @@ BOOST_AUTO_TEST_CASE(VariableDef_Works_1) {
   stream << "fun main() {"
             "var a;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -869,7 +869,7 @@ BOOST_AUTO_TEST_CASE(VariableDef_Works_2) {
   stream << "fun main() {"
             "var a = 2;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -882,7 +882,7 @@ BOOST_AUTO_TEST_CASE(VariableDef_Works_3) {
             "var b = 2;"
             "var a = b;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -897,7 +897,7 @@ BOOST_AUTO_TEST_CASE(StmtBlock_Works_1) {
             "var a = b;"
             "}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -914,7 +914,7 @@ BOOST_AUTO_TEST_CASE(StmtBlock_Works_2) {
             "}"
             "}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -927,7 +927,7 @@ BOOST_AUTO_TEST_CASE(Relational_Works_1) {
             "var a = 1;"
             "if(12 == a){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -940,7 +940,7 @@ BOOST_AUTO_TEST_CASE(Relational_Works_2) {
             "var a = 1;"
             "if(12 != a){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -953,7 +953,7 @@ BOOST_AUTO_TEST_CASE(Relational_Works_3) {
             "var a = 1;"
             "if(12 < a){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -966,7 +966,7 @@ BOOST_AUTO_TEST_CASE(Relational_Works_4) {
             "var a = 1;"
             "if(12 <= a){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -979,7 +979,7 @@ BOOST_AUTO_TEST_CASE(Relational_Works_5) {
             "var a = 1;"
             "if(12 > a){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -992,7 +992,7 @@ BOOST_AUTO_TEST_CASE(Relational_Works_6) {
             "var a = 1;"
             "if(12 >= a){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1004,7 +1004,7 @@ BOOST_AUTO_TEST_CASE(VecNoThrow_1) {
   stream << "fun main() {"
             "  var a = vec(1, 1);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1016,7 +1016,7 @@ BOOST_AUTO_TEST_CASE(VecNoThrow_2) {
   stream << "fun main() {"
             "  var a = vec(1, 1, 2);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1028,7 +1028,7 @@ BOOST_AUTO_TEST_CASE(VecNoThrow_3) {
   stream << "fun main() {"
             "  var a = vec(-1, 0);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   (parser.parse());
@@ -1040,7 +1040,7 @@ BOOST_AUTO_TEST_CASE(VecNoThrow_4) {
   stream << "fun main() {"
             "  var a = vec(-99, 0, 22);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   (parser.parse());
@@ -1055,7 +1055,7 @@ BOOST_AUTO_TEST_CASE(IfDef_Works_1) {
             "  a = 2;"
             "}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1072,7 +1072,7 @@ BOOST_AUTO_TEST_CASE(IfDef_Works_2) {
             " a = 6;"
             "}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1089,7 +1089,7 @@ BOOST_AUTO_TEST_CASE(IfDef_Works_3) {
             " a = 6;"
             "}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1104,7 +1104,7 @@ BOOST_AUTO_TEST_CASE(WhileDef_Works_1) {
             "  a = 2; "
             "}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1119,7 +1119,7 @@ BOOST_AUTO_TEST_CASE(WhileDef_Works_2) {
             "  a = a * 2 + 2; "
             "}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1133,7 +1133,7 @@ BOOST_AUTO_TEST_CASE(FunctionCall_Works_1) {
             "fun main(){"
             "func();"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1147,7 +1147,7 @@ BOOST_AUTO_TEST_CASE(FunctionCall_Works_2) {
             "fun main(){"
             "func(1,2);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1161,7 +1161,7 @@ BOOST_AUTO_TEST_CASE(Print_Works_1) {
             "fun main(){"
             "print(\"func = \", func());"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1173,7 +1173,7 @@ BOOST_AUTO_TEST_CASE(Print_Works_2) {
   stream << "fun main(){"
             "print(\"func = \", 77);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1185,7 +1185,7 @@ BOOST_AUTO_TEST_CASE(Math_Works_1) {
   stream << "fun main(){"
             "var a = 1+3;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1197,7 +1197,7 @@ BOOST_AUTO_TEST_CASE(Math_Works_2) {
   stream << "fun main(){"
             "var a = 1-3;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1209,7 +1209,7 @@ BOOST_AUTO_TEST_CASE(Math_Works_3) {
   stream << "fun main(){"
             "var a = 1*3;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1221,7 +1221,7 @@ BOOST_AUTO_TEST_CASE(Math_Works_4) {
   stream << "fun main(){"
             "var a = 1/3;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1233,7 +1233,7 @@ BOOST_AUTO_TEST_CASE(Math_Works_5) {
   stream << "fun main(){"
             "var a = 1%3;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1245,7 +1245,7 @@ BOOST_AUTO_TEST_CASE(Math_Works_6) {
   stream << "fun main(){"
             "var a = 1+1*5;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1257,7 +1257,7 @@ BOOST_AUTO_TEST_CASE(Math_Works_7) {
   stream << "fun main(){"
             "var a = 1+1-1;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1269,7 +1269,7 @@ BOOST_AUTO_TEST_CASE(Math_Works_8) {
   stream << "fun main(){"
             "var a = 1-1+6;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1281,7 +1281,7 @@ BOOST_AUTO_TEST_CASE(Math_Works_9) {
   stream << "fun main(){"
             "var a = -1*1+8;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1293,7 +1293,7 @@ BOOST_AUTO_TEST_CASE(Math_Works_10) {
   stream << "fun main(){"
             "var a = 1*1/6;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1305,7 +1305,7 @@ BOOST_AUTO_TEST_CASE(Math_Works_11) {
   stream << "fun main(){"
             "var a = (1*(5/3));"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1317,7 +1317,7 @@ BOOST_AUTO_TEST_CASE(Math_Works_12) {
   stream << "fun main(){"
             "var a = (1*(5/3)+9);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1329,7 +1329,7 @@ BOOST_AUTO_TEST_CASE(Math_Works_13) {
   stream << "fun main(){"
             "var a = -(1*(5/3)%9);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1341,7 +1341,7 @@ BOOST_AUTO_TEST_CASE(Math_Works_14) {
   stream << "fun main(){"
             "var a = (1*(5+3)%9);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1353,7 +1353,7 @@ BOOST_AUTO_TEST_CASE(Math_Works_15) {
   stream << "fun main(){"
             "var a = (1*(5/3)%9+5%7)*(1+2);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1365,7 +1365,7 @@ BOOST_AUTO_TEST_CASE(VecMath_Works_1) {
   stream << "fun main(){"
             "var a = vec(1,2)+vec(1,2)-vec(1,1);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1377,7 +1377,7 @@ BOOST_AUTO_TEST_CASE(VecMath_Works_2) {
   stream << "fun main(){"
             "var a = (vec(1,2)+vec(1,2))-vec(3,4);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1389,7 +1389,7 @@ BOOST_AUTO_TEST_CASE(Logic_Works_1) {
   stream << "fun main(){"
             "if(1 and 1){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1401,7 +1401,7 @@ BOOST_AUTO_TEST_CASE(Logic_Works_2) {
   stream << "fun main(){"
             "if(1> 0 and 4){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1413,7 +1413,7 @@ BOOST_AUTO_TEST_CASE(Logic_Works_3) {
   stream << "fun main(){"
             "if(1 or 0){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1425,7 +1425,7 @@ BOOST_AUTO_TEST_CASE(Logic_Works_4) {
   stream << "fun main(){"
             "if(0 or !4){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1437,7 +1437,7 @@ BOOST_AUTO_TEST_CASE(Logic_Works_5) {
   stream << "fun main(){"
             "if(1 and 2 or 0){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1449,7 +1449,7 @@ BOOST_AUTO_TEST_CASE(Logic_Works_6) {
   stream << "fun main(){"
             "if(2 and !4 or 0){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1461,7 +1461,7 @@ BOOST_AUTO_TEST_CASE(Logic_Works_7) {
   stream << "fun main(){"
             "if(2 and (!4 or 1) ){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1473,7 +1473,7 @@ BOOST_AUTO_TEST_CASE(Logic_Works_8) {
   stream << "fun main(){"
             "if((1 and 2 == 3) or 0){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1485,7 +1485,7 @@ BOOST_AUTO_TEST_CASE(Logic_Works_9) {
   stream << "fun main(){"
             "if(1 or (0 and 4) or 12 > 9){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1497,7 +1497,7 @@ BOOST_AUTO_TEST_CASE(Logic_Works_10) {
   stream << "fun main(){"
             "if(1 or (12 > 9) and !(1==4)){}"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1511,7 +1511,7 @@ BOOST_AUTO_TEST_CASE(Return_Works_1) {
             "fun main(){"
             "return 1;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1526,7 +1526,7 @@ BOOST_AUTO_TEST_CASE(Return_Works_2) {
             "fun main(){"
             "return func();"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1541,7 +1541,7 @@ BOOST_AUTO_TEST_CASE(Return_Works_3) {
             "fun main(){"
             "return 12*func();"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1555,7 +1555,7 @@ BOOST_AUTO_TEST_CASE(Return_Works_4) {
             "fun main(){"
             "return !1;"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -1569,7 +1569,7 @@ BOOST_AUTO_TEST_CASE(Return_Works_5) {
             "fun main(){"
             "return vec(1,2,3);"
             "}";
-  Parser parser = Parser(Reader(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());

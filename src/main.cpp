@@ -18,11 +18,11 @@ using namespace vecc::ast;
  */
 struct Params {
   bool run = false; //!< determines if there are files to parse&run
-  std::vector<std::string> files;       //!< files to be parsed
-  LogLevel verbosity = LogLevel::NoLog; //!< log level
-  bool fibLib        = false;           //!< Fibonacci library
-  bool veccLib       = false;           //!< vecc library
-} params;                               //!< global Params object
+  std::vector<std::string> files = {};              //!< files to be parsed
+  LogLevel verbosity             = LogLevel::NoLog; //!< log level
+  bool fibLib                    = false;           //!< Fibonacci library
+  bool veccLib                   = false;           //!< vecc library
+} params;                                           //!< global Params object
 
 /**
  * Function for arguments parsing
@@ -82,7 +82,7 @@ inline void parseParams(int argc, char *argv[]) {
 inline void parseStream(Parser &parser, const std::string &name,
                         std::istream &stream) {
   try {
-    parser.setSource(Reader(stream, name));
+    parser.setSource(std::make_unique<Reader>(stream, name));
     parser.parse();
   } catch (Exception &error) {
     if (params.verbosity >= LogLevel::Errors) {

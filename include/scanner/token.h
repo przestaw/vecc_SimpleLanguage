@@ -74,18 +74,11 @@ namespace vecc {
     explicit Token(const Position &position = Position(),
                    const Type &type         = Type::NaT);
 
-    explicit Token(const unsigned val, const Position &position = Position());
+    explicit Token(unsigned val, const Position &position = Position());
 
     explicit Token(const std::string &literal,
                    const Position &position = Position(),
                    const Type &type         = Type::NaT);
-
-    // setters
-    /**
-     * Sets Token Type
-     * @param type Token Type
-     */
-    void setType(const Type &type);
 
     // getters
     /**

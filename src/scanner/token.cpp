@@ -136,8 +136,6 @@ Token::Token(const std::string &literal, const Position &position,
   }
 }
 
-void Token::setType(const Token::Type &type) { type_ = type; }
-
 const Position &Token::getTokenPos() const { return tokenPos_; }
 
 Token::Type Token::getType() const { return type_; }

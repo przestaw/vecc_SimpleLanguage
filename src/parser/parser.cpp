@@ -24,14 +24,17 @@ using namespace vecc::ast;
 Parser::Parser(const LogLevel &logLevel, std::ostream &out)
     : logLevel_(logLevel), out_(out),
       scanner_(std::unique_ptr<Scanner>(nullptr)),
-      currentProgram(std::make_unique<Program>()), currentContext(nullptr) {}
+      currentProgram(std::make_unique<Program>()), currentContext(nullptr) {
+}
 
-Parser::Parser(Reader source, const LogLevel &logLevel, std::ostream &out)
+Parser::Parser(std::unique_ptr<Reader> source, const LogLevel &logLevel,
+               std::ostream &out)
     : logLevel_(logLevel), out_(out),
       scanner_(std::make_unique<Scanner>(std::move(source), logLevel, out)),
-      currentProgram(std::make_unique<Program>()), currentContext(nullptr) {}
+      currentProgram(std::make_unique<Program>()), currentContext(nullptr) {
+}
 
-void Parser::setSource(Reader source) {
+void Parser::setSource(std::unique_ptr<Reader> source) {
   scanner_ =
       std::make_unique<Scanner>(Scanner(std::move(source), logLevel_, out_));
 }
@@ -187,9 +190,8 @@ Parser::parseAssignStatement(const std::shared_ptr<Variable> &variable) {
   if (tryToken(Token::Type::BracketOpen)) {
     // indexed access identifier[position]
     unsigned val;
-    expectToken(Token::Type::NumberString, [&]() {
-      val = scanner_->getToken().getNumberValue();
-    });
+    expectToken(Token::Type::NumberString,
+                [&]() { val = scanner_->getToken().getNumberValue(); });
     expectToken(Token::Type::BracketClose);
     assignStmt =
         std::make_unique<AssignStatement>(*(variable), val, rValueParse());
@@ -422,6 +424,8 @@ std::unique_ptr<Expression> Parser::parseAdditiveExpression() {
                         token.getTokenPos());
   };
 
+  // NOTE : "infinite" loop allows for easy and more readable handling multiple
+  // cases
   for (;;) {
     token = scanner_->getToken();
     switch (token.getType()) {
@@ -450,6 +454,8 @@ std::unique_ptr<Expression> Parser::parseMultiplyExpression() {
                           token.getTokenPos());
   };
 
+  // NOTE : "infinite" loop allows for easy and more readable handling multiple
+  // cases
   for (;;) {
     token = scanner_->getToken();
     switch (token.getType()) {
@@ -476,8 +482,8 @@ std::unique_ptr<Expression> Parser::parseBaseMathExpression() {
   switch (token.getType()) {
   case Token::Type::NumberString:
     scanner_->parseToken();
-    return std::make_unique<BaseMathExpr>(
-        Variable({token.getNumberValue()}), unaryMathOp);
+    return std::make_unique<BaseMathExpr>(Variable({token.getNumberValue()}),
+                                          unaryMathOp);
 
   case Token::Type::Vec:
     return std::make_unique<BaseMathExpr>(parseVectorValue(), unaryMathOp);
@@ -518,9 +524,8 @@ Parser::parseIdentifierValue(const bool &unaryMathOp) {
     // NOTE : checking of variable existance is done in findVariable
     if (tryToken(Token::Type::BracketOpen)) {
       unsigned val;
-      expectToken(Token::Type::NumberString, [&]() {
-        val = scanner_->getToken().getNumberValue();
-      });
+      expectToken(Token::Type::NumberString,
+                  [&]() { val = scanner_->getToken().getNumberValue(); });
       expectToken(Token::Type::BracketClose);
 
       return std::make_unique<BaseMathExpr>(
