@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_SUITE(Language_Test_Suite)
 BOOST_AUTO_TEST_CASE(VeccLibrary_NoThrow) {
   std::stringstream stream;
   stream << libraries::veccLibrary;
-  Parser parser(std::make_unique<Reader>(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct2_Works_1) {
             "  return product2(vec(1,2),vec(2,1));"
             "}";
 
-  Parser parser(std::make_unique<Reader>(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_REQUIRE_NO_THROW(parser.parse());
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct2_Works_2) {
             "  return product2(vec(1,2),vec(3,4));"
             "}";
 
-  Parser parser(std::make_unique<Reader>(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_REQUIRE_NO_THROW(parser.parse());
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct3_Works_1) {
             "  return product3(vec(1,2,3),vec(1,2,3));"
             "}";
 
-  Parser parser(std::make_unique<Reader>(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_REQUIRE_NO_THROW(parser.parse());
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct3_Works_2) {
             "  return product3(vec(1,2,3),vec(3,4,5));"
             "}";
 
-  Parser parser(std::make_unique<Reader>(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_REQUIRE_NO_THROW(parser.parse());
@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct3_Works_3) {
             "  return product3(vec(1,2,3),vec(0,0,0));"
             "}";
 
-  Parser parser(std::make_unique<Reader>(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_REQUIRE_NO_THROW(parser.parse());
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct3_Works_3) {
 BOOST_AUTO_TEST_CASE(FibLibrary_NoThrow) {
   std::stringstream stream;
   stream << libraries::fibLibrary;
-  Parser parser(std::make_unique<Reader>(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_CHECK_NO_THROW(parser.parse());
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(FibLibraryTestIt_Works_1) {
             "  return fib_it(10);"
             "}";
 
-  Parser parser(std::make_unique<Reader>(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_REQUIRE_NO_THROW(parser.parse());
@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE(FibLibraryTestIt_Works_2) {
             "  return fib_it(20);"
             "}";
 
-  Parser parser(std::make_unique<Reader>(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_REQUIRE_NO_THROW(parser.parse());
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE(FibLibraryTestRec_Works_1) {
             "  return fib_rec(10);"
             "}";
 
-  Parser parser(std::make_unique<Reader>(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_REQUIRE_NO_THROW(parser.parse());
@@ -175,7 +175,7 @@ BOOST_AUTO_TEST_CASE(FibLibraryTestRec_Works_2) {
             "  return fib_rec(20);"
             "}";
 
-  Parser parser(std::make_unique<Reader>(stream));
+  Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
   BOOST_REQUIRE_NO_THROW(parser.parse());

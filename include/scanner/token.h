@@ -8,6 +8,7 @@
 #include "scanner/position.h"
 #include <functional>
 #include <unordered_map>
+#include <variant>
 
 namespace vecc {
   /**
@@ -73,18 +74,11 @@ namespace vecc {
     explicit Token(const Position &position = Position(),
                    const Type &type         = Type::NaT);
 
-    // setters
-    /**
-     * Sets Token Type
-     * @param type Token Type
-     */
-    void setType(const Type &type);
+    explicit Token(unsigned val, const Position &position = Position());
 
-    /**
-     * Sets Token literal
-     * @param literal Token literal
-     */
-    void setLiteral(const std::string &literal);
+    explicit Token(const std::string &literal,
+                   const Position &position = Position(),
+                   const Type &type         = Type::NaT);
 
     // getters
     /**
@@ -103,23 +97,20 @@ namespace vecc {
      * Returns Token literal
      * @return Token literal
      */
-    [[nodiscard]] const std::string &getLiteral() const;
+    [[nodiscard]] std::string getLiteral() const;
+
+    /**
+     * Returns Token number value, 0 for non-number string, and number strings
+     * created from set of characters
+     * @return Token number value
+     */
+    [[nodiscard]] int getNumberValue() const;
 
     /**
      * Generates and returns information about Token
      * @return Token description, position and value
      */
     [[nodiscard]] std::string toString() const;
-
-    /**
-     * Prints Token using toString on given stream
-     * @param os given stream
-     * @return modified os
-     */
-    inline std::ostream &operator<<(std::ostream &os) const {
-      os << toString();
-      return os;
-    }
 
     // functions connected with Type
     /**
@@ -162,9 +153,9 @@ namespace vecc {
     static std::string getTypeName(const Type &type);
 
   protected:
-    Position tokenPos_;   //!< position of the Token
-    Type type_;           //!< type of token
-    std::string literal_; //!< to distinguish identifiers
+    Position tokenPos_;                        //!< position of the Token
+    Type type_;                                //!< type of token
+    std::variant<std::string, int> value; //!< token value
 
   private:
     static const std::unordered_map<Type, std::string> typeDescription;

@@ -14,6 +14,11 @@ RelationExpr::RelationExpr(std::unique_ptr<Expression> lVal,
     : type_(type), lVal_(std::move(lVal)), pos_(position),
       rVal_(std::move(rVal)) {}
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wreturn-type"
+/* NOTE: GCC inproperly handles that case : strongly typed enum with all values
+ *       covered. This was added to allow of usage -Werror with GCC
+ */
 Variable RelationExpr::calculate() const {
   Variable ret = lVal_->calculate();
   ret.setPosition(pos_);
@@ -32,5 +37,5 @@ Variable RelationExpr::calculate() const {
   case OperatorType::LessOrEqual:
     return (ret <= rVal_->calculate());
   }
-  // NOTE : how to silence warning using g++ instead of clang++
 }
+#pragma GCC diagnostic pop

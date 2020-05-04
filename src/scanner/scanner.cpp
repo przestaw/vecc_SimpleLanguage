@@ -2,63 +2,61 @@
 // Created by przemek on 17.03.2020.
 //
 
+#include <boost/lexical_cast.hpp>
 #include <error/exeception.h>
 #include <scanner/scanner.h>
 
 using namespace vecc;
 
+Scanner::Scanner(std::istream &input, const LogLevel &logLevel,
+                 std::ostream &out)
+    : reader_(std::make_unique<Reader>(input)), logLevel_(logLevel), out_(out) {
+}
+
 Scanner::Scanner(std::unique_ptr<Reader> reader, const LogLevel &logLevel,
                  std::ostream &out)
-    : logLevel_(logLevel), out_(out), reader_(std::move(reader)) {}
-
-bool Scanner::canRead() { return static_cast<bool>(reader_); }
+    : reader_(std::move(reader)), logLevel_(logLevel), out_(out) {
+}
 
 Token Scanner::parseToken() {
-  if (canRead()) {
-    currentToken = Token(reader_->getCurrentPos());
 
-    tryToken(); // Note:  Handles EOF as first possible case
+  currentToken = Token(reader_->getCurrentPos());
 
-    if (currentToken.getType() != Token::Type::NaT) {
-      if (logLevel_ >= LogLevel::ParsedTokens) {
-        out_ << FCYN(BOLD("Token Log : \n")) "Parsed token : "
-                    + currentToken.toString() + "\n";
-      }
+  tryToken(); // Note:  Handles EOF as first possible case
 
-      return currentToken;
-    } else {
-      throw error::NotAToken(currentToken);
+  if (currentToken.getType() != Token::Type::NaT) {
+    if (logLevel_ >= LogLevel::ParsedTokens) {
+      out_ << FCYN(BOLD("Token Log : \n")) "Parsed token : "
+                  + currentToken.toString() + "\n";
     }
+
+    return currentToken;
   } else {
-    throw error::NoInputStream();
+    throw error::NotAToken(currentToken);
   }
 }
 
 Token Scanner::getToken() { return currentToken; }
 
-void Scanner::setReader(std::unique_ptr<Reader> reader) {
-  reader_ = std::move(reader);
-}
-
 void Scanner::tryToken() {
   while (std::isspace(reader_->peek()) && !reader_->isEoF()) reader_->get();
 
-  currentToken = Token(reader_->getCurrentPos());
-
   if (reader_->isEoF()) {
-    currentToken.setType(Token::Type::EoF);
-  } else if (isdigit(reader_->peek())) {
-    tryNumberString();
-  } else if (reader_->peek() == '"') {
-    tryCharString();
-  } else if (isalnum(reader_->peek())) {
-    tryKeywordOrIdentifier();
+    currentToken = Token(reader_->getCurrentPos(), Token::Type::EoF);
   } else {
-    tryOperatorOrBracket();
+    if (isdigit(reader_->peek())) {
+      tryNumberString(reader_->getCurrentPos());
+    } else if (reader_->peek() == '"') {
+      tryCharString(reader_->getCurrentPos());
+    } else if (isalnum(reader_->peek())) {
+      tryKeywordOrIdentifier(reader_->getCurrentPos());
+    } else {
+      tryOperatorOrBracket(reader_->getCurrentPos());
+    }
   }
 }
 
-void Scanner::tryCharString() {
+void Scanner::tryCharString(const Position &tokenStartPos) {
   reader_->get(); // consume first ' " '
   std::string buf;
 
@@ -86,50 +84,62 @@ void Scanner::tryCharString() {
   if (reader_->peek() == '"') {
     // consume last ' " '
     reader_->get();
-    currentToken.setType(Token::Type::CharacterString);
+    currentToken = Token(buf, tokenStartPos, Token::Type::CharacterString);
   } else {
     // not properly closed
-    currentToken.setType(Token::Type::NaT);
+    currentToken = Token(buf, tokenStartPos, Token::Type::NaT);
   }
-  currentToken.setLiteral(buf);
 }
 
-void Scanner::tryNumberString() {
+void Scanner::tryNumberString(const Position &tokenStartPos) {
   std::string buf;
   buf.push_back(reader_->get());
 
   while (std::isdigit(reader_->peek())) { buf.push_back(reader_->get()); }
 
-  currentToken.setType(Token::Type::NumberString);
-  currentToken.setLiteral(buf);
+  unsigned val;
+  try {
+    val = boost::lexical_cast<int>(buf);
+  } catch (const boost::bad_lexical_cast &ex) {
+    throw error::InvalidNumberLiteral(Token(buf, tokenStartPos));
+  }
+
+  currentToken = Token(val, tokenStartPos);
 }
 
-void Scanner::tryOperatorOrBracket() {
+void Scanner::tryOperatorOrBracket(const Position &tokenStartPos) {
   std::string buf;
   buf.push_back(reader_->get());
-  currentToken.setType(Token::findSymbolType(buf.front()));
-  if (currentToken.getType() != Token::Type::NaT) {
-    Token::Type testForTwoSymbol =
+  auto firstSymbolType = Token::findSymbolType(buf.front());
+  if (firstSymbolType != Token::Type::NaT) {
+    auto testForTwoSymbol =
         Token::checkSecondSecond(buf.front(), reader_->peek());
     if (testForTwoSymbol != Token::Type::NaT) {
+      // consume
       buf.push_back(reader_->get());
-      currentToken.setType(testForTwoSymbol);
-    } // orginal one-symbol type untouched, reader in same pos
-  }   // else invalid operator
-  currentToken.setLiteral(buf);
+      currentToken = Token(buf, tokenStartPos, testForTwoSymbol);
+    } else {
+      // orginal one-symbol type untouched, reader in same pos
+      currentToken = Token(buf, tokenStartPos, firstSymbolType);
+    }
+  } else {
+    // else invalid operator
+    currentToken = Token(buf, tokenStartPos, Token::Type::NaT);
+  }
 }
 
-void Scanner::tryKeywordOrIdentifier() {
+void Scanner::tryKeywordOrIdentifier(const Position &tokenStartPos) {
   std::string buf;
   while (!reader_->isEoF()
          && (std::isalnum(reader_->peek()) || reader_->peek() == '_')) {
     buf.push_back(reader_->get());
   }
 
-  currentToken.setLiteral(buf);
-  currentToken.setType(Token::findKeywordType(buf));
+  auto tokType = Token::findKeywordType(buf);
 
-  if (currentToken.getType() == Token::Type::NaT) {
-    currentToken.setType(Token::Type::Identifier);
+  if (tokType != Token::Type::NaT) {
+    currentToken = Token(buf, tokenStartPos, tokType);
+  } else {
+    currentToken = Token(buf, tokenStartPos, Token::Type::Identifier);
   }
 }

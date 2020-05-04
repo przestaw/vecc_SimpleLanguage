@@ -16,30 +16,38 @@
 #include <AST/statement/return_stmt.h>
 #include <AST/statement/while_stmt.h>
 #include <parser/parser.h>
+#include <utility>
 
 using namespace vecc;
 using namespace vecc::ast;
 
 Parser::Parser(const LogLevel &logLevel, std::ostream &out)
     : logLevel_(logLevel), out_(out),
-      scanner_(std::make_unique<Scanner>(nullptr, logLevel, out)),
-      currentProgram(std::make_unique<Program>()), currentContext(nullptr) {}
+      scanner_(std::unique_ptr<Scanner>(nullptr)),
+      currentProgram(std::make_unique<Program>()), currentContext(nullptr) {
+}
 
 Parser::Parser(std::unique_ptr<Reader> source, const LogLevel &logLevel,
                std::ostream &out)
     : logLevel_(logLevel), out_(out),
       scanner_(std::make_unique<Scanner>(std::move(source), logLevel, out)),
-      currentProgram(std::make_unique<Program>()), currentContext(nullptr) {}
+      currentProgram(std::make_unique<Program>()), currentContext(nullptr) {
+}
 
 void Parser::setSource(std::unique_ptr<Reader> source) {
-  scanner_->setReader(std::move(source));
+  scanner_ =
+      std::make_unique<Scanner>(Scanner(std::move(source), logLevel_, out_));
 }
 
 void Parser::parse() {
-  scanner_->parseToken();
-  while (scanner_->getToken().getType() != Token::Type::EoF) {
-    expectToken(Token::Type::Function);
-    parseFunctionDef();
+  if (scanner_) {
+    scanner_->parseToken();
+    while (scanner_->getToken().getType() != Token::Type::EoF) {
+      expectToken(Token::Type::Function);
+      parseFunctionDef();
+    }
+  } else {
+    throw error::NoInputStream();
   }
 }
 
@@ -141,9 +149,9 @@ Variable Parser::parseVectorValue() {
   auto addNumberLiteral = [&](bool minus) {
     // need to convert value to integer
     if (minus) {
-      variables.push_back(-std::stoi(scanner_->getToken().getLiteral()));
+      variables.push_back(-scanner_->getToken().getNumberValue());
     } else {
-      variables.push_back(std::stoi(scanner_->getToken().getLiteral()));
+      variables.push_back(scanner_->getToken().getNumberValue());
     }
   };
 
@@ -182,11 +190,8 @@ Parser::parseAssignStatement(const std::shared_ptr<Variable> &variable) {
   if (tryToken(Token::Type::BracketOpen)) {
     // indexed access identifier[position]
     unsigned val;
-    expectToken(Token::Type::NumberString, [&]() {
-      // Is there need for range check?
-      val =
-          static_cast<unsigned>(std::stoul(scanner_->getToken().getLiteral()));
-    });
+    expectToken(Token::Type::NumberString,
+                [&]() { val = scanner_->getToken().getNumberValue(); });
     expectToken(Token::Type::BracketClose);
     assignStmt =
         std::make_unique<AssignStatement>(*(variable), val, rValueParse());
@@ -419,6 +424,8 @@ std::unique_ptr<Expression> Parser::parseAdditiveExpression() {
                         token.getTokenPos());
   };
 
+  // NOTE : "infinite" loop allows for easy and more readable handling multiple
+  // cases
   for (;;) {
     token = scanner_->getToken();
     switch (token.getType()) {
@@ -447,6 +454,8 @@ std::unique_ptr<Expression> Parser::parseMultiplyExpression() {
                           token.getTokenPos());
   };
 
+  // NOTE : "infinite" loop allows for easy and more readable handling multiple
+  // cases
   for (;;) {
     token = scanner_->getToken();
     switch (token.getType()) {
@@ -473,8 +482,8 @@ std::unique_ptr<Expression> Parser::parseBaseMathExpression() {
   switch (token.getType()) {
   case Token::Type::NumberString:
     scanner_->parseToken();
-    return std::make_unique<BaseMathExpr>(
-        Variable({std::stoi(token.getLiteral())}), unaryMathOp);
+    return std::make_unique<BaseMathExpr>(Variable({token.getNumberValue()}),
+                                          unaryMathOp);
 
   case Token::Type::Vec:
     return std::make_unique<BaseMathExpr>(parseVectorValue(), unaryMathOp);
@@ -515,11 +524,8 @@ Parser::parseIdentifierValue(const bool &unaryMathOp) {
     // NOTE : checking of variable existance is done in findVariable
     if (tryToken(Token::Type::BracketOpen)) {
       unsigned val;
-      expectToken(Token::Type::NumberString, [&]() {
-        // Is there need for range check?
-        val = static_cast<unsigned>(
-            std::stoul(scanner_->getToken().getLiteral()));
-      });
+      expectToken(Token::Type::NumberString,
+                  [&]() { val = scanner_->getToken().getNumberValue(); });
       expectToken(Token::Type::BracketClose);
 
       return std::make_unique<BaseMathExpr>(
