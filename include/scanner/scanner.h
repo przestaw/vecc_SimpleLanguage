@@ -57,15 +57,13 @@ namespace vecc {
 
     inline void tryToken();
 
-    inline void tryKeyword();
+    inline void tryKeywordOrIdentifier(const Position &tokenStartPos);
 
-    inline void tryKeywordOrIdentifier();
+    inline void tryCharString(const Position &tokenStartPos);
 
-    inline void tryCharString();
+    inline void tryNumberString(const Position &tokenStartPos);
 
-    inline void tryNumberString();
-
-    inline void tryOperatorOrBracket();
+    inline void tryOperatorOrBracket(const Position &tokenStartPos);
   };
 } // namespace vecc
 #endif // VECC_LANG_SCANNER_H

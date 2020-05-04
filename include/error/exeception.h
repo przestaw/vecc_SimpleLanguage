@@ -78,6 +78,21 @@ namespace vecc {
     };
 
     /**
+     * Class used to inform about missing input stream
+     */
+    class InvalidNumberLiteral : public ParseException {
+    public:
+      /**
+       * Constructor
+       */
+      explicit InvalidNumberLiteral(const Token &token)
+          : ParseException(
+              FRED(BOLD("Token ERROR : \n")) "Number string is too large : "
+              + token.getLiteral()
+              + "\nat line: " + token.getTokenPos().toString()) {}
+    };
+
+    /**
      * Class describing unexpected tokens errors
      */
     class UnexpectedToken : public ParseException {

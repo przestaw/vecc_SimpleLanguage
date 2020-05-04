@@ -141,9 +141,9 @@ Variable Parser::parseVectorValue() {
   auto addNumberLiteral = [&](bool minus) {
     // need to convert value to integer
     if (minus) {
-      variables.push_back(-std::stoi(scanner_->getToken().getLiteral()));
+      variables.push_back(-scanner_->getToken().getNumberValue());
     } else {
-      variables.push_back(std::stoi(scanner_->getToken().getLiteral()));
+      variables.push_back(scanner_->getToken().getNumberValue());
     }
   };
 
@@ -183,9 +183,7 @@ Parser::parseAssignStatement(const std::shared_ptr<Variable> &variable) {
     // indexed access identifier[position]
     unsigned val;
     expectToken(Token::Type::NumberString, [&]() {
-      // Is there need for range check?
-      val =
-          static_cast<unsigned>(std::stoul(scanner_->getToken().getLiteral()));
+      val = scanner_->getToken().getNumberValue();
     });
     expectToken(Token::Type::BracketClose);
     assignStmt =
@@ -474,7 +472,7 @@ std::unique_ptr<Expression> Parser::parseBaseMathExpression() {
   case Token::Type::NumberString:
     scanner_->parseToken();
     return std::make_unique<BaseMathExpr>(
-        Variable({std::stoi(token.getLiteral())}), unaryMathOp);
+        Variable({token.getNumberValue()}), unaryMathOp);
 
   case Token::Type::Vec:
     return std::make_unique<BaseMathExpr>(parseVectorValue(), unaryMathOp);
@@ -516,9 +514,7 @@ Parser::parseIdentifierValue(const bool &unaryMathOp) {
     if (tryToken(Token::Type::BracketOpen)) {
       unsigned val;
       expectToken(Token::Type::NumberString, [&]() {
-        // Is there need for range check?
-        val = static_cast<unsigned>(
-            std::stoul(scanner_->getToken().getLiteral()));
+        val = scanner_->getToken().getNumberValue();
       });
       expectToken(Token::Type::BracketClose);
 

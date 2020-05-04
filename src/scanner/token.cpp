@@ -119,20 +119,47 @@ Token::Type Token::checkSecondSecond(const char &first, const char &second) {
 std::string Token::typeName() const { return typeDescription.at(this->type_); }
 
 Token::Token(const Position &position, const Token::Type &type)
-    : tokenPos_(position), type_(type) {}
+    : tokenPos_(position), type_(type) {
+  if(type_ == Type::NumberString){
+    value = 0;
+  } else {
+    value = "";
+  }
+}
+
+Token::Token(const unsigned int val, const Position &position) : tokenPos_(position), type_(Type::NumberString), value(val){}
+
+Token::Token(const std::string &literal, const Position &position,
+             const Token::Type &type) : tokenPos_(position), type_(type), value(literal){
+  if(type_ == Type::NumberString){
+    value = 0;
+  }
+}
 
 void Token::setType(const Token::Type &type) { type_ = type; }
-
-void Token::setLiteral(const std::string &literal) { literal_ = literal; }
 
 const Position &Token::getTokenPos() const { return tokenPos_; }
 
 Token::Type Token::getType() const { return type_; }
 
-const std::string &Token::getLiteral() const { return literal_; }
+std::string Token::getLiteral() const {
+  if (type_ == Type::NumberString) {
+    return std::to_string(std::get<int>(value));
+  } else {
+    return std::get<std::string>(value);
+  }
+}
+
+int Token::getNumberValue() const {
+  if (type_ == Type::NumberString) {
+    return std::get<int>(value);
+  } else {
+    return 0;
+  }
+}
 
 std::string Token::toString() const {
-  return "Token " + typeName() + ", \"" + literal_ + "\", \n at "
+  return "Token " + typeName() + ", \"" + this->getLiteral() + "\", \n at "
          + tokenPos_.toString();
 }
 

@@ -112,15 +112,15 @@ namespace vecc {
              + (namedSource ? BOLD("\n\tin file : ") + sourceName : "");
     }
 
-    /**
-     * Prints Position using toString on given stream
-     * @param os given stream
-     * @return modified os
-     */
-    inline std::ostream &operator<<(std::ostream &os) const {
-      os << toString();
-      return os;
-    }
+//    /**
+//     * Prints Position using toString on given stream
+//     * @param os given stream
+//     * @return modified os
+//     */
+//    inline std::ostream &operator<<(std::ostream &os) const {
+//      os << toString();
+//      return os;
+//    }
 
   private:
     unsigned int lineNo;   //!< Position in file lines
