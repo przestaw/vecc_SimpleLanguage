@@ -25,7 +25,7 @@ set(EXTERNAL_LIBS "Boost::program_options")
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     # using Clang
-    set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   -O0 -g -Wextra-tokens -Wambiguous-member-template -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
+    set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   -O0 -g -Werror -Wextra-tokens -Wambiguous-member-template -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions -fmerge-all-constants -fvectorize -flto")
 
     include(LLVMtoolchain)
@@ -47,7 +47,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     endif()
 
     # using GCC
-    set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   -O0 -Og -g -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
+    set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   -O0 -Og -g -Werror -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions -fdevirtualize -fmerge-constants")
 
     include(GNUtoolchain)

@@ -18,8 +18,16 @@ namespace vecc {
   class Scanner {
   public:
     /**
-     *
-     * @param reader initial Reader
+     * @param input input stream
+     * @param logLevel LogLevel determining if anything needs to be logged
+     * @param out log out stream
+     */
+    explicit Scanner(std::istream &input,
+                     const LogLevel &logLevel = LogLevel::NoLog,
+                     std::ostream &out        = std::cout);
+
+    /**
+     * @param reader Reader
      * @param logLevel LogLevel determining if anything needs to be logged
      * @param out log out stream
      */
@@ -39,33 +47,21 @@ namespace vecc {
      */
     Token parseToken();
 
-    /**
-     * Sets current Reader
-     * @param reader Reader
-     */
-    void setReader(std::unique_ptr<Reader> reader);
-
   private:
+    std::unique_ptr<Reader> reader_;
     LogLevel logLevel_; //!< Log level
     std::ostream &out_; //!< output stream for logs
-
-    std::unique_ptr<Reader> reader_; //!< Internal reader
-    Token currentToken;              //!< Current Token storage
-
-    inline bool canRead(); // use built-in std::unique_ptr check if ptr is
-                           // "valid" (!= nullptr)
+    Token currentToken; //!< Current Token storage
 
     inline void tryToken();
 
-    inline void tryKeyword();
+    inline void tryKeywordOrIdentifier(const Position &tokenStartPos);
 
-    inline void tryKeywordOrIdentifier();
+    inline void tryCharString(const Position &tokenStartPos);
 
-    inline void tryCharString();
+    inline void tryNumberString(const Position &tokenStartPos);
 
-    inline void tryNumberString();
-
-    inline void tryOperatorOrBracket();
+    inline void tryOperatorOrBracket(const Position &tokenStartPos);
   };
 } // namespace vecc
 #endif // VECC_LANG_SCANNER_H

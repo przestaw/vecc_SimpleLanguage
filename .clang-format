@@ -1,6 +1,5 @@
 ---
 BasedOnStyle: LLVM
-
 AlignAfterOpenBracket: Align
 AlignConsecutiveMacros: 'true'
 AlignConsecutiveAssignments: 'true'
@@ -13,6 +12,7 @@ AllowAllConstructorInitializersOnNextLine: 'true'
 AllowAllParametersOfDeclarationOnNextLine: 'true'
 AllowShortBlocksOnASingleLine: 'true'
 AllowShortCaseLabelsOnASingleLine: 'false'
+AllowShortFunctionsOnASingleLine: InlineOnly
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: 'true'
 BreakBeforeBinaryOperators: NonAssignment
@@ -22,6 +22,7 @@ CompactNamespaces: 'false'
 Cpp11BracedListStyle: 'true'
 DerivePointerAlignment: 'true'
 FixNamespaceComments: 'true'
+IndentCaseLabels: 'false'
 Language: Cpp
 NamespaceIndentation: All
 PointerAlignment: Right
