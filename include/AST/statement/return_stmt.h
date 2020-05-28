@@ -28,6 +28,12 @@ namespace vecc::ast {
      */
     Return run() override;
 
+    /**
+     * Returns simplified AST representation
+     * @return simplified AST
+     */
+    [[nodiscard]] std::string toString() const override;
+
   private:
     std::unique_ptr<Expression> expression_;
   };

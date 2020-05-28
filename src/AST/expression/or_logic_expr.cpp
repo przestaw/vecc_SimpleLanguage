@@ -26,3 +26,15 @@ Variable OrLogicExpr::calculate() const {
 
   return ret;
 }
+std::string OrLogicExpr::toString() const {
+  if (operands.size() < 2) {
+    return operands.begin()->get()->toString();
+  } else {
+    std::string ret = "(" + operands.begin()->get()->toString();
+    for (auto it = ++operands.begin(); it != operands.end(); ++it) {
+      ret += " or " + it->get()->toString();
+    }
+    ret += ")";
+    return ret;
+  }
+}

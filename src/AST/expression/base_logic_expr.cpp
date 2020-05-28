@@ -14,3 +14,10 @@ BaseLogicExpr::BaseLogicExpr(std::unique_ptr<Expression> value,
 Variable BaseLogicExpr::calculate() const {
   return invert ? !value_->calculate() : value_->calculate();
 }
+std::string BaseLogicExpr::toString() const {
+  if (invert) {
+    return "(not " + value_->toString() + ")";
+  } else {
+    return value_->toString();
+  }
+}

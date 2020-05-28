@@ -36,3 +36,25 @@ Variable MultiplyExpr::calculate() const {
 
   return ret;
 }
+std::string MultiplyExpr::toString() const {
+  if (multiplyables.empty()) {
+    return baseValue->toString();
+  } else {
+    std::string ret = "(" + baseValue->toString();
+    for (const auto &it : multiplyables) {
+      switch (it.operation_) {
+      case OperatorType::Multiply:
+        ret += "*" + it.value_->toString();
+        break;
+      case OperatorType::Divide:
+        ret += "/" + it.value_->toString();
+        break;
+      case OperatorType::Modulo:
+        ret += "%" + it.value_->toString();
+        break;
+      }
+    }
+    ret += ")";
+    return ret;
+  }
+}

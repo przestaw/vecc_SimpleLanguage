@@ -8,9 +8,12 @@
 #include <AST/statement/return_stmt.h>
 #include <AST/statement/while_stmt.h>
 #include <boost/test/unit_test.hpp>
+#include <mock_expr.h>
+#include <mock_stmt.h>
 
 using namespace vecc;
 using namespace vecc::ast;
+using namespace vecc::test;
 
 BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
@@ -85,6 +88,15 @@ BOOST_AUTO_TEST_CASE(While_BrakesOnReturn) {
   BOOST_CHECK_EQUAL(var2, Variable({1}));
   BOOST_REQUIRE(whileStmt.run().type_ == Return::Type::Value);
   BOOST_CHECK_EQUAL(whileStmt.run().variable_, Variable({123}));
+}
+
+BOOST_AUTO_TEST_CASE(If_ToStringWorks) {
+  WhileStatement whileStmt(std::make_unique<MockExpr>("condition"));
+
+  whileStmt.getWhileBody().addInstruction(
+      std::make_unique<MockStmt>("statements"));
+
+  BOOST_CHECK_EQUAL(whileStmt.toString(), "while(condition){\nstatements;\n}");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

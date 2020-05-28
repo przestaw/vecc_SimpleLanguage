@@ -208,6 +208,27 @@ BOOST_AUTO_TEST_CASE(GivenFiveValues_ValueIsCorrect_3) {
   BOOST_CHECK_EQUAL(false, expr.calculate());
 }
 
+BOOST_AUTO_TEST_CASE(GivenVal_ToStringCorrect) {
+  Variable var = Variable({1, 2});
+
+  OrLogicExpr expr(make_unique<BaseMathExpr>(var));
+
+  BOOST_CHECK_EQUAL(expr.toString(), "vec[1, 2]");
+}
+
+BOOST_AUTO_TEST_CASE(GivenThreeVals_ToStringCorrect) {
+  Variable trueVar1  = Variable({5, 1, 0});
+  Variable falseVar1 = Variable({0, 0, 0});
+  Variable falseVar2 = Variable({0, 0});
+
+  OrLogicExpr expr1(make_unique<BaseMathExpr>(trueVar1));
+  expr1.addOperand(make_unique<BaseMathExpr>(falseVar1));
+  expr1.addOperand(make_unique<BaseMathExpr>(falseVar2));
+
+  BOOST_CHECK_EQUAL(expr1.toString(),
+                    "(vec[5, 1, 0] or vec[0, 0, 0] or vec[0, 0])");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE_END()

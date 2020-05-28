@@ -19,7 +19,6 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
 BOOST_AUTO_TEST_SUITE(Relation_Expr_Test_Suite)
 
-
 BOOST_AUTO_TEST_CASE(GivenTwoValues_EqualityReturnsCorrectValue) {
   Variable var1 = Variable({1});
   Variable var2 = Variable({2});
@@ -221,6 +220,34 @@ BOOST_AUTO_TEST_CASE(GivenTwoVecValues_LessOrEqualThrows) {
   BOOST_CHECK_THROW(temp = expr1.calculate(), MathException);
   BOOST_CHECK_THROW(temp = expr2.calculate(), MathException);
   BOOST_CHECK_THROW(temp = expr3.calculate(), MathException);
+}
+
+class MockExpr : public Expression {
+public:
+  MockExpr(std::string name) : name_(name) {}
+  Variable calculate() const override { return Variable(); }
+  std::string toString() const override { return name_; };
+
+  std::string name_;
+};
+
+BOOST_AUTO_TEST_CASE(GivenTwoVal_ToStringCorrect) {
+  auto expr1 = MockExpr("e1");
+  auto expr2 = MockExpr("e2");
+
+  RelationExpr ex1(make_unique<MockExpr>(expr1),
+                   RelationExpr::OperatorType::LessOrEqual,
+                   make_unique<MockExpr>(expr2));
+  RelationExpr ex2(make_unique<MockExpr>(expr1),
+                   RelationExpr::OperatorType::Greater,
+                   make_unique<MockExpr>(expr2));
+  RelationExpr ex3(make_unique<MockExpr>(expr1),
+                   RelationExpr::OperatorType::NotEqual,
+                   make_unique<MockExpr>(expr2));
+
+  BOOST_CHECK_EQUAL(ex1.toString(), "(e1 <= e2)");
+  BOOST_CHECK_EQUAL(ex2.toString(), "(e1 > e2)");
+  BOOST_CHECK_EQUAL(ex3.toString(), "(e1 != e2)");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

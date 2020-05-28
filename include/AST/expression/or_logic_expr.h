@@ -33,6 +33,12 @@ namespace vecc::ast {
      */
     [[nodiscard]] Variable calculate() const override;
 
+    /**
+     * Returns simplified AST representation
+     * @return simplified AST
+     */
+    [[nodiscard]] std::string toString() const override;
+
   private:
     std::vector<std::unique_ptr<Expression>> operands;
   };

@@ -76,3 +76,33 @@ Variable BaseMathExpr::getBaseValue() const {
     }
   }
 }
+std::string BaseMathExpr::toString() const {
+  std::string ret;
+
+  switch (type_) {
+  case Type::Expression:
+    ret = std::get<std::unique_ptr<Expression>>(value_)->toString();
+    break;
+  case Type::Constant:
+    ret = std::get<Variable>(value_).toString();
+    break;
+  case Type::Variable:
+    if (indexedAccess_) {
+      ret = std::get<Variable*>(value_)->getName() + "["
+            + std::to_string(index_) + "]";
+    } else {
+      ret = std::get<Variable*>(value_)->getName();
+    }
+    break;
+  case Type::Function:
+  default:
+    ret = std::get<std::unique_ptr<Statement>>(value_)->toString();
+    break;
+  }
+
+  if (invert_) {
+    return "(-" + ret + ")";
+  } else {
+    return ret;
+  }
+}

@@ -67,6 +67,36 @@ BOOST_AUTO_TEST_CASE(GivenVec2Substract_ValueIsCorrect) {
   BOOST_CHECK_EQUAL(expr.calculate(), Variable({2, 0}));
 }
 
+BOOST_AUTO_TEST_CASE(GivenVal_ToStringCorrect) {
+  Variable var = Variable({1, 2});
+
+  AdditiveExpr expr(make_unique<BaseMathExpr>(var));
+
+  BOOST_CHECK_EQUAL(expr.toString(), "vec[1, 2]");
+}
+
+BOOST_AUTO_TEST_CASE(GivenAdd_ToStringCorrect) {
+  Variable var = Variable({1, 2});
+
+  AdditiveExpr expr(make_unique<BaseMathExpr>(var));
+  expr.addOperand(make_unique<BaseMathExpr>((Variable({-2, 2}))),
+                  AdditiveExpr::OperatorType::Add);
+
+  BOOST_CHECK_EQUAL(expr.toString(), "(vec[1, 2]+vec[-2, 2])");
+}
+
+BOOST_AUTO_TEST_CASE(GivenMultiple_ToStringCorrect) {
+  Variable var = Variable({1, 2});
+
+  AdditiveExpr expr(make_unique<BaseMathExpr>(var));
+  expr.addOperand(make_unique<BaseMathExpr>((Variable({-1, 2}))),
+                  AdditiveExpr::OperatorType::Substract);
+  expr.addOperand(make_unique<BaseMathExpr>((Variable({-2, 2}))),
+                  AdditiveExpr::OperatorType::Add);
+
+  BOOST_CHECK_EQUAL(expr.toString(), "(vec[1, 2]-vec[-1, 2]+vec[-2, 2])");
+}
+
 BOOST_AUTO_TEST_CASE(GivenVec3Add_ValueIsCorrect) {
   Variable var = Variable({1, 2, 3});
 

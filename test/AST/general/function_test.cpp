@@ -7,9 +7,11 @@
 #include <AST/statement/assign_stmt.h>
 #include <AST/statement/return_stmt.h>
 #include <boost/test/unit_test.hpp>
+#include <mock_stmt.h>
 
 using namespace vecc;
 using namespace vecc::ast;
+using namespace vecc::test;
 
 BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
@@ -66,6 +68,25 @@ BOOST_AUTO_TEST_CASE(ArgPassedToFun_ReturnsCorrect) {
           &fun.getFunctionBody().findVariable("kotitka"))));
 
   BOOST_CHECK_EQUAL(Variable({5}), fun.run({Variable({5})}).variable_);
+}
+
+BOOST_AUTO_TEST_CASE(FunctionWithoutArgs_ToStringWorks) {
+  Function fun("kotek");
+
+  fun.getFunctionBody().addInstruction(std::make_unique<MockStmt>("fat cat"));
+
+  BOOST_CHECK_EQUAL(fun.toString(), "fun kotek(){\nfat cat;\n}");
+}
+
+BOOST_AUTO_TEST_CASE(FunctionWithArgs_ToStringWorks) {
+  Function fun("kotek");
+
+  fun.addParameter("kotitka");
+  fun.addParameter("myszek");
+
+  fun.getFunctionBody().addInstruction(std::make_unique<MockStmt>("fat cat"));
+
+  BOOST_CHECK_EQUAL(fun.toString(), "fun kotek(kotitka, myszek){\nfat cat;\n}");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

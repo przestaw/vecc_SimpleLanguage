@@ -219,11 +219,23 @@ namespace vecc::ast {
       return os;
     }
 
+    /**
+     * Used for printing AST
+     * @return variable name
+     */
+    [[nodiscard]] const std::string &getName() const { return name_; }
+
+    /**
+     * Used to set variable name if needed
+     * @param name variable name
+     */
+    void setName(const std::string &name) { Variable::name_ = name; }
+
   private:
     std::vector<int> values_; //!< can store normal value or 2,3(with
                               //!< possibility for more) dim vec
     Position currentPosition;
-
+    std::string name_; //!< to be used for "AST" printing
     static const Variable retTrue;
     static const Variable retFalse;
   };

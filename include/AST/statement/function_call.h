@@ -45,6 +45,12 @@ namespace vecc::ast {
      */
     [[nodiscard]] unsigned size() const;
 
+    /**
+     * Returns simplified AST representation
+     * @return simplified AST
+     */
+    [[nodiscard]] std::string toString() const override;
+
   private:
     Function &function_;
     std::list<std::unique_ptr<Expression>> arguments_;

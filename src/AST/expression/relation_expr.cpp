@@ -12,7 +12,8 @@ RelationExpr::RelationExpr(std::unique_ptr<Expression> lVal,
                            std::unique_ptr<Expression> rVal,
                            const Position &position)
     : type_(type), lVal_(std::move(lVal)), pos_(position),
-      rVal_(std::move(rVal)) {}
+      rVal_(std::move(rVal)) {
+}
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wreturn-type"
@@ -36,6 +37,23 @@ Variable RelationExpr::calculate() const {
     return (ret < rVal_->calculate());
   case OperatorType::LessOrEqual:
     return (ret <= rVal_->calculate());
+  }
+}
+std::string RelationExpr::toString() const {
+  std::string ret = "(" + lVal_->toString();
+  switch (type_) {
+  case OperatorType::Equal:
+    return (ret += " == " + rVal_->toString() + ")");
+  case OperatorType::NotEqual:
+    return (ret += " != " + rVal_->toString() + ")");
+  case OperatorType::Greater:
+    return (ret += " > " + rVal_->toString() + ")");
+  case OperatorType::GreaterOrEqual:
+    return (ret += " >= " + rVal_->toString() + ")");
+  case OperatorType::Less:
+    return (ret += " < " + rVal_->toString() + ")");
+  case OperatorType::LessOrEqual:
+    return (ret += " <= " + rVal_->toString() + ")");
   }
 }
 #pragma GCC diagnostic pop

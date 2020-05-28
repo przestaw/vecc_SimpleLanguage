@@ -11,6 +11,7 @@ using namespace vecc::ast;
 void Context::addVariable(const std::string &identifier,
                           const Variable &variable) {
   variables_.insert({identifier, variable});
+  variables_.at(identifier).setName(identifier);
 }
 
 Variable &Context::findVariable(const std::string &identifier,

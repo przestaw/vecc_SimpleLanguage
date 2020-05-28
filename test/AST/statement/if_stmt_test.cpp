@@ -7,9 +7,12 @@
 #include <AST/statement/if_stmt.h>
 #include <AST/statement/return_stmt.h>
 #include <boost/test/unit_test.hpp>
+#include <mock_expr.h>
+#include <mock_stmt.h>
 
 using namespace vecc;
 using namespace vecc::ast;
+using namespace vecc::test;
 
 BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
@@ -68,7 +71,7 @@ BOOST_AUTO_TEST_CASE(IfFalseTest_FalseBlockRun) {
 BOOST_AUTO_TEST_CASE(IfTrueTest_TrueBlockReturn) {
   auto cond = std::make_unique<BaseMathExpr>(Variable({1}));
 
-  BOOST_REQUIRE_EQUAL(true, static_cast<bool>(cond->calculate()));
+  BOOST_REQUIRE_EQUAL(true, cond->calculate());
 
   IfStatement ifStmt(std::move(cond));
 
@@ -85,7 +88,7 @@ BOOST_AUTO_TEST_CASE(IfTrueTest_TrueBlockReturn) {
 BOOST_AUTO_TEST_CASE(IfFalseTest_FalseBlockReturn) {
   auto cond = std::make_unique<BaseMathExpr>(Variable({0}));
 
-  BOOST_REQUIRE_EQUAL(false, static_cast<bool>(cond->calculate()));
+  BOOST_REQUIRE_EQUAL(false, cond->calculate());
 
   IfStatement ifStmt(std::move(cond));
 
@@ -97,6 +100,17 @@ BOOST_AUTO_TEST_CASE(IfFalseTest_FalseBlockReturn) {
 
   BOOST_CHECK_EQUAL(true, ifStmt.run().type_ == Return::Type::Value);
   BOOST_CHECK_EQUAL(ifStmt.run().variable_, Variable({22}));
+}
+
+BOOST_AUTO_TEST_CASE(If_ToStringWorks) {
+  IfStatement ifStmt(std::make_unique<MockExpr>("condition"));
+
+  ifStmt.trueBlock().addInstruction(std::make_unique<MockStmt>("true block"));
+
+  ifStmt.falseBlock().addInstruction(std::make_unique<MockStmt>("false block"));
+
+  BOOST_CHECK_EQUAL(ifStmt.toString(),
+                    "if(condition){\ntrue block;\n}else{\nfalse block;\n}");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

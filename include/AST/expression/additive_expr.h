@@ -48,7 +48,8 @@ namespace vecc::ast {
      * Returns simplified AST representation
      * @return simplified AST
      */
-    //[[nodiscard]] virtual std::string toString() const override;
+    [[nodiscard]] std::string toString() const override;
+
   private:
     std::unique_ptr<Expression> baseValue;
 
@@ -62,7 +63,7 @@ namespace vecc::ast {
       Position pos_;
     };
 
-    std::vector<Addable> multiplyables;
+    std::vector<Addable> addables;
   };
 } // namespace vecc::ast
 

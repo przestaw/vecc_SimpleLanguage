@@ -11,12 +11,14 @@ using namespace vecc::ast;
 AssignStatement::AssignStatement(Variable &variable,
                                  std::unique_ptr<Expression> expression)
     : variable_(variable), expression_(std::move(expression)),
-      indexedAccess(false), index_() {}
+      indexedAccess(false), index_() {
+}
 
 AssignStatement::AssignStatement(Variable &variable, const unsigned &index,
                                  std::unique_ptr<Expression> expression)
     : variable_(variable), expression_(std::move(expression)),
-      indexedAccess(true), index_(index) {}
+      indexedAccess(true), index_(index) {
+}
 
 Return AssignStatement::run() {
   Variable value = expression_->calculate();
@@ -38,4 +40,12 @@ Return AssignStatement::run() {
 
 void AssignStatement::setPosition(const Position &position) {
   this->position_ = position;
+}
+std::string AssignStatement::toString() const {
+  if (indexedAccess) {
+    return variable_.getName() + "[" + std::to_string(index_)
+           + "] = " + expression_->toString();
+  } else {
+    return variable_.getName() + " = " + expression_->toString();
+  }
 }

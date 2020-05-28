@@ -238,14 +238,14 @@ std::string Variable::toString() const {
   if (size() == 1) {
     buf = std::to_string(values_[0]);
   } else {
-    buf.append("[ ");
+    buf.append("vec[");
     for (unsigned i = 0; i < values_.size(); ++i) {
       buf.append(std::to_string(values_[i]));
       if (i < values_.size() - 1) {
         buf.append(", ");
       }
     }
-    buf.append(" ]");
+    buf.append("]");
   }
   return buf;
 }

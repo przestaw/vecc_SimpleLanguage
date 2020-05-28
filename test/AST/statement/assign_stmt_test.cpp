@@ -15,103 +15,92 @@ BOOST_AUTO_TEST_SUITE(Assign_Stmt_Test_Suite)
 
 BOOST_AUTO_TEST_CASE(AssignVal_Works) {
   Variable before({0});
-  auto variable = std::make_shared<Variable>(before);
+  auto variable = Variable(before);
   Variable after({3});
 
-  AssignStatement stmt(*variable,
+  AssignStatement stmt(variable,
                        std::make_unique<BaseMathExpr>(BaseMathExpr(after)));
-  BOOST_REQUIRE_EQUAL(*variable, before);
+  BOOST_REQUIRE_EQUAL(variable, before);
   stmt.run();
-  BOOST_CHECK_EQUAL(*variable, after);
+  BOOST_CHECK_EQUAL(variable, after);
 }
 
 BOOST_AUTO_TEST_CASE(AssignVec2_Works) {
   Variable before({1, 2});
-  auto variable = std::make_shared<Variable>(before);
+  auto variable = Variable(before);
   Variable after({3, 3});
 
-  AssignStatement stmt(*variable,
+  AssignStatement stmt(variable,
                        std::make_unique<BaseMathExpr>(BaseMathExpr(after)));
-  BOOST_REQUIRE_EQUAL(*variable, before);
+  BOOST_REQUIRE_EQUAL(variable, before);
   stmt.run();
-  BOOST_CHECK_EQUAL(*variable, after);
+  BOOST_CHECK_EQUAL(variable, after);
 }
 
 BOOST_AUTO_TEST_CASE(AssignVec3_Works) {
   Variable before({0, 1, 2});
-  auto variable = std::make_shared<Variable>(before);
+  auto variable = Variable(before);
   Variable after({3, 3, 3});
 
-  AssignStatement stmt(*variable,
+  AssignStatement stmt(variable,
                        std::make_unique<BaseMathExpr>(BaseMathExpr(after)));
-  BOOST_REQUIRE_EQUAL(*variable, before);
+  BOOST_REQUIRE_EQUAL(variable, before);
   stmt.run();
-  BOOST_CHECK_EQUAL(*variable, after);
+  BOOST_CHECK_EQUAL(variable, after);
 }
 
-BOOST_AUTO_TEST_CASE(AssignValToIndex2_Works0) {
+BOOST_AUTO_TEST_CASE(AssignValToIndex1Vec2_Works) {
   Variable before({0, 2});
-  auto variable = std::make_shared<Variable>(before);
-  Variable after({3, 2});
-
-  AssignStatement stmt(
-      *variable, 0,
-      std::make_unique<BaseMathExpr>(BaseMathExpr(Variable({3}))));
-  BOOST_REQUIRE_EQUAL(*variable, before);
-  stmt.run();
-  BOOST_CHECK_EQUAL(*variable, after);
-}
-
-BOOST_AUTO_TEST_CASE(AssignValToIndex2_Works1) {
-  Variable before({0, 2});
-  auto variable = std::make_shared<Variable>(before);
+  auto variable = Variable(before);
   Variable after({0, 7});
 
   AssignStatement stmt(
-      *variable, 1,
-      std::make_unique<BaseMathExpr>(BaseMathExpr(Variable({7}))));
-  BOOST_REQUIRE_EQUAL(*variable, before);
+      variable, 1, std::make_unique<BaseMathExpr>(BaseMathExpr(Variable({7}))));
+  BOOST_REQUIRE_EQUAL(variable, before);
   stmt.run();
-  BOOST_CHECK_EQUAL(*variable, after);
+  BOOST_CHECK_EQUAL(variable, after);
 }
 
-BOOST_AUTO_TEST_CASE(AssignValToIndex3_Works0) {
+BOOST_AUTO_TEST_CASE(AssignValToIndex0Vec3_Works) {
   Variable before({0, 2, 4});
-  auto variable = std::make_shared<Variable>(before);
+  auto variable = Variable(before);
   Variable after({3, 2, 4});
 
   AssignStatement stmt(
-      *variable, 0,
-      std::make_unique<BaseMathExpr>(BaseMathExpr(Variable({3}))));
-  BOOST_REQUIRE_EQUAL(*variable, before);
+      variable, 0, std::make_unique<BaseMathExpr>(BaseMathExpr(Variable({3}))));
+  BOOST_REQUIRE_EQUAL(variable, before);
   stmt.run();
-  BOOST_CHECK_EQUAL(*variable, after);
+  BOOST_CHECK_EQUAL(variable, after);
 }
 
-BOOST_AUTO_TEST_CASE(AssignValToIndex3_Works1) {
+BOOST_AUTO_TEST_CASE(AssignValToIndex1vec3_Works) {
   Variable before({0, 2, 4});
-  auto variable = std::make_shared<Variable>(before);
+  auto variable = Variable(before);
   Variable after({0, 9, 4});
 
   AssignStatement stmt(
-      *variable, 1,
-      std::make_unique<BaseMathExpr>(BaseMathExpr(Variable({9}))));
-  BOOST_REQUIRE_EQUAL(*variable, before);
+      variable, 1, std::make_unique<BaseMathExpr>(BaseMathExpr(Variable({9}))));
+  BOOST_REQUIRE_EQUAL(variable, before);
   stmt.run();
-  BOOST_CHECK_EQUAL(*variable, after);
+  BOOST_CHECK_EQUAL(variable, after);
 }
 
-BOOST_AUTO_TEST_CASE(AssignValToIndex3_Works2) {
-  Variable before({0, 2, 4});
-  auto variable = std::make_shared<Variable>(before);
-  Variable after({0, 2, -3});
+BOOST_AUTO_TEST_CASE(AssignVal_ToStirngWirks) {
+  Variable variable({0, 2});
+  variable.setName("roman");
 
   AssignStatement stmt(
-      *variable, 2,
+      variable, std::make_unique<BaseMathExpr>(BaseMathExpr(Variable({3, 7}))));
+  BOOST_REQUIRE_EQUAL(stmt.toString(), "roman = vec[3, 7]");
+}
+
+BOOST_AUTO_TEST_CASE(AssignValToIndex_ToStirngWirks) {
+  Variable variable({0, 2, 4});
+  variable.setName("roman");
+  AssignStatement stmt(
+      variable, 2,
       std::make_unique<BaseMathExpr>(BaseMathExpr(Variable({-3}))));
-  BOOST_REQUIRE_EQUAL(*variable, before);
-  stmt.run();
-  BOOST_CHECK_EQUAL(*variable, after);
+  BOOST_REQUIRE_EQUAL(stmt.toString(), "roman[2] = -3");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -54,6 +54,12 @@ namespace vecc::ast {
      */
     StatementBlock &getFunctionBody();
 
+    /**
+     * Returns simplified AST representation
+     * @return simplified AST
+     */
+    [[nodiscard]] virtual std::string toString() const;
+
   private:
     const std::string identifier_;   //!< function identifier/name
     std::vector<std::string> names_; //!< Parameters names

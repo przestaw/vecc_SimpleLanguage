@@ -33,7 +33,8 @@ namespace vecc::ast {
      * Returns simplified AST representation
      * @return simplified AST
      */
-    //[[nodiscard]] virtual std::string toString() const override;
+    [[nodiscard]] std::string toString() const override;
+
   private:
     bool invert;
     std::unique_ptr<Expression> value_;

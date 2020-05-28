@@ -26,6 +26,13 @@ BOOST_AUTO_TEST_CASE(ReturnValue) {
   BOOST_CHECK_EQUAL(ret.run().variable_, var);
 }
 
+BOOST_AUTO_TEST_CASE(ReturnValue_toStringWorks) {
+  Variable var = Variable({5, 2, 1});
+  ReturnStatement ret(std::make_unique<BaseMathExpr>(var));
+
+  BOOST_CHECK_EQUAL(ret.toString(), "return " + var.toString());
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE_END()

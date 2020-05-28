@@ -31,7 +31,7 @@ BOOST_AUTO_TEST_CASE(FunctionRun_Works) {
   FunctionCallStatement funCall(fun);
 
   BOOST_CHECK_EQUAL(fun.getFunctionBody().findVariable("kotitka"), before);
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(funCall.run().variable_ == after));
+  BOOST_CHECK_EQUAL(true, funCall.run().variable_ == after);
   BOOST_CHECK_EQUAL(fun.getFunctionBody().findVariable("kotitka"), before);
 }
 
@@ -49,6 +49,26 @@ BOOST_AUTO_TEST_CASE(ArgPassedToFun_ReturnsCorrect) {
   funCall.addArgument(std::make_unique<BaseMathExpr>(Variable({5})));
 
   BOOST_CHECK_EQUAL(Variable({5}), funCall.run().variable_);
+}
+
+BOOST_AUTO_TEST_CASE(FunWithoutArg_ToStingWorks) {
+  Function fun("kotek");
+
+  FunctionCallStatement funCall(fun);
+
+  BOOST_CHECK_EQUAL(funCall.toString(), "kotek()");
+}
+
+BOOST_AUTO_TEST_CASE(FunWithArg_ToStingWorks) {
+  Function fun("kotek");
+
+  fun.addParameter("kotitka");
+
+  FunctionCallStatement funCall(fun);
+
+  funCall.addArgument(std::make_unique<BaseMathExpr>(Variable({5})));
+
+  BOOST_CHECK_EQUAL(funCall.toString(), "kotek(5)");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

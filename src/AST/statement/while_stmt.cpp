@@ -24,3 +24,7 @@ Return WhileStatement::run() {
 
   return ret;
 }
+
+std::string WhileStatement::toString() const {
+  return "while(" + expression_->toString() + ")" + whileBody_.toString();
+}

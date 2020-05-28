@@ -44,6 +44,12 @@ namespace vecc::ast {
      */
     void setPosition(const Position &position);
 
+    /**
+     * Returns simplified AST representation
+     * @return simplified AST
+     */
+    [[nodiscard]] std::string toString() const override;
+
   private:
     Variable &variable_;
     std::unique_ptr<Expression> expression_;

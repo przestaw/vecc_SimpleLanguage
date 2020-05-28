@@ -36,8 +36,26 @@ Return Function::run(const std::vector<Variable> &parameters) {
   }
 }
 
-StatementBlock &Function::getFunctionBody() { return functionBody_; }
+StatementBlock &Function::getFunctionBody() {
+  return functionBody_;
+}
 
-const std::string &Function::getIdentifier() const { return identifier_; }
+const std::string &Function::getIdentifier() const {
+  return identifier_;
+}
 
-unsigned Function::size() const { return names_.size(); }
+unsigned Function::size() const {
+  return names_.size();
+}
+
+std::string Function::toString() const {
+  std::string ret = "fun " + identifier_ + "(";
+  if (!names_.empty()) {
+    ret += *names_.begin();
+    for (auto it = ++names_.begin(); it != names_.end(); ++it) {
+      ret += ", " + *it;
+    }
+  }
+  ret += ")" + functionBody_.toString();
+  return ret;
+}

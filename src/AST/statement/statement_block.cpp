@@ -39,3 +39,11 @@ Return StatementBlock::run() {
 Context &StatementBlock::getContext() {
   return context_;
 }
+
+std::string StatementBlock::toString() const {
+  std::string ret = "{\n";
+
+  for (auto &it : statements_) { ret += it->toString() + ";\n"; }
+
+  return ret + "}";
+}

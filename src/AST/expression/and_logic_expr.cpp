@@ -28,12 +28,15 @@ Variable AndLogicExpr::calculate() const {
   return ret;
 }
 
-// std::string AndLogicExpr::toString() const {
-//  std::string ret = operands.begin()->get()->toString();
-//
-//  for (auto it = ++operands.begin(); it != operands.end(); ++it) {
-//    ret += " and " + it->get()->toString();
-//  }
-//
-//  return ret;
-//}
+std::string AndLogicExpr::toString() const {
+  if (operands.size() < 2) {
+    return operands.begin()->get()->toString();
+  } else {
+    std::string ret = "(" + operands.begin()->get()->toString();
+    for (auto it = ++operands.begin(); it != operands.end(); ++it) {
+      ret += " and " + it->get()->toString();
+    }
+    ret += ")";
+    return ret;
+  }
+}

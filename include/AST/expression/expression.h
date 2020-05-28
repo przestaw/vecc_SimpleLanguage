@@ -28,7 +28,7 @@ namespace vecc::ast {
      * Returns simplified AST representation
      * @return simplified AST
      */
-    //[[nodiscard]] virtual std::string toString() const = 0;
+    [[nodiscard]] virtual std::string toString() const = 0;
   };
 } // namespace vecc::ast
 

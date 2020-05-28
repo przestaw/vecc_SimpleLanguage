@@ -166,6 +166,35 @@ BOOST_AUTO_TEST_CASE(GivenWrongDimModulo_Throws) {
   BOOST_CHECK_THROW(temp = expr.calculate(), MathException);
 }
 
+BOOST_AUTO_TEST_CASE(GivenVal_ToStringCorrect) {
+  Variable var = Variable({1, 2});
+
+  MultiplyExpr expr(make_unique<BaseMathExpr>(var));
+
+  BOOST_CHECK_EQUAL(expr.toString(), "vec[1, 2]");
+}
+
+BOOST_AUTO_TEST_CASE(GivenAdd_ToStringCorrect) {
+  Variable var = Variable({1, 2});
+
+  MultiplyExpr expr(make_unique<BaseMathExpr>(var));
+  expr.addOperand(make_unique<BaseMathExpr>((Variable({-2, 2}))),
+                  MultiplyExpr::OperatorType::Multiply);
+
+  BOOST_CHECK_EQUAL(expr.toString(), "(vec[1, 2]*vec[-2, 2])");
+}
+
+BOOST_AUTO_TEST_CASE(GivenMultiple_ToStringCorrect) {
+  Variable var = Variable({1, 2});
+
+  MultiplyExpr expr(make_unique<BaseMathExpr>(var));
+  expr.addOperand(make_unique<BaseMathExpr>((Variable({-1, 2}))),
+                  MultiplyExpr::OperatorType::Modulo);
+  expr.addOperand(make_unique<BaseMathExpr>((Variable({-2, 2}))),
+                  MultiplyExpr::OperatorType::Divide);
+
+  BOOST_CHECK_EQUAL(expr.toString(), "(vec[1, 2]%vec[-1, 2]/vec[-2, 2])");
+}
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE_END()

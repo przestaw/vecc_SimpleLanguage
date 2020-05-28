@@ -32,3 +32,21 @@ Return PrintStatement::run() {
   out_ << buffer.str() << std::endl;
   return Return(Return::Type::Noting);
 }
+std::string PrintStatement::toString() const {
+  auto print = [](const Printable &it) {
+    if (it.expression) {
+      return std::get<std::unique_ptr<Expression>>(it.value)->toString();
+    } else {
+      return "\"" + std::get<std::string>(it.value) + "\"";
+    }
+  };
+  std::string ret = "print(";
+  if (!printables.empty()) {
+    ret += print(*printables.begin());
+    for (auto it = ++printables.begin(); it != printables.end(); ++it) {
+      ret += ", " + print(*it);
+    }
+  }
+  ret += ")";
+  return ret;
+}
