@@ -40,8 +40,8 @@ BOOST_AUTO_TEST_CASE(IfTrueTest_TrueBlockRun) {
       *var1, std::make_unique<BaseMathExpr>(Variable({99}))));
 
   BOOST_CHECK_EQUAL(true, ifStmt.run().type_ == Return::Type::Noting);
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*var1 == Variable({99})));
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*var2 == Variable({10})));
+  BOOST_CHECK_EQUAL(*var1, Variable({99}));
+  BOOST_CHECK_EQUAL(*var2, Variable({10}));
 }
 
 BOOST_AUTO_TEST_CASE(IfFalseTest_FalseBlockRun) {
@@ -61,8 +61,8 @@ BOOST_AUTO_TEST_CASE(IfFalseTest_FalseBlockRun) {
       *var1, std::make_unique<BaseMathExpr>(Variable({99}))));
 
   BOOST_CHECK_EQUAL(true, ifStmt.run().type_ == Return::Type::Noting);
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*var1 == Variable({1})));
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*var2 == Variable({99})));
+  BOOST_CHECK_EQUAL(*var1, Variable({1}));
+  BOOST_CHECK_EQUAL(*var2, Variable({99}));
 }
 
 BOOST_AUTO_TEST_CASE(IfTrueTest_TrueBlockReturn) {
@@ -79,8 +79,7 @@ BOOST_AUTO_TEST_CASE(IfTrueTest_TrueBlockReturn) {
       std::make_unique<BaseMathExpr>(Variable({22}))));
 
   BOOST_CHECK_EQUAL(true, ifStmt.run().type_ == Return::Type::Value);
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(ifStmt.run().variable_ == Variable({99})));
+  BOOST_CHECK_EQUAL(ifStmt.run().variable_, Variable({99}));
 }
 
 BOOST_AUTO_TEST_CASE(IfFalseTest_FalseBlockReturn) {
@@ -97,8 +96,7 @@ BOOST_AUTO_TEST_CASE(IfFalseTest_FalseBlockReturn) {
       std::make_unique<BaseMathExpr>(Variable({22}))));
 
   BOOST_CHECK_EQUAL(true, ifStmt.run().type_ == Return::Type::Value);
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(ifStmt.run().variable_ == Variable({22})));
+  BOOST_CHECK_EQUAL(ifStmt.run().variable_, Variable({22}));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

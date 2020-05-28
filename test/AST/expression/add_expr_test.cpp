@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(GivenMathExpr_ValueIsCorrect) {
 
   AdditiveExpr expr(make_unique<BaseMathExpr>(var));
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == var));
+  BOOST_CHECK_EQUAL(expr.calculate(), var);
 }
 
 BOOST_AUTO_TEST_CASE(GivenAdd_ValueIsCorrect) {
@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(GivenAdd_ValueIsCorrect) {
       make_unique<BaseMathExpr>(make_unique<Variable>(Variable({4}))),
       AdditiveExpr::OperatorType::Add);
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == Variable({5})));
+  BOOST_CHECK_EQUAL(expr.calculate(), Variable({5}));
 }
 
 BOOST_AUTO_TEST_CASE(GivenSubstract_ValueIsCorrect) {
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(GivenSubstract_ValueIsCorrect) {
       make_unique<BaseMathExpr>(make_unique<Variable>(Variable({3}))),
       AdditiveExpr::OperatorType::Substract);
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == Variable({-2})));
+  BOOST_CHECK_EQUAL(expr.calculate(), Variable({-2}));
 }
 
 BOOST_AUTO_TEST_CASE(GivenVec2Add_ValueIsCorrect) {
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(GivenVec2Add_ValueIsCorrect) {
       make_unique<BaseMathExpr>(make_unique<Variable>(Variable({-2, 2}))),
       AdditiveExpr::OperatorType::Add);
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == Variable({-1, 4})));
+  BOOST_CHECK_EQUAL(expr.calculate(), Variable({-1, 4}));
 }
 
 BOOST_AUTO_TEST_CASE(GivenVec2Substract_ValueIsCorrect) {
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(GivenVec2Substract_ValueIsCorrect) {
       make_unique<BaseMathExpr>(make_unique<Variable>(Variable({-1, 2}))),
       AdditiveExpr::OperatorType::Substract);
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == Variable({2, 0})));
+  BOOST_CHECK_EQUAL(expr.calculate(), Variable({2, 0}));
 }
 
 BOOST_AUTO_TEST_CASE(GivenVec3Add_ValueIsCorrect) {
@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(GivenVec3Add_ValueIsCorrect) {
       make_unique<BaseMathExpr>(make_unique<Variable>(Variable({2, 2, 2}))),
       AdditiveExpr::OperatorType::Add);
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == Variable({3, 4, 5})));
+  BOOST_CHECK_EQUAL(expr.calculate(), Variable({3, 4, 5}));
 }
 
 BOOST_AUTO_TEST_CASE(Givenvec3Substract_ValueIsCorrect) {
@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_CASE(Givenvec3Substract_ValueIsCorrect) {
       make_unique<BaseMathExpr>(make_unique<Variable>(Variable({3, 2, 1}))),
       AdditiveExpr::OperatorType::Substract);
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == Variable({-2, 0, 2})));
+  BOOST_CHECK_EQUAL(expr.calculate(), Variable({-2, 0, 2}));
 }
 
 BOOST_AUTO_TEST_CASE(GivenWrongDimAdd_Throws) {

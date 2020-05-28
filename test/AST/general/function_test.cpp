@@ -36,8 +36,7 @@ BOOST_AUTO_TEST_CASE(FunctionArgs_CorrectCount) {
 BOOST_AUTO_TEST_CASE(EmptyFun_ReturnsNone) {
   Function fun("kotek");
 
-  BOOST_CHECK_EQUAL(true,
-                    static_cast<bool>(Return::Type::Noting == fun.run().type_));
+  BOOST_CHECK_EQUAL(true, Return::Type::Noting == fun.run().type_);
 }
 
 BOOST_AUTO_TEST_CASE(AddedStmt_IsExecuted) {
@@ -54,13 +53,11 @@ BOOST_AUTO_TEST_CASE(AddedStmt_IsExecuted) {
       std::make_unique<ReturnStatement>(std::make_unique<BaseMathExpr>(
           fun.getFunctionBody().findVariable("kotitka"))));
 
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(*fun.getFunctionBody().findVariable("kotitka")
-                              == before));
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(fun.run().variable_ == after));
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(*fun.getFunctionBody().findVariable("kotitka")
-                              == before));
+  BOOST_CHECK_EQUAL(true,
+                    *fun.getFunctionBody().findVariable("kotitka") == before);
+  BOOST_CHECK_EQUAL(true, fun.run().variable_ == after);
+  BOOST_CHECK_EQUAL(true,
+                    *fun.getFunctionBody().findVariable("kotitka") == before);
 }
 
 BOOST_AUTO_TEST_CASE(ArgPassedToFun_ReturnsCorrect) {
@@ -72,9 +69,7 @@ BOOST_AUTO_TEST_CASE(ArgPassedToFun_ReturnsCorrect) {
       std::make_unique<ReturnStatement>(std::make_unique<BaseMathExpr>(
           fun.getFunctionBody().findVariable("kotitka"))));
 
-  BOOST_CHECK_EQUAL(
-      true,
-      static_cast<bool>(Variable({5}) == fun.run({Variable({5})}).variable_));
+  BOOST_CHECK_EQUAL(true, Variable({5}) == fun.run({Variable({5})}).variable_);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

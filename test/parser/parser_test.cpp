@@ -11,17 +11,17 @@ using namespace vecc::ast;
 
 BOOST_AUTO_TEST_SUITE(Parser_Test_Suite)
 
-// BOOST_AUTO_TEST_CASE(EmptyParser_Throws) {
-//  Parser parser;
-//
-//  BOOST_CHECK_THROW(parser.parse(), NoInputStream);
-//}
+BOOST_AUTO_TEST_CASE(EmptyParser_Throws) {
+  Parser parser;
+
+  BOOST_CHECK_THROW(parser.parse(), NoInputStream);
+}
 
 BOOST_AUTO_TEST_CASE(EmptyStreamInParser_DoesNotThrow) {
   std::stringstream stream;
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
-  BOOST_CHECK_NO_THROW(parser.parse());
+  parser.parse();
 }
 
 BOOST_AUTO_TEST_SUITE(Invalid_Examples_Test_Suite)
@@ -128,8 +128,8 @@ BOOST_AUTO_TEST_CASE(NoMainFunction_Throws_1) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 
   BOOST_CHECK_THROW(program->run(), UndefinedMain);
 }
@@ -140,8 +140,8 @@ BOOST_AUTO_TEST_CASE(NoMainFunction_Throws_2) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 
   BOOST_CHECK_THROW(program->run(), UndefinedMain);
 }
@@ -810,8 +810,8 @@ BOOST_AUTO_TEST_CASE(FunctionDef_Works_1) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 
   BOOST_CHECK_EQUAL(true, program->existFunction("kotek"));
 }
@@ -822,8 +822,8 @@ BOOST_AUTO_TEST_CASE(FunctionDef_Works_2) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 
   BOOST_REQUIRE_EQUAL(true, program->existFunction("kotek"));
 
@@ -843,8 +843,8 @@ BOOST_AUTO_TEST_CASE(MultipleFunctionDef_Works_1) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 
   BOOST_CHECK_EQUAL(true, program->existFunction("kotek"));
   BOOST_CHECK_EQUAL(true, program->existFunction("barka"));
@@ -860,8 +860,8 @@ BOOST_AUTO_TEST_CASE(VariableDef_Works_1) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(VariableDef_Works_2) {
@@ -872,8 +872,8 @@ BOOST_AUTO_TEST_CASE(VariableDef_Works_2) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(VariableDef_Works_3) {
@@ -885,8 +885,8 @@ BOOST_AUTO_TEST_CASE(VariableDef_Works_3) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(StmtBlock_Works_1) {
@@ -900,8 +900,8 @@ BOOST_AUTO_TEST_CASE(StmtBlock_Works_1) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(StmtBlock_Works_2) {
@@ -917,8 +917,8 @@ BOOST_AUTO_TEST_CASE(StmtBlock_Works_2) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Relational_Works_1) {
@@ -930,8 +930,8 @@ BOOST_AUTO_TEST_CASE(Relational_Works_1) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Relational_Works_2) {
@@ -943,8 +943,8 @@ BOOST_AUTO_TEST_CASE(Relational_Works_2) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Relational_Works_3) {
@@ -956,8 +956,8 @@ BOOST_AUTO_TEST_CASE(Relational_Works_3) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Relational_Works_4) {
@@ -969,8 +969,8 @@ BOOST_AUTO_TEST_CASE(Relational_Works_4) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Relational_Works_5) {
@@ -982,8 +982,8 @@ BOOST_AUTO_TEST_CASE(Relational_Works_5) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Relational_Works_6) {
@@ -995,8 +995,8 @@ BOOST_AUTO_TEST_CASE(Relational_Works_6) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(VecNoThrow_1) {
@@ -1007,8 +1007,8 @@ BOOST_AUTO_TEST_CASE(VecNoThrow_1) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(VecNoThrow_2) {
@@ -1019,8 +1019,8 @@ BOOST_AUTO_TEST_CASE(VecNoThrow_2) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(VecNoThrow_3) {
@@ -1031,8 +1031,8 @@ BOOST_AUTO_TEST_CASE(VecNoThrow_3) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  (parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(VecNoThrow_4) {
@@ -1043,8 +1043,8 @@ BOOST_AUTO_TEST_CASE(VecNoThrow_4) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  (parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(IfDef_Works_1) {
@@ -1058,8 +1058,8 @@ BOOST_AUTO_TEST_CASE(IfDef_Works_1) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(IfDef_Works_2) {
@@ -1075,8 +1075,8 @@ BOOST_AUTO_TEST_CASE(IfDef_Works_2) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(IfDef_Works_3) {
@@ -1092,8 +1092,8 @@ BOOST_AUTO_TEST_CASE(IfDef_Works_3) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(WhileDef_Works_1) {
@@ -1107,8 +1107,8 @@ BOOST_AUTO_TEST_CASE(WhileDef_Works_1) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(WhileDef_Works_2) {
@@ -1122,8 +1122,8 @@ BOOST_AUTO_TEST_CASE(WhileDef_Works_2) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(FunctionCall_Works_1) {
@@ -1136,8 +1136,8 @@ BOOST_AUTO_TEST_CASE(FunctionCall_Works_1) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(FunctionCall_Works_2) {
@@ -1150,8 +1150,8 @@ BOOST_AUTO_TEST_CASE(FunctionCall_Works_2) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Print_Works_1) {
@@ -1164,8 +1164,8 @@ BOOST_AUTO_TEST_CASE(Print_Works_1) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Print_Works_2) {
@@ -1176,8 +1176,8 @@ BOOST_AUTO_TEST_CASE(Print_Works_2) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Math_Works_1) {
@@ -1188,8 +1188,8 @@ BOOST_AUTO_TEST_CASE(Math_Works_1) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Math_Works_2) {
@@ -1200,8 +1200,8 @@ BOOST_AUTO_TEST_CASE(Math_Works_2) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Math_Works_3) {
@@ -1212,8 +1212,8 @@ BOOST_AUTO_TEST_CASE(Math_Works_3) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Math_Works_4) {
@@ -1224,8 +1224,8 @@ BOOST_AUTO_TEST_CASE(Math_Works_4) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Math_Works_5) {
@@ -1236,8 +1236,8 @@ BOOST_AUTO_TEST_CASE(Math_Works_5) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Math_Works_6) {
@@ -1248,8 +1248,8 @@ BOOST_AUTO_TEST_CASE(Math_Works_6) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Math_Works_7) {
@@ -1260,8 +1260,8 @@ BOOST_AUTO_TEST_CASE(Math_Works_7) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Math_Works_8) {
@@ -1272,8 +1272,8 @@ BOOST_AUTO_TEST_CASE(Math_Works_8) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Math_Works_9) {
@@ -1284,8 +1284,8 @@ BOOST_AUTO_TEST_CASE(Math_Works_9) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Math_Works_10) {
@@ -1296,8 +1296,8 @@ BOOST_AUTO_TEST_CASE(Math_Works_10) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Math_Works_11) {
@@ -1308,8 +1308,8 @@ BOOST_AUTO_TEST_CASE(Math_Works_11) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Math_Works_12) {
@@ -1320,8 +1320,8 @@ BOOST_AUTO_TEST_CASE(Math_Works_12) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Math_Works_13) {
@@ -1332,8 +1332,8 @@ BOOST_AUTO_TEST_CASE(Math_Works_13) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Math_Works_14) {
@@ -1344,8 +1344,8 @@ BOOST_AUTO_TEST_CASE(Math_Works_14) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Math_Works_15) {
@@ -1356,8 +1356,8 @@ BOOST_AUTO_TEST_CASE(Math_Works_15) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(VecMath_Works_1) {
@@ -1381,8 +1381,8 @@ BOOST_AUTO_TEST_CASE(VecMath_Works_2) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Logic_Works_1) {
@@ -1393,8 +1393,8 @@ BOOST_AUTO_TEST_CASE(Logic_Works_1) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Logic_Works_2) {
@@ -1405,8 +1405,8 @@ BOOST_AUTO_TEST_CASE(Logic_Works_2) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Logic_Works_3) {
@@ -1417,8 +1417,8 @@ BOOST_AUTO_TEST_CASE(Logic_Works_3) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Logic_Works_4) {
@@ -1429,8 +1429,8 @@ BOOST_AUTO_TEST_CASE(Logic_Works_4) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Logic_Works_5) {
@@ -1441,8 +1441,8 @@ BOOST_AUTO_TEST_CASE(Logic_Works_5) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Logic_Works_6) {
@@ -1453,8 +1453,8 @@ BOOST_AUTO_TEST_CASE(Logic_Works_6) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Logic_Works_7) {
@@ -1465,8 +1465,8 @@ BOOST_AUTO_TEST_CASE(Logic_Works_7) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Logic_Works_8) {
@@ -1477,8 +1477,8 @@ BOOST_AUTO_TEST_CASE(Logic_Works_8) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Logic_Works_9) {
@@ -1489,8 +1489,8 @@ BOOST_AUTO_TEST_CASE(Logic_Works_9) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Logic_Works_10) {
@@ -1501,8 +1501,8 @@ BOOST_AUTO_TEST_CASE(Logic_Works_10) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Return_Works_1) {
@@ -1515,8 +1515,8 @@ BOOST_AUTO_TEST_CASE(Return_Works_1) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Return_Works_2) {
@@ -1530,8 +1530,8 @@ BOOST_AUTO_TEST_CASE(Return_Works_2) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Return_Works_3) {
@@ -1545,8 +1545,8 @@ BOOST_AUTO_TEST_CASE(Return_Works_3) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Return_Works_4) {
@@ -1559,8 +1559,8 @@ BOOST_AUTO_TEST_CASE(Return_Works_4) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_CASE(Return_Works_5) {
@@ -1573,8 +1573,8 @@ BOOST_AUTO_TEST_CASE(Return_Works_5) {
   Parser parser = Parser(std::make_unique<Reader>(stream));
 
   std::unique_ptr<Program> program;
-  BOOST_CHECK_NO_THROW(parser.parse());
-  BOOST_CHECK_NO_THROW(program = parser.getProgram());
+  parser.parse();
+  program = parser.getProgram();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

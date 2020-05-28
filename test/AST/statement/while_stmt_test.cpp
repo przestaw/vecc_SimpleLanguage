@@ -34,31 +34,32 @@ BOOST_AUTO_TEST_CASE(While_ExecutesAddition) {
       std::make_unique<AssignStatement>(*var1, std::move(addExpr)));
 
   BOOST_CHECK(whileStmt.run().type_ == Return::Type::Noting);
-  BOOST_CHECK(static_cast<bool>(*var1 == *var2));
-  BOOST_CHECK(static_cast<bool>(*var1 == Variable({10})));
-}
-
-BOOST_AUTO_TEST_CASE(While_ExecutesSubstract) {
-  auto var1 = std::make_shared<Variable>(Variable({10}));
-  auto var2 = std::make_shared<Variable>(Variable({1}));
-  auto cond = std::make_unique<RelationExpr>(
-      std::make_unique<BaseMathExpr>(var1), RelationExpr::OperatorType::Greater,
-      std::make_unique<BaseMathExpr>(var2));
-
-  WhileStatement whileStmt(std::move(cond));
-
-  auto addExpr =
-      std::make_unique<AdditiveExpr>(std::make_unique<BaseMathExpr>(var1));
-  addExpr->addOperand(std::make_unique<BaseMathExpr>(Variable({1})),
-                      AdditiveExpr::OperatorType::Substract);
-
-  whileStmt.getWhileBody().addInstruction(
-      std::make_unique<AssignStatement>(*var1, std::move(addExpr)));
-
-  BOOST_CHECK(whileStmt.run().type_ == Return::Type::Noting);
   BOOST_CHECK_EQUAL(*var1, *var2);
-  BOOST_CHECK(static_cast<bool>(*var1 == Variable({1})));
+  BOOST_CHECK_EQUAL(*var1, Variable({10}));
 }
+
+// BOOST_AUTO_TEST_CASE(While_ExecutesSubstract) {
+//  auto var1 = std::make_shared<Variable>(Variable({10}));
+//  auto var2 = std::make_shared<Variable>(Variable({1}));
+//  auto cond = std::make_unique<RelationExpr>(
+//      std::make_unique<BaseMathExpr>(var1),
+//      RelationExpr::OperatorType::Greater,
+//      std::make_unique<BaseMathExpr>(var2));
+//
+//  WhileStatement whileStmt(std::move(cond));
+//
+//  auto addExpr =
+//      std::make_unique<AdditiveExpr>(std::make_unique<BaseMathExpr>(var1));
+//  addExpr->addOperand(std::make_unique<BaseMathExpr>(Variable({1})),
+//                      AdditiveExpr::OperatorType::Substract);
+//
+//  whileStmt.getWhileBody().addInstruction(
+//      std::make_unique<AssignStatement>(*var1, std::move(addExpr)));
+//
+//  BOOST_CHECK(whileStmt.run().type_ == Return::Type::Noting);
+//  BOOST_CHECK_EQUAL(*var1, *var2);
+//  BOOST_CHECK(static_cast<bool>(*var1 == Variable({1})));
+//}
 
 BOOST_AUTO_TEST_CASE(While_BrakesOnReturn) {
   auto var1 = std::make_shared<Variable>(Variable({10}));
@@ -79,11 +80,10 @@ BOOST_AUTO_TEST_CASE(While_BrakesOnReturn) {
 
   whileStmt.getWhileBody().addInstruction(
       std::make_unique<AssignStatement>(*var1, std::move(addExpr)));
-  BOOST_CHECK(static_cast<bool>(*var1 == Variable({10})));
-  BOOST_CHECK(static_cast<bool>(*var2 == Variable({1})));
-  BOOST_REQUIRE_EQUAL(true, whileStmt.run().type_ == Return::Type::Value);
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(whileStmt.run().variable_ == Variable({123})));
+  BOOST_CHECK_EQUAL(*var1, Variable({10}));
+  BOOST_CHECK_EQUAL(*var2, Variable({1}));
+  BOOST_REQUIRE(whileStmt.run().type_ == Return::Type::Value);
+  BOOST_CHECK_EQUAL(whileStmt.run().variable_, Variable({123}));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

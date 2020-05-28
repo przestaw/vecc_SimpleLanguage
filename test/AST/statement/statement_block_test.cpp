@@ -32,9 +32,9 @@ BOOST_AUTO_TEST_CASE(AddedStmt_IsExecuted) {
   stmt.addInstruction(std::make_unique<AssignStatement>(
       *variable, std::make_unique<BaseMathExpr>(BaseMathExpr(after))));
 
-  BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
+  BOOST_REQUIRE_EQUAL(*variable, before);
   stmt.run();
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));
+  BOOST_CHECK_EQUAL(*variable, after);
 }
 
 BOOST_AUTO_TEST_CASE(ReturnStmt_IsExecuted) {
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(ReturnStmt_IsExecuted) {
   stmt.addInstruction(std::make_unique<ReturnStatement>(
       std::make_unique<BaseMathExpr>(stmt.findVariable("vari"))));
 
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == stmt.run().variable_));
+  BOOST_CHECK_EQUAL(*variable, stmt.run().variable_);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

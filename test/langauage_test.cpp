@@ -35,8 +35,7 @@ BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct2_Works_1) {
   BOOST_REQUIRE_NO_THROW(parser.parse());
   BOOST_REQUIRE_NO_THROW(program = parser.getProgram());
 
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(program->run().variable_ == Variable({0, 5})));
+  BOOST_CHECK_EQUAL(program->run().variable_, Variable({0, 5}));
 }
 
 BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct2_Works_2) {
@@ -52,8 +51,7 @@ BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct2_Works_2) {
   BOOST_REQUIRE_NO_THROW(parser.parse());
   BOOST_REQUIRE_NO_THROW(program = parser.getProgram());
 
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(program->run().variable_ == Variable({-5, 10})));
+  BOOST_CHECK_EQUAL(program->run().variable_, Variable({-5, 10}));
 }
 
 BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct3_Works_1) {
@@ -69,8 +67,7 @@ BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct3_Works_1) {
   BOOST_REQUIRE_NO_THROW(parser.parse());
   BOOST_REQUIRE_NO_THROW(program = parser.getProgram());
 
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(program->run().variable_ == Variable({0, 0, 0})));
+  BOOST_CHECK_EQUAL(program->run().variable_, Variable({0, 0, 0}));
 }
 
 BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct3_Works_2) {
@@ -86,8 +83,7 @@ BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct3_Works_2) {
   BOOST_REQUIRE_NO_THROW(parser.parse());
   BOOST_REQUIRE_NO_THROW(program = parser.getProgram());
 
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(program->run().variable_
-                                            == Variable({-2, 4, -2})));
+  BOOST_CHECK_EQUAL(program->run().variable_, Variable({-2, 4, -2}));
 }
 
 BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct3_Works_3) {
@@ -103,8 +99,7 @@ BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct3_Works_3) {
   BOOST_REQUIRE_NO_THROW(parser.parse());
   BOOST_REQUIRE_NO_THROW(program = parser.getProgram());
 
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(program->run().variable_ == Variable({0, 0, 0})));
+  BOOST_CHECK_EQUAL(program->run().variable_, Variable({0, 0, 0}));
 }
 
 BOOST_AUTO_TEST_CASE(FibLibrary_NoThrow) {
@@ -130,8 +125,7 @@ BOOST_AUTO_TEST_CASE(FibLibraryTestIt_Works_1) {
   BOOST_REQUIRE_NO_THROW(parser.parse());
   BOOST_REQUIRE_NO_THROW(program = parser.getProgram());
 
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(program->run().variable_ == Variable({89})));
+  BOOST_CHECK_EQUAL(program->run().variable_, Variable({89}));
 }
 
 BOOST_AUTO_TEST_CASE(FibLibraryTestIt_Works_2) {
@@ -147,8 +141,7 @@ BOOST_AUTO_TEST_CASE(FibLibraryTestIt_Works_2) {
   BOOST_REQUIRE_NO_THROW(parser.parse());
   BOOST_REQUIRE_NO_THROW(program = parser.getProgram());
 
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(program->run().variable_ == Variable({10946})));
+  BOOST_CHECK_EQUAL(program->run().variable_, Variable({10946}));
 }
 
 BOOST_AUTO_TEST_CASE(FibLibraryTestRec_Works_1) {
@@ -164,8 +157,7 @@ BOOST_AUTO_TEST_CASE(FibLibraryTestRec_Works_1) {
   BOOST_REQUIRE_NO_THROW(parser.parse());
   BOOST_REQUIRE_NO_THROW(program = parser.getProgram());
 
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(program->run().variable_ == Variable({89})));
+  BOOST_CHECK_EQUAL(program->run().variable_, Variable({89}));
 }
 
 BOOST_AUTO_TEST_CASE(FibLibraryTestRec_Works_2) {
@@ -181,8 +173,7 @@ BOOST_AUTO_TEST_CASE(FibLibraryTestRec_Works_2) {
   BOOST_REQUIRE_NO_THROW(parser.parse());
   BOOST_REQUIRE_NO_THROW(program = parser.getProgram());
 
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(program->run().variable_ == Variable({10946})));
+  BOOST_CHECK_EQUAL(program->run().variable_, Variable({10946}));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

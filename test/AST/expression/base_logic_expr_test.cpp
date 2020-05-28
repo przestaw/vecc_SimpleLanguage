@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE(BaseLogic_ReturnsVal) {
 
   BaseLogicExpr expr(make_unique<BaseMathExpr>(var));
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == var));
+  BOOST_CHECK(expr.calculate() == var);
 }
 
 BOOST_AUTO_TEST_CASE(NegatedBaseLogic_ReturnsNegatedVal) {
@@ -31,7 +31,7 @@ BOOST_AUTO_TEST_CASE(NegatedBaseLogic_ReturnsNegatedVal) {
 
   BaseLogicExpr expr(make_unique<BaseMathExpr>(var), true);
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == !var));
+  BOOST_CHECK(expr.calculate() == !var);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

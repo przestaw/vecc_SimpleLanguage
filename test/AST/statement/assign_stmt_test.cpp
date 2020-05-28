@@ -20,9 +20,9 @@ BOOST_AUTO_TEST_CASE(AssignVal_Works) {
 
   AssignStatement stmt(*variable,
                        std::make_unique<BaseMathExpr>(BaseMathExpr(after)));
-  BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
+  BOOST_REQUIRE_EQUAL(*variable, before);
   stmt.run();
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));
+  BOOST_CHECK_EQUAL(*variable, after);
 }
 
 BOOST_AUTO_TEST_CASE(AssignVec2_Works) {
@@ -32,9 +32,9 @@ BOOST_AUTO_TEST_CASE(AssignVec2_Works) {
 
   AssignStatement stmt(*variable,
                        std::make_unique<BaseMathExpr>(BaseMathExpr(after)));
-  BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
+  BOOST_REQUIRE_EQUAL(*variable, before);
   stmt.run();
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));
+  BOOST_CHECK_EQUAL(*variable, after);
 }
 
 BOOST_AUTO_TEST_CASE(AssignVec3_Works) {
@@ -44,9 +44,9 @@ BOOST_AUTO_TEST_CASE(AssignVec3_Works) {
 
   AssignStatement stmt(*variable,
                        std::make_unique<BaseMathExpr>(BaseMathExpr(after)));
-  BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
+  BOOST_REQUIRE_EQUAL(*variable, before);
   stmt.run();
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));
+  BOOST_CHECK_EQUAL(*variable, after);
 }
 
 BOOST_AUTO_TEST_CASE(AssignValToIndex2_Works0) {
@@ -57,9 +57,9 @@ BOOST_AUTO_TEST_CASE(AssignValToIndex2_Works0) {
   AssignStatement stmt(
       *variable, 0,
       std::make_unique<BaseMathExpr>(BaseMathExpr(Variable({3}))));
-  BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
+  BOOST_REQUIRE_EQUAL(*variable, before);
   stmt.run();
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));
+  BOOST_CHECK_EQUAL(*variable, after);
 }
 
 BOOST_AUTO_TEST_CASE(AssignValToIndex2_Works1) {
@@ -70,9 +70,9 @@ BOOST_AUTO_TEST_CASE(AssignValToIndex2_Works1) {
   AssignStatement stmt(
       *variable, 1,
       std::make_unique<BaseMathExpr>(BaseMathExpr(Variable({7}))));
-  BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
+  BOOST_REQUIRE_EQUAL(*variable, before);
   stmt.run();
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));
+  BOOST_CHECK_EQUAL(*variable, after);
 }
 
 BOOST_AUTO_TEST_CASE(AssignValToIndex3_Works0) {
@@ -83,9 +83,9 @@ BOOST_AUTO_TEST_CASE(AssignValToIndex3_Works0) {
   AssignStatement stmt(
       *variable, 0,
       std::make_unique<BaseMathExpr>(BaseMathExpr(Variable({3}))));
-  BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
+  BOOST_REQUIRE_EQUAL(*variable, before);
   stmt.run();
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));
+  BOOST_CHECK_EQUAL(*variable, after);
 }
 
 BOOST_AUTO_TEST_CASE(AssignValToIndex3_Works1) {
@@ -96,9 +96,9 @@ BOOST_AUTO_TEST_CASE(AssignValToIndex3_Works1) {
   AssignStatement stmt(
       *variable, 1,
       std::make_unique<BaseMathExpr>(BaseMathExpr(Variable({9}))));
-  BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
+  BOOST_REQUIRE_EQUAL(*variable, before);
   stmt.run();
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));
+  BOOST_CHECK_EQUAL(*variable, after);
 }
 
 BOOST_AUTO_TEST_CASE(AssignValToIndex3_Works2) {
@@ -109,9 +109,9 @@ BOOST_AUTO_TEST_CASE(AssignValToIndex3_Works2) {
   AssignStatement stmt(
       *variable, 2,
       std::make_unique<BaseMathExpr>(BaseMathExpr(Variable({-3}))));
-  BOOST_REQUIRE_EQUAL(true, static_cast<bool>(*variable == before));
+  BOOST_REQUIRE_EQUAL(*variable, before);
   stmt.run();
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*variable == after));
+  BOOST_CHECK_EQUAL(*variable, after);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -18,8 +18,8 @@ BOOST_AUTO_TEST_CASE(GivenConstatnt_ValueIsCorrect) {
   BaseMathExpr expr1(constant, false);
   BaseMathExpr expr2(constant, true);
 
-  BOOST_CHECK(static_cast<bool>(expr1.calculate() == Variable({1, 2, 3})));
-  BOOST_CHECK(static_cast<bool>(expr2.calculate() == Variable({-1, -2, -3})));
+  BOOST_CHECK_EQUAL(expr1.calculate(), Variable({1, 2, 3}));
+  BOOST_CHECK_EQUAL(expr2.calculate(), Variable({-1, -2, -3}));
 }
 
 BOOST_AUTO_TEST_CASE(GivenVariable_ValueIsCorrect) {
@@ -29,8 +29,8 @@ BOOST_AUTO_TEST_CASE(GivenVariable_ValueIsCorrect) {
   BaseMathExpr expr1(constant, false);
   BaseMathExpr expr2(constant, true);
 
-  BOOST_CHECK(static_cast<bool>(expr1.calculate() == Variable({1, 2, 3})));
-  BOOST_CHECK(static_cast<bool>(expr2.calculate() == Variable({-1, -2, -3})));
+  BOOST_CHECK_EQUAL(expr1.calculate(), Variable({1, 2, 3}));
+  BOOST_CHECK_EQUAL(expr2.calculate(), Variable({-1, -2, -3}));
 }
 
 BOOST_AUTO_TEST_CASE(GivenVariable_WhenVariableChangesValueIsCorrect) {
@@ -42,8 +42,8 @@ BOOST_AUTO_TEST_CASE(GivenVariable_WhenVariableChangesValueIsCorrect) {
 
   *constant = *constant + Variable({3, 2, 1});
 
-  BOOST_CHECK(static_cast<bool>(expr1.calculate() == Variable({4, 4, 4})));
-  BOOST_CHECK(static_cast<bool>(expr2.calculate() == Variable({-4, -4, -4})));
+  BOOST_CHECK_EQUAL(expr1.calculate(), Variable({4, 4, 4}));
+  BOOST_CHECK_EQUAL(expr2.calculate(), Variable({-4, -4, -4}));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

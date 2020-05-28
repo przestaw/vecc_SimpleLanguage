@@ -19,22 +19,6 @@ BOOST_AUTO_TEST_SUITE(AST_Test_Suite)
 
 BOOST_AUTO_TEST_SUITE(Relation_Expr_Test_Suite)
 
-//        BOOST_AUTO_TEST_CASE(GivenMathExpr_ValueIsCorrect) {
-//            Variable var = Variable({1, 2, 3});
-//
-//            unique_ptr<Variable> variable =
-//                    var);
-//
-//            RelationExpr expr1(make_unique<BaseMathExpr>(move(variable)),
-//                              RelationExpr::OperatorType::PassValue,
-//                              unique_ptr<Expression>(nullptr));
-//
-//            variable = var);
-//            RelationExpr expr2(make_unique<BaseMathExpr>(move(variable)));
-//
-//            BOOST_CHECK(static_cast<bool>(expr1.calculate() == var));
-//            BOOST_CHECK(static_cast<bool>(expr2.calculate() == var));
-//        }
 
 BOOST_AUTO_TEST_CASE(GivenTwoValues_EqualityReturnsCorrectValue) {
   Variable var1 = Variable({1});
@@ -52,9 +36,9 @@ BOOST_AUTO_TEST_CASE(GivenTwoValues_EqualityReturnsCorrectValue) {
                      RelationExpr::OperatorType::Equal,
                      make_unique<BaseMathExpr>(var2));
 
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr1.calculate()), true);
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr2.calculate()), false);
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr3.calculate()), true);
+  BOOST_CHECK_EQUAL(expr1.calculate(), true);
+  BOOST_CHECK_EQUAL(expr2.calculate(), false);
+  BOOST_CHECK_EQUAL(expr3.calculate(), true);
 }
 
 BOOST_AUTO_TEST_CASE(GivenTwoVecValues_EqualityReturnsCorrectValue) {
@@ -73,9 +57,9 @@ BOOST_AUTO_TEST_CASE(GivenTwoVecValues_EqualityReturnsCorrectValue) {
                      RelationExpr::OperatorType::Equal,
                      make_unique<BaseMathExpr>(var2));
 
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr1.calculate()), true);
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr2.calculate()), false);
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr3.calculate()), true);
+  BOOST_CHECK_EQUAL(expr1.calculate(), true);
+  BOOST_CHECK_EQUAL(expr2.calculate(), false);
+  BOOST_CHECK_EQUAL(expr3.calculate(), true);
 }
 
 BOOST_AUTO_TEST_CASE(GivenTwoDiffrentDimVecValues_EqualityThrows) {
@@ -106,9 +90,9 @@ BOOST_AUTO_TEST_CASE(GivenTwoValues_InequalityReturnsCorrectValue) {
                      RelationExpr::OperatorType::NotEqual,
                      make_unique<BaseMathExpr>(var2));
 
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr1.calculate()), false);
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr2.calculate()), true);
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr3.calculate()), false);
+  BOOST_CHECK_EQUAL(expr1.calculate(), false);
+  BOOST_CHECK_EQUAL(expr2.calculate(), true);
+  BOOST_CHECK_EQUAL(expr3.calculate(), false);
 }
 
 BOOST_AUTO_TEST_CASE(GivenTwoVecValues_InequalityReturnsCorrectValue) {
@@ -127,9 +111,9 @@ BOOST_AUTO_TEST_CASE(GivenTwoVecValues_InequalityReturnsCorrectValue) {
                      RelationExpr::OperatorType::NotEqual,
                      make_unique<BaseMathExpr>(var2));
 
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr1.calculate()), false);
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr2.calculate()), true);
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr3.calculate()), false);
+  BOOST_CHECK_EQUAL(expr1.calculate(), false);
+  BOOST_CHECK_EQUAL(expr2.calculate(), true);
+  BOOST_CHECK_EQUAL(expr3.calculate(), false);
 }
 
 BOOST_AUTO_TEST_CASE(GivenTwoDiffrentDimVecValues_InequalityThrows) {
@@ -163,10 +147,10 @@ BOOST_AUTO_TEST_CASE(GivenTwoValues_LessReturnsCorrectValue) {
                      RelationExpr::OperatorType::Less,
                      make_unique<BaseMathExpr>(var1));
 
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr1.calculate()), false);
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr2.calculate()), true);
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr3.calculate()), false);
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr4.calculate()), false);
+  BOOST_CHECK_EQUAL(expr1.calculate(), false);
+  BOOST_CHECK_EQUAL(expr2.calculate(), true);
+  BOOST_CHECK_EQUAL(expr3.calculate(), false);
+  BOOST_CHECK_EQUAL(expr4.calculate(), false);
 }
 
 BOOST_AUTO_TEST_CASE(GivenTwoVecValues_LessThrows) {
@@ -211,10 +195,10 @@ BOOST_AUTO_TEST_CASE(GivenTwoValues_LessOrEqualReturnsCorrectValue) {
                      RelationExpr::OperatorType::LessOrEqual,
                      make_unique<BaseMathExpr>(var1));
 
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr1.calculate()), true);
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr2.calculate()), true);
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr3.calculate()), true);
-  BOOST_CHECK_EQUAL(static_cast<bool>(expr4.calculate()), false);
+  BOOST_CHECK_EQUAL(expr1.calculate(), true);
+  BOOST_CHECK_EQUAL(expr2.calculate(), true);
+  BOOST_CHECK_EQUAL(expr3.calculate(), true);
+  BOOST_CHECK_EQUAL(expr4.calculate(), false);
 }
 
 BOOST_AUTO_TEST_CASE(GivenTwoVecValues_LessOrEqualThrows) {

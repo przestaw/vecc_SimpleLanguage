@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE(GivenMathExpr_ValueIsCorrect) {
   Variable var = Variable({1, 2, 3});
   MultiplyExpr expr(make_unique<BaseMathExpr>(var));
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == var));
+  BOOST_CHECK_EQUAL(expr.calculate(), var);
 }
 
 BOOST_AUTO_TEST_CASE(GivenMultiply_ValueIsCorrect) {
@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(GivenMultiply_ValueIsCorrect) {
   expr.addOperand(make_unique<BaseMathExpr>(Variable({2})),
                   MultiplyExpr::OperatorType::Multiply);
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == Variable({-10})));
+  BOOST_CHECK_EQUAL(expr.calculate(), Variable({-10}));
 }
 
 BOOST_AUTO_TEST_CASE(GivenModulo_ValueIsCorrect) {
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(GivenModulo_ValueIsCorrect) {
   expr.addOperand(make_unique<BaseMathExpr>(Variable({3})),
                   MultiplyExpr::OperatorType::Modulo);
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == Variable({1})));
+  BOOST_CHECK_EQUAL(expr.calculate(), Variable({1}));
 }
 
 BOOST_AUTO_TEST_CASE(GivenDivide_ValueIsCorrect) {
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(GivenDivide_ValueIsCorrect) {
   expr.addOperand(make_unique<BaseMathExpr>(Variable({5})),
                   MultiplyExpr::OperatorType::Divide);
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == Variable({4})));
+  BOOST_CHECK_EQUAL(expr.calculate(), Variable({4}));
 }
 
 BOOST_AUTO_TEST_CASE(GivenVec2Multiply_ValueIsCorrect) {
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE(GivenVec2Multiply_ValueIsCorrect) {
   expr.addOperand(make_unique<BaseMathExpr>(Variable({2})),
                   MultiplyExpr::OperatorType::Multiply);
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == Variable({2, 4})));
+  BOOST_CHECK_EQUAL(expr.calculate(), Variable({2, 4}));
 }
 
 BOOST_AUTO_TEST_CASE(GivenVec2Modulo_ValueIsCorrect) {
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(GivenVec2Modulo_ValueIsCorrect) {
   expr.addOperand(make_unique<BaseMathExpr>(Variable({3})),
                   MultiplyExpr::OperatorType::Modulo);
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == Variable({1, 2})));
+  BOOST_CHECK_EQUAL(expr.calculate(), Variable({1, 2}));
 }
 
 BOOST_AUTO_TEST_CASE(GivenVec2Divide_ValueIsCorrect) {
@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(GivenVec2Divide_ValueIsCorrect) {
   expr.addOperand(make_unique<BaseMathExpr>(Variable({2})),
                   MultiplyExpr::OperatorType::Divide);
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == Variable({1, 2})));
+  BOOST_CHECK_EQUAL(expr.calculate(), Variable({1, 2}));
 }
 
 BOOST_AUTO_TEST_CASE(GivenVec3Multiply_ValueIsCorrect) {
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(GivenVec3Multiply_ValueIsCorrect) {
   expr.addOperand(make_unique<BaseMathExpr>(Variable({2})),
                   MultiplyExpr::OperatorType::Multiply);
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == Variable({2, 4, 6})));
+  BOOST_CHECK_EQUAL(expr.calculate(), Variable({2, 4, 6}));
 }
 
 BOOST_AUTO_TEST_CASE(GivenVec3Modulo_ValueIsCorrect) {
@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE(GivenVec3Modulo_ValueIsCorrect) {
   expr.addOperand(make_unique<BaseMathExpr>(Variable({3})),
                   MultiplyExpr::OperatorType::Modulo);
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == Variable({1, 2, 0})));
+  BOOST_CHECK_EQUAL(expr.calculate(), Variable({1, 2, 0}));
 }
 
 BOOST_AUTO_TEST_CASE(GivenVec3Divide_ValueIsCorrect) {
@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE(GivenVec3Divide_ValueIsCorrect) {
   expr.addOperand(make_unique<BaseMathExpr>(Variable({2})),
                   MultiplyExpr::OperatorType::Divide);
 
-  BOOST_CHECK(static_cast<bool>(expr.calculate() == Variable({1, 2, 2})));
+  BOOST_CHECK_EQUAL(expr.calculate(), Variable({1, 2, 2}));
 }
 
 BOOST_AUTO_TEST_CASE(GivenZeroDivision_Throws) {
