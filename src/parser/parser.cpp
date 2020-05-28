@@ -107,7 +107,7 @@ void Parser::parseStatementBlock(StatementBlock &newBlock) {
   currentContext = &newBlock.getContext();
 
   while (scanner_->getToken().getType() != Token::Type::CurlyBracketClose) {
-    Token token = scanner_->readToken();
+    Token token = scanner_->getToken();
     switch (token.getType()) {
     default:
       throw error::UnexpectedToken(
@@ -141,6 +141,7 @@ void Parser::parseStatementBlock(StatementBlock &newBlock) {
       newBlock.addInstruction(std::move(internalBlock));
     }
   }
+  scanner_->readToken();
   // Note: we now exit this block
   currentContext = currentContext->getParentContext();
 }
@@ -156,6 +157,7 @@ Variable Parser::parseVectorValue() {
     } else {
       variables.push_back(scanner_->getToken().getNumberValue());
     }
+    scanner_->readToken();
   };
 
   scanner_->readToken(); // parse token after vec
