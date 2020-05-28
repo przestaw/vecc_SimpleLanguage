@@ -10,11 +10,11 @@ using namespace vecc::ast;
 
 void Context::addVariable(const std::string &identifier,
                           const Variable &variable) {
-  variables_.insert({identifier, std::make_shared<Variable>(variable)});
+  variables_.insert({identifier, variable});
 }
 
-std::shared_ptr<Variable> Context::findVariable(const std::string &identifier,
-                                                const Token &token) {
+Variable &Context::findVariable(const std::string &identifier,
+                                const Token &token) {
   if (variables_.count(identifier)) {
     return variables_.at(identifier);
   } else if (parentContext_) {
@@ -41,11 +41,13 @@ void Context::setParentContext(Context *parentContext) {
   parentContext_ = parentContext;
 }
 
-Context *Context::getParentContext() { return parentContext_; }
+Context *Context::getParentContext() {
+  return parentContext_;
+}
 
 std::vector<Variable> Context::saveValues() {
   std::vector<Variable> ret;
-  for (auto &it : variables_) { ret.push_back(*it.second); }
+  for (auto &it : variables_) { ret.push_back(it.second); }
   return ret;
 }
 
@@ -53,7 +55,7 @@ void Context::restoreValues(const std::vector<Variable> &savedValues) {
   if (savedValues.size() == variables_.size()) {
     auto val = savedValues.begin();
     for (auto &it : variables_) {
-      *it.second = *val;
+      it.second = *val;
       ++val;
     }
   } else {

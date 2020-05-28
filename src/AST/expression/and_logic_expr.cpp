@@ -27,3 +27,13 @@ Variable AndLogicExpr::calculate() const {
 
   return ret;
 }
+
+// std::string AndLogicExpr::toString() const {
+//  std::string ret = operands.begin()->get()->toString();
+//
+//  for (auto it = ++operands.begin(); it != operands.end(); ++it) {
+//    ret += " and " + it->get()->toString();
+//  }
+//
+//  return ret;
+//}

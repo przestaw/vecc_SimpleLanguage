@@ -39,7 +39,7 @@ namespace vecc::ast {
      * @param identifier variable identifier
      * @return shared_ptr to the variable
      */
-    std::shared_ptr<Variable> findVariable(const std::string &identifier);
+    Variable &findVariable(const std::string &identifier);
 
     /**
      * Returns reference to StatementBlock internal Context

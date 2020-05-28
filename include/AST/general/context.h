@@ -49,8 +49,7 @@ namespace vecc::ast {
      * @param token connected Token
      * @return Variable shared_ptr
      */
-    std::shared_ptr<Variable> findVariable(const std::string &identifier,
-                                           const Token &token);
+    Variable &findVariable(const std::string &identifier, const Token &token);
 
     /**
      * Returns pointer to parent Context
@@ -79,7 +78,7 @@ namespace vecc::ast {
   private:
     Context *parentContext_; //!< used incases like if/while branch/just some
                              //!< code in curly brackets. In other cases nullptr
-    std::unordered_map<std::string, std::shared_ptr<Variable>> variables_;
+    std::unordered_map<std::string, Variable> variables_;
   };
 } // namespace vecc::ast
 

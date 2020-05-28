@@ -22,21 +22,17 @@ BOOST_AUTO_TEST_CASE(FunctionRun_Works) {
   fun.getFunctionBody().getContext().addVariable("kotitka", before);
 
   fun.getFunctionBody().addInstruction(std::make_unique<AssignStatement>(
-      *fun.getFunctionBody().findVariable("kotitka"),
+      fun.getFunctionBody().findVariable("kotitka"),
       std::make_unique<BaseMathExpr>(BaseMathExpr(after))));
   fun.getFunctionBody().addInstruction(
       std::make_unique<ReturnStatement>(std::make_unique<BaseMathExpr>(
-          fun.getFunctionBody().findVariable("kotitka"))));
+          &fun.getFunctionBody().findVariable("kotitka"))));
 
   FunctionCallStatement funCall(fun);
 
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(*fun.getFunctionBody().findVariable("kotitka")
-                              == before));
+  BOOST_CHECK_EQUAL(fun.getFunctionBody().findVariable("kotitka"), before);
   BOOST_CHECK_EQUAL(true, static_cast<bool>(funCall.run().variable_ == after));
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(*fun.getFunctionBody().findVariable("kotitka")
-                              == before));
+  BOOST_CHECK_EQUAL(fun.getFunctionBody().findVariable("kotitka"), before);
 }
 
 BOOST_AUTO_TEST_CASE(ArgPassedToFun_ReturnsCorrect) {
@@ -46,14 +42,13 @@ BOOST_AUTO_TEST_CASE(ArgPassedToFun_ReturnsCorrect) {
 
   fun.getFunctionBody().addInstruction(
       std::make_unique<ReturnStatement>(std::make_unique<BaseMathExpr>(
-          fun.getFunctionBody().findVariable("kotitka"))));
+          &fun.getFunctionBody().findVariable("kotitka"))));
 
   FunctionCallStatement funCall(fun);
 
   funCall.addArgument(std::make_unique<BaseMathExpr>(Variable({5})));
 
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(Variable({5}) == funCall.run().variable_));
+  BOOST_CHECK_EQUAL(Variable({5}), funCall.run().variable_);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

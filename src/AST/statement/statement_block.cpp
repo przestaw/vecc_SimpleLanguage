@@ -8,7 +8,8 @@ using namespace vecc;
 using namespace vecc::ast;
 
 StatementBlock::StatementBlock(Context *parentContext)
-    : context_(parentContext) {}
+    : context_(parentContext) {
+}
 
 void StatementBlock::addInstruction(std::unique_ptr<Statement> statement) {
   this->statements_.push_back(std::move(statement));
@@ -18,8 +19,7 @@ void StatementBlock::addVariable(const std::string &identifier) {
   this->context_.addVariable(identifier, Variable());
 }
 
-std::shared_ptr<Variable>
-StatementBlock::findVariable(const std::string &identifier) {
+Variable &StatementBlock::findVariable(const std::string &identifier) {
   return context_.findVariable(identifier, Token()); // TODO ??
 }
 
@@ -36,4 +36,6 @@ Return StatementBlock::run() {
   return ret;
 }
 
-Context &StatementBlock::getContext() { return context_; }
+Context &StatementBlock::getContext() {
+  return context_;
+}

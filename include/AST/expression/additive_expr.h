@@ -44,6 +44,11 @@ namespace vecc::ast {
      */
     [[nodiscard]] Variable calculate() const override;
 
+    /**
+     * Returns simplified AST representation
+     * @return simplified AST
+     */
+    //[[nodiscard]] virtual std::string toString() const override;
   private:
     std::unique_ptr<Expression> baseValue;
 

@@ -36,9 +36,8 @@ BOOST_AUTO_TEST_CASE(VariableIsAddedToContext_VariableIsReturned) {
   context.addVariable("kotek", Variable({3, -3, 4}));
 
   BOOST_CHECK_EQUAL(true, context.existVariable("kotek"));
-  BOOST_CHECK_EQUAL(true,
-                    static_cast<bool>(*context.findVariable("kotek", Token())
-                                      == Variable({3, -3, 4})));
+  BOOST_CHECK_EQUAL(context.findVariable("kotek", Token()),
+                    Variable({3, -3, 4}));
 }
 
 BOOST_AUTO_TEST_CASE(VariableIsAddedToParentContext_VariableIsReturned_1) {
@@ -53,9 +52,8 @@ BOOST_AUTO_TEST_CASE(VariableIsAddedToParentContext_VariableIsReturned_1) {
   Context childContext(context);
 
   BOOST_CHECK_EQUAL(true, childContext.existVariable("kotek"));
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(*childContext.findVariable("kotek", Token())
-                              == Variable({3, -3, 4})));
+  BOOST_CHECK_EQUAL(childContext.findVariable("kotek", Token()),
+                    Variable({3, -3, 4}));
 }
 
 BOOST_AUTO_TEST_CASE(VariableIsAddedToParentContext_VariableIsReturned_2) {
@@ -74,9 +72,8 @@ BOOST_AUTO_TEST_CASE(VariableIsAddedToParentContext_VariableIsReturned_2) {
   childContext.setParentContext(&context);
 
   BOOST_CHECK_EQUAL(true, childContext.existVariable("kotek"));
-  BOOST_CHECK_EQUAL(
-      true, static_cast<bool>(*childContext.findVariable("kotek", Token())
-                              == Variable({3, -3, 4})));
+  BOOST_CHECK_EQUAL(childContext.findVariable("kotek", Token()),
+                    Variable({3, -3, 4}));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

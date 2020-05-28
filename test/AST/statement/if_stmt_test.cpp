@@ -25,44 +25,44 @@ BOOST_AUTO_TEST_CASE(IfTest_NoThrow) {
 }
 
 BOOST_AUTO_TEST_CASE(IfTrueTest_TrueBlockRun) {
-  auto var1 = std::make_shared<Variable>(Variable({1}));
-  auto var2 = std::make_shared<Variable>(Variable({10}));
+  auto var1 = Variable({1});
+  auto var2 = Variable({10});
   auto cond = std::make_unique<RelationExpr>(
-      std::make_unique<BaseMathExpr>(var1), RelationExpr::OperatorType::Less,
-      std::make_unique<BaseMathExpr>(var2));
+      std::make_unique<BaseMathExpr>(&var1), RelationExpr::OperatorType::Less,
+      std::make_unique<BaseMathExpr>(&var2));
 
   IfStatement ifStmt(std::move(cond));
 
   ifStmt.falseBlock().addInstruction(std::make_unique<AssignStatement>(
-      *var2, std::make_unique<BaseMathExpr>(Variable({99}))));
+      var2, std::make_unique<BaseMathExpr>(Variable({99}))));
 
   ifStmt.trueBlock().addInstruction(std::make_unique<AssignStatement>(
-      *var1, std::make_unique<BaseMathExpr>(Variable({99}))));
+      var1, std::make_unique<BaseMathExpr>(Variable({99}))));
 
   BOOST_CHECK_EQUAL(true, ifStmt.run().type_ == Return::Type::Noting);
-  BOOST_CHECK_EQUAL(*var1, Variable({99}));
-  BOOST_CHECK_EQUAL(*var2, Variable({10}));
+  BOOST_CHECK_EQUAL(var1, Variable({99}));
+  BOOST_CHECK_EQUAL(var2, Variable({10}));
 }
 
 BOOST_AUTO_TEST_CASE(IfFalseTest_FalseBlockRun) {
-  auto var1 = std::make_shared<Variable>(Variable({1}));
-  auto var2 = std::make_shared<Variable>(Variable({10}));
+  auto var1 = Variable({1});
+  auto var2 = Variable({10});
   auto cond =
-      std::make_unique<RelationExpr>(std::make_unique<BaseMathExpr>(var1),
+      std::make_unique<RelationExpr>(std::make_unique<BaseMathExpr>(&var1),
                                      RelationExpr::OperatorType::GreaterOrEqual,
-                                     std::make_unique<BaseMathExpr>(var2));
+                                     std::make_unique<BaseMathExpr>(&var2));
 
   IfStatement ifStmt(std::move(cond));
 
   ifStmt.falseBlock().addInstruction(std::make_unique<AssignStatement>(
-      *var2, std::make_unique<BaseMathExpr>(Variable({99}))));
+      var2, std::make_unique<BaseMathExpr>(Variable({99}))));
 
   ifStmt.trueBlock().addInstruction(std::make_unique<AssignStatement>(
-      *var1, std::make_unique<BaseMathExpr>(Variable({99}))));
+      var1, std::make_unique<BaseMathExpr>(Variable({99}))));
 
   BOOST_CHECK_EQUAL(true, ifStmt.run().type_ == Return::Type::Noting);
-  BOOST_CHECK_EQUAL(*var1, Variable({1}));
-  BOOST_CHECK_EQUAL(*var2, Variable({99}));
+  BOOST_CHECK_EQUAL(var1, Variable({1}));
+  BOOST_CHECK_EQUAL(var2, Variable({99}));
 }
 
 BOOST_AUTO_TEST_CASE(IfTrueTest_TrueBlockReturn) {

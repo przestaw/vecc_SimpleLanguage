@@ -23,14 +23,12 @@ BOOST_AUTO_TEST_CASE(FunctionArgs_CorrectCount) {
   fun.addParameter("bananek");
 
   BOOST_CHECK_EQUAL(1, fun.size());
-  BOOST_CHECK_EQUAL(
-      true, fun.getFunctionBody().getContext().existVariable("bananek"));
+  BOOST_CHECK(fun.getFunctionBody().getContext().existVariable("bananek"));
 
   fun.addParameter("koluszki");
 
   BOOST_CHECK_EQUAL(2, fun.size());
-  BOOST_CHECK_EQUAL(
-      true, fun.getFunctionBody().getContext().existVariable("koluszki"));
+  BOOST_CHECK(fun.getFunctionBody().getContext().existVariable("koluszki"));
 }
 
 BOOST_AUTO_TEST_CASE(EmptyFun_ReturnsNone) {
@@ -47,17 +45,15 @@ BOOST_AUTO_TEST_CASE(AddedStmt_IsExecuted) {
   fun.getFunctionBody().getContext().addVariable("kotitka", before);
 
   fun.getFunctionBody().addInstruction(std::make_unique<AssignStatement>(
-      *fun.getFunctionBody().findVariable("kotitka"),
+      fun.getFunctionBody().findVariable("kotitka"),
       std::make_unique<BaseMathExpr>(BaseMathExpr(after))));
   fun.getFunctionBody().addInstruction(
       std::make_unique<ReturnStatement>(std::make_unique<BaseMathExpr>(
-          fun.getFunctionBody().findVariable("kotitka"))));
+          &fun.getFunctionBody().findVariable("kotitka"))));
 
-  BOOST_CHECK_EQUAL(true,
-                    *fun.getFunctionBody().findVariable("kotitka") == before);
-  BOOST_CHECK_EQUAL(true, fun.run().variable_ == after);
-  BOOST_CHECK_EQUAL(true,
-                    *fun.getFunctionBody().findVariable("kotitka") == before);
+  BOOST_CHECK_EQUAL(fun.getFunctionBody().findVariable("kotitka"), before);
+  BOOST_CHECK_EQUAL(fun.run().variable_, after);
+  BOOST_CHECK_EQUAL(fun.getFunctionBody().findVariable("kotitka"), before);
 }
 
 BOOST_AUTO_TEST_CASE(ArgPassedToFun_ReturnsCorrect) {
@@ -67,9 +63,9 @@ BOOST_AUTO_TEST_CASE(ArgPassedToFun_ReturnsCorrect) {
 
   fun.getFunctionBody().addInstruction(
       std::make_unique<ReturnStatement>(std::make_unique<BaseMathExpr>(
-          fun.getFunctionBody().findVariable("kotitka"))));
+          &fun.getFunctionBody().findVariable("kotitka"))));
 
-  BOOST_CHECK_EQUAL(true, Variable({5}) == fun.run({Variable({5})}).variable_);
+  BOOST_CHECK_EQUAL(Variable({5}), fun.run({Variable({5})}).variable_);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

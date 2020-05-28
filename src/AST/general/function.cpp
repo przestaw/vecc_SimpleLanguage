@@ -25,7 +25,7 @@ Return Function::run(const std::vector<Variable> &parameters) {
         functionBody_.getContext().saveValues();
 
     for (; paramValIt != parameters.end(); ++paramNameIt, ++paramValIt) {
-      *(functionBody_.findVariable(*paramNameIt)) = *paramValIt;
+      functionBody_.findVariable(*paramNameIt) = *paramValIt;
     }
     Return ret = functionBody_.run();
 

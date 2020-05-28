@@ -23,8 +23,7 @@ BOOST_AUTO_TEST_CASE(GivenConstatnt_ValueIsCorrect) {
 }
 
 BOOST_AUTO_TEST_CASE(GivenVariable_ValueIsCorrect) {
-  std::shared_ptr<Variable> constant =
-      std::make_shared<Variable>(Variable({1, 2, 3}));
+  auto constant = Variable({1, 2, 3});
 
   BaseMathExpr expr1(constant, false);
   BaseMathExpr expr2(constant, true);
@@ -34,13 +33,12 @@ BOOST_AUTO_TEST_CASE(GivenVariable_ValueIsCorrect) {
 }
 
 BOOST_AUTO_TEST_CASE(GivenVariable_WhenVariableChangesValueIsCorrect) {
-  std::shared_ptr<Variable> constant =
-      std::make_shared<Variable>(Variable({1, 2, 3}));
+  auto variable = Variable({1, 2, 3});
 
-  BaseMathExpr expr1(constant, false);
-  BaseMathExpr expr2(constant, true);
+  BaseMathExpr expr1(&variable, false);
+  BaseMathExpr expr2(&variable, true);
 
-  *constant = *constant + Variable({3, 2, 1});
+  variable = variable + Variable({3, 2, 1});
 
   BOOST_CHECK_EQUAL(expr1.calculate(), Variable({4, 4, 4}));
   BOOST_CHECK_EQUAL(expr2.calculate(), Variable({-4, -4, -4}));

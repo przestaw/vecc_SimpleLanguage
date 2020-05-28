@@ -8,7 +8,8 @@ using namespace vecc;
 using namespace vecc::ast;
 
 AdditiveExpr::AdditiveExpr(std::unique_ptr<Expression> value)
-    : baseValue(std::move(value)) {}
+    : baseValue(std::move(value)) {
+}
 
 void AdditiveExpr::addOperand(std::unique_ptr<Expression> value,
                               const OperatorType &type,
@@ -33,3 +34,18 @@ Variable AdditiveExpr::calculate() const {
 
   return ret;
 }
+
+// std::string AdditiveExpr::toString() const {
+//  std::string ret = baseValue->toString();
+//  for (const auto &it : multiplyables) {
+//    switch (it.operation_) {
+//    case OperatorType::Add:
+//      ret += " + " + it.value_->toString();
+//      break;
+//    case OperatorType::Substract:
+//      ret += " - "+ it.value_->toString();
+//      break;
+//    }
+//  }
+//  return ret
+//}

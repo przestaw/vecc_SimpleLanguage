@@ -103,7 +103,7 @@ namespace vecc {
 
     // Statements
     inline std::unique_ptr<ast::Statement>
-    parseAssignStatement(const std::shared_ptr<ast::Variable> &variable);
+    parseAssignStatement(ast::Variable *variable);
 
     inline std::unique_ptr<ast::Statement> parseInitStatement();
 

@@ -27,36 +27,36 @@ namespace vecc::ast {
                           bool unaryMathOp = false);
 
     /**
-     * Constructor
-     * @param expr
+     * Constructor for expression
+     * @param expr expression
      * @param unaryMathOp determines is value should be negated
      */
     explicit BaseMathExpr(std::unique_ptr<Expression> expr,
                           bool unaryMathOp = false);
 
     /**
-     * Constructor
+     * Constructor for constant value
      * @param constant constant value
      * @param unaryMathOp determines is value should be negated
      */
     explicit BaseMathExpr(Variable constant, bool unaryMathOp = false);
 
     /**
-     * Constructor
+     * Constructor for program variable val
      * @param variable variable
      * @param unaryMathOp determines is value should be negated
      */
-    explicit BaseMathExpr(std::shared_ptr<Variable> variable,
-                          bool unaryMathOp = false);
+    // NOTE : using pointer instead of reference to distinguish from value
+    explicit BaseMathExpr(Variable* variable, bool unaryMathOp = false);
 
     /**
-     * Constructor
+     * Constructor for program variable val indexed acess
      * @param variable variable
      * @param index index
      * @param unaryMathOp determines is value should be negated
      */
-    BaseMathExpr(std::shared_ptr<Variable> variable, unsigned index,
-                 bool unaryMathOp = false);
+    // NOTE : using pointer instead of reference to distinguish from value
+    BaseMathExpr(Variable* variable, unsigned index, bool unaryMathOp = false);
 
     /**
      * Calculate value of Expression
@@ -74,7 +74,7 @@ namespace vecc::ast {
     bool invert_;        //!< if unarymathOperator was present
 
     std::variant<std::unique_ptr<Statement>, std::unique_ptr<Expression>,
-                 Variable, std::shared_ptr<Variable>>
+                 Variable, Variable*>
         value_;
 
     unsigned index_;

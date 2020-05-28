@@ -178,8 +178,7 @@ Variable Parser::parseVectorValue() {
   return Variable(std::move(variables));
 }
 
-std::unique_ptr<Statement>
-Parser::parseAssignStatement(const std::shared_ptr<Variable> &variable) {
+std::unique_ptr<Statement> Parser::parseAssignStatement(Variable *variable) {
   Position position;
   auto rValueParse = [&]() {
     expectNextToken(Token::Type::Assignment);
@@ -224,13 +223,13 @@ std::unique_ptr<Statement> Parser::parseInitStatement() {
       position = scanner_->getToken().getTokenPos();
       scanner_->readToken();
       assignStmt = std::make_unique<AssignStatement>(
-          *currentContext->findVariable(identifier.getLiteral(), identifier),
+          currentContext->findVariable(identifier.getLiteral(), identifier),
           parseOrExpression());
       assignStmt->setPosition(position); // = pos
     } else {
       assignStmt = std::make_unique<AssignStatement>(
-          *currentContext->findVariable(identifier.getLiteral(), identifier),
-          std::make_unique<BaseMathExpr>(std::make_unique<Variable>()));
+          currentContext->findVariable(identifier.getLiteral(), identifier),
+          std::make_unique<BaseMathExpr>(Variable()));
       assignStmt->setPosition(position); // id pos
     }
 
@@ -258,7 +257,7 @@ std::unique_ptr<Statement> Parser::parseIdentifier() {
     // variable
     stmt = parseAssignStatement(
         // findVariable checks if Variable exists
-        currentContext->findVariable(identifier.getLiteral(), identifier));
+        &currentContext->findVariable(identifier.getLiteral(), identifier));
   }
 
   return stmt;
@@ -565,11 +564,11 @@ Parser::parseIdentifierValue(const bool &unaryMathOp) {
       scanner_->readToken();
 
       return std::make_unique<BaseMathExpr>(
-          currentContext->findVariable(identifier.getLiteral(), identifier),
+          &currentContext->findVariable(identifier.getLiteral(), identifier),
           val, unaryMathOp);
     } else {
       return std::make_unique<BaseMathExpr>(
-          currentContext->findVariable(identifier.getLiteral(), identifier),
+          &currentContext->findVariable(identifier.getLiteral(), identifier),
           unaryMathOp);
     }
   }

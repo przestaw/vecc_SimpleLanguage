@@ -23,6 +23,12 @@ namespace vecc::ast {
      * @return Expression value
      */
     [[nodiscard]] virtual Variable calculate() const = 0;
+
+    /**
+     * Returns simplified AST representation
+     * @return simplified AST
+     */
+    //[[nodiscard]] virtual std::string toString() const = 0;
   };
 } // namespace vecc::ast
 
