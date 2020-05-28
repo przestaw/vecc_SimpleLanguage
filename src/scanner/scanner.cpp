@@ -18,7 +18,7 @@ Scanner::Scanner(std::unique_ptr<Reader> reader, const LogLevel &logLevel,
     : reader_(std::move(reader)), logLevel_(logLevel), out_(out) {
 }
 
-Token Scanner::parseToken() {
+Token Scanner::readToken() {
 
   currentToken = Token(reader_->getCurrentPos());
 

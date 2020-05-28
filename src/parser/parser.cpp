@@ -41,9 +41,10 @@ void Parser::setSource(std::unique_ptr<Reader> source) {
 
 void Parser::parse() {
   if (scanner_) {
-    scanner_->parseToken();
+    scanner_->readToken();
     while (scanner_->getToken().getType() != Token::Type::EoF) {
-      expectToken(Token::Type::Function);
+      expectNextToken(Token::Type::Function);
+      scanner_->readToken();
       parseFunctionDef();
     }
   } else {
@@ -59,18 +60,20 @@ std::unique_ptr<Program> Parser::getProgram() {
 }
 
 void Parser::parseFunctionDef() {
-  Token funToken;
-  expectToken(Token::Type::Identifier,
-              [&]() { funToken = scanner_->getToken(); });
+  expectNextToken(Token::Type::Identifier);
+  Token funToken = scanner_->getToken();
+  scanner_->readToken();
 
   if (!currentProgram->existFunction(funToken.getLiteral())) {
     std::unique_ptr<Function> function =
         std::make_unique<Function>(funToken.getLiteral());
 
-    expectToken(Token::Type::ParenthesisOpen);
+    expectNextToken(Token::Type::ParenthesisOpen);
+    scanner_->readToken();
     parseParameters(*function);
 
-    expectToken(Token::Type::CurlyBracketOpen);
+    expectNextToken(Token::Type::CurlyBracketOpen);
+    scanner_->readToken();
 
     // NOTE : need to add to allow recursion, reference to save
     Function *funRef = function.get();
@@ -88,24 +91,26 @@ void Parser::parseFunctionDef() {
 }
 
 void Parser::parseParameters(Function &def) {
-  if (tryToken(Token::Type::Identifier, [&]() {
-        def.addParameter(scanner_->getToken().getLiteral());
-      })) {
+  if (scanner_->getToken().getType() == Token::Type::Identifier) {
+    def.addParameter(scanner_->getToken().getLiteral());
+    scanner_->readToken();
 
-    while (tryToken(Token::Type::Comma)) {
-      expectToken(Token::Type::Identifier, [&]() {
-        def.addParameter(scanner_->getToken().getLiteral());
-      });
+    while (scanner_->getToken().getType() == Token::Type::Comma) {
+      scanner_->readToken();
+      expectNextToken(Token::Type::Identifier);
+      def.addParameter(scanner_->getToken().getLiteral());
+      scanner_->readToken();
     }
   }
-  expectToken(Token::Type::ParenthesisClose);
+  expectNextToken(Token::Type::ParenthesisClose);
+  scanner_->readToken();
 }
 
 void Parser::parseStatementBlock(StatementBlock &newBlock) {
   currentContext = &newBlock.getContext();
 
-  while (!tryToken(Token::Type::CurlyBracketClose)) {
-    Token token = scanner_->getToken();
+  while (scanner_->getToken().getType() != Token::Type::CurlyBracketClose) {
+    Token token = scanner_->readToken();
     switch (token.getType()) {
     default:
       throw error::UnexpectedToken(
@@ -134,7 +139,7 @@ void Parser::parseStatementBlock(StatementBlock &newBlock) {
       break;
     case Token::Type::CurlyBracketOpen:
       auto internalBlock = std::make_unique<StatementBlock>(currentContext);
-      scanner_->parseToken(); // move to next token
+      scanner_->readToken(); // move to next token
       parseStatementBlock(*internalBlock);
       newBlock.addInstruction(std::move(internalBlock));
     }
@@ -146,8 +151,9 @@ void Parser::parseStatementBlock(StatementBlock &newBlock) {
 Variable Parser::parseVectorValue() {
   std::vector<int> variables;
 
-  auto addNumberLiteral = [&](bool minus) {
-    // need to convert value to integer
+  auto parseValue = [&]() {
+    bool minus = tryConsumeToken(Token::Type::Minus);
+    expectNextToken(Token::Type::NumberString);
     if (minus) {
       variables.push_back(-scanner_->getToken().getNumberValue());
     } else {
@@ -155,22 +161,20 @@ Variable Parser::parseVectorValue() {
     }
   };
 
-  auto parseValue = [&]() {
-    bool minus = tryToken(Token::Type::Minus);
-    expectToken(Token::Type::NumberString, [&]() { addNumberLiteral(minus); });
-  };
-
-  scanner_->parseToken(); // parse token after vec
-  expectToken(Token::Type::ParenthesisOpen);
+  scanner_->readToken(); // parse token after vec
+  expectNextToken(Token::Type::ParenthesisOpen);
+  scanner_->readToken();
   parseValue();
-  expectToken(Token::Type::Comma);
+  expectNextToken(Token::Type::Comma);
+  scanner_->readToken();
   parseValue();
   // check if 3 dimensional vector
   // FIXME : could be any dim vector -> while
-  if (tryToken(Token::Type::Comma)) {
+  if (tryConsumeToken(Token::Type::Comma)) {
     parseValue();
   }
-  expectToken(Token::Type::ParenthesisClose);
+  expectNextToken(Token::Type::ParenthesisClose);
+  scanner_->readToken();
 
   return Variable(std::move(variables));
 }
@@ -179,20 +183,23 @@ std::unique_ptr<Statement>
 Parser::parseAssignStatement(const std::shared_ptr<Variable> &variable) {
   Position position;
   auto rValueParse = [&]() {
-    expectToken(Token::Type::Assignment,
-                [&]() { position = scanner_->getToken().getTokenPos(); });
+    expectNextToken(Token::Type::Assignment);
+    position = scanner_->getToken().getTokenPos();
+    scanner_->readToken();
     std::unique_ptr<Expression> logicExpr(parseOrExpression());
-    expectToken(Token::Type::Semicolon);
+    expectNextToken(Token::Type::Semicolon);
+    scanner_->readToken();
     return logicExpr;
   };
 
   std::unique_ptr<AssignStatement> assignStmt;
-  if (tryToken(Token::Type::BracketOpen)) {
+  if (tryConsumeToken(Token::Type::BracketOpen)) {
     // indexed access identifier[position]
-    unsigned val;
-    expectToken(Token::Type::NumberString,
-                [&]() { val = scanner_->getToken().getNumberValue(); });
-    expectToken(Token::Type::BracketClose);
+    expectNextToken(Token::Type::NumberString);
+    const auto val = scanner_->getToken().getNumberValue();
+    scanner_->readToken();
+    expectNextToken(Token::Type::BracketClose);
+    scanner_->readToken();
     assignStmt =
         std::make_unique<AssignStatement>(*(variable), val, rValueParse());
   } else {
@@ -204,30 +211,32 @@ Parser::parseAssignStatement(const std::shared_ptr<Variable> &variable) {
 }
 
 std::unique_ptr<Statement> Parser::parseInitStatement() {
-  scanner_->parseToken();
-  Token identifier;
-  Position position;
-  expectToken(Token::Type::Identifier,
-              [&]() { identifier = scanner_->getToken(); });
+  scanner_->readToken();
+  expectNextToken(Token::Type::Identifier);
+  Token identifier  = scanner_->getToken();
+  Position position = identifier.getTokenPos();
+  scanner_->readToken();
 
   if (!currentContext->existVariable(identifier.getLiteral())) {
     std::unique_ptr<AssignStatement> assignStmt;
     currentContext->addVariable(identifier.getLiteral(), Variable());
 
-    if (tryToken(Token::Type::Assignment,
-                 [&]() { position = scanner_->getToken().getTokenPos(); })) {
+    if (scanner_->getToken().getType() == Token::Type::Assignment) {
+      position = scanner_->getToken().getTokenPos();
+      scanner_->readToken();
       assignStmt = std::make_unique<AssignStatement>(
           *currentContext->findVariable(identifier.getLiteral(), identifier),
           parseOrExpression());
-      assignStmt->setPosition(position);
+      assignStmt->setPosition(position); // = pos
     } else {
       assignStmt = std::make_unique<AssignStatement>(
           *currentContext->findVariable(identifier.getLiteral(), identifier),
           std::make_unique<BaseMathExpr>(std::make_unique<Variable>()));
-      assignStmt->setPosition(identifier.getTokenPos());
+      assignStmt->setPosition(position); // id pos
     }
 
-    expectToken(Token::Type::Semicolon);
+    expectNextToken(Token::Type::Semicolon);
+    scanner_->readToken();
     return assignStmt;
 
   } else {
@@ -238,12 +247,14 @@ std::unique_ptr<Statement> Parser::parseInitStatement() {
 std::unique_ptr<Statement> Parser::parseIdentifier() {
   std::unique_ptr<Statement> stmt;
   Token identifier = scanner_->getToken();
-  scanner_->parseToken();
+  scanner_->readToken();
 
-  if (tryToken(Token::Type::ParenthesisOpen)) {
+  if (scanner_->getToken().getType() == Token::Type::ParenthesisOpen) {
     // function
+    scanner_->readToken();
     stmt = parseFunctionCall(identifier);
-    expectToken(Token::Type::Semicolon);
+    expectNextToken(Token::Type::Semicolon);
+    scanner_->readToken();
   } else {
     // variable
     stmt = parseAssignStatement(
@@ -264,12 +275,13 @@ std::unique_ptr<Statement> Parser::parseFunctionCall(const Token &function) {
   std::unique_ptr<FunctionCallStatement> funCall =
       std::make_unique<FunctionCallStatement>(fun);
 
-  if (!tryToken(Token::Type::ParenthesisClose)) {
+  if (scanner_->getToken().getType() != Token::Type::ParenthesisClose) {
     do {
       funCall->addArgument(parseOrExpression());
-    } while (tryToken(Token::Type::Comma));
-    expectToken(Token::Type::ParenthesisClose);
+    } while (tryConsumeToken(Token::Type::Comma));
+    expectNextToken(Token::Type::ParenthesisClose);
   }
+  scanner_->readToken(); // read ParenthesisClose
 
   if (fun.size() == funCall->size()) {
     return funCall;
@@ -280,21 +292,28 @@ std::unique_ptr<Statement> Parser::parseFunctionCall(const Token &function) {
 }
 
 std::unique_ptr<Statement> Parser::parseIfStatement() {
-  scanner_->parseToken();
-  expectToken(Token::Type::ParenthesisOpen);
+  scanner_->readToken(); // read If
+  expectNextToken(Token::Type::ParenthesisOpen);
+  scanner_->readToken();
+
   std::unique_ptr<Expression> condition = parseOrExpression();
-  expectToken(Token::Type::ParenthesisClose);
+
+  expectNextToken(Token::Type::ParenthesisClose);
+  scanner_->readToken();
 
   std::unique_ptr<IfStatement> ifStmt =
       std::make_unique<IfStatement>(std::move(condition));
 
-  expectToken(Token::Type::CurlyBracketOpen);
+  expectNextToken(Token::Type::CurlyBracketOpen);
+  scanner_->readToken();
   // connect to context
   ifStmt->trueBlock().getContext().setParentContext(currentContext);
   parseStatementBlock(ifStmt->trueBlock());
 
-  if (tryToken(Token::Type::Else)) {
-    expectToken(Token::Type::CurlyBracketOpen);
+  if (scanner_->getToken().getType() == Token::Type::Else) {
+    scanner_->readToken();
+    expectNextToken(Token::Type::CurlyBracketOpen);
+    scanner_->readToken();
     // connect to context
     ifStmt->falseBlock().getContext().setParentContext(currentContext);
     parseStatementBlock(ifStmt->falseBlock());
@@ -304,15 +323,20 @@ std::unique_ptr<Statement> Parser::parseIfStatement() {
 }
 
 std::unique_ptr<Statement> Parser::parseWhileStatement() {
-  scanner_->parseToken();
-  expectToken(Token::Type::ParenthesisOpen);
+  scanner_->readToken(); // read While
+  expectNextToken(Token::Type::ParenthesisOpen);
+  scanner_->readToken();
+
   std::unique_ptr<Expression> condition = parseOrExpression();
-  expectToken(Token::Type::ParenthesisClose);
+
+  expectNextToken(Token::Type::ParenthesisClose);
+  scanner_->readToken();
 
   std::unique_ptr<WhileStatement> whileStmt =
       std::make_unique<WhileStatement>(std::move(condition));
 
-  expectToken(Token::Type::CurlyBracketOpen);
+  expectNextToken(Token::Type::CurlyBracketOpen);
+  scanner_->readToken();
   // connect to context
   whileStmt->getWhileBody().getContext().setParentContext(currentContext);
   parseStatementBlock(whileStmt->getWhileBody());
@@ -321,27 +345,35 @@ std::unique_ptr<Statement> Parser::parseWhileStatement() {
 }
 
 std::unique_ptr<Statement> Parser::parseReturnStatement() {
-  scanner_->parseToken();
+  scanner_->readToken(); // read Return
   std::unique_ptr<ReturnStatement> returnStmt =
       std::make_unique<ReturnStatement>(parseOrExpression());
-  expectToken(Token::Type::Semicolon);
+  expectNextToken(Token::Type::Semicolon);
+  scanner_->readToken();
   return returnStmt;
 }
 
 std::unique_ptr<Statement> Parser::parsePrintStatement() {
-  scanner_->parseToken();
-  expectToken(Token::Type::ParenthesisOpen);
+  scanner_->readToken(); // read Print
+  expectNextToken(Token::Type::ParenthesisOpen);
+  scanner_->readToken();
+
   std::unique_ptr<PrintStatement> printStmt =
       std::make_unique<PrintStatement>(out_);
   do {
-    if (!tryToken(Token::Type::CharacterString, [&]() {
-          printStmt->addString(scanner_->getToken().getLiteral());
-        })) {
+    if (scanner_->getToken().getType() == Token::Type::CharacterString) {
+      printStmt->addString(scanner_->getToken().getLiteral());
+      scanner_->readToken();
+    } else {
       printStmt->addExpression(parseOrExpression());
     }
-  } while (tryToken(Token::Type::Comma));
-  expectToken(Token::Type::ParenthesisClose);
-  expectToken(Token::Type::Semicolon);
+  } while (tryConsumeToken(Token::Type::Comma));
+
+  expectNextToken(Token::Type::ParenthesisClose);
+  scanner_->readToken();
+  expectNextToken(Token::Type::Semicolon);
+  scanner_->readToken();
+
   return printStmt;
 }
 
@@ -349,8 +381,9 @@ std::unique_ptr<Expression> Parser::parseOrExpression() {
   std::unique_ptr<OrLogicExpr> orExpr =
       std::make_unique<OrLogicExpr>(parseAndExpression());
 
-  while (tryToken(Token::Type::Or)) {
+  while (scanner_->getToken().getType() == Token::Type::Or) {
     // add operands until other token will appear
+    scanner_->readToken();
     orExpr->addOperand(parseAndExpression());
   }
 
@@ -361,8 +394,9 @@ std::unique_ptr<Expression> Parser::parseAndExpression() {
   std::unique_ptr<AndLogicExpr> andExpr =
       std::make_unique<AndLogicExpr>(parseRelationalExpression());
 
-  while (tryToken(Token::Type::And)) {
+  while (scanner_->getToken().getType() == Token::Type::And) {
     // add operands until other token will appear
+    scanner_->readToken();
     andExpr->addOperand(parseRelationalExpression());
   }
 
@@ -375,7 +409,8 @@ std::unique_ptr<Expression> Parser::parseRelationalExpression() {
   Token token = scanner_->getToken();
 
   auto makeRel = [&](const RelationExpr::OperatorType &operatorType) {
-    scanner_->parseToken();
+    scanner_->readToken();
+    // make expr using token pos
     return std::make_unique<RelationExpr>(std::move(lValue), operatorType,
                                           parseBaseLogicExpression(),
                                           token.getTokenPos());
@@ -408,7 +443,7 @@ std::unique_ptr<Expression> Parser::parseRelationalExpression() {
 
 std::unique_ptr<Expression> Parser::parseBaseLogicExpression() {
   // return negated if Token: Negation occured
-  bool negated = tryToken(Token::Type::Negation);
+  bool negated = tryConsumeToken(Token::Type::Negation);
   return std::make_unique<BaseLogicExpr>(parseAdditiveExpression(), negated);
 }
 
@@ -419,7 +454,7 @@ std::unique_ptr<Expression> Parser::parseAdditiveExpression() {
   Token token;
 
   auto addOp = [&](const AdditiveExpr::OperatorType &operatorType) {
-    scanner_->parseToken();
+    scanner_->readToken();
     addExpr->addOperand(parseMultiplyExpression(), operatorType,
                         token.getTokenPos());
   };
@@ -449,7 +484,7 @@ std::unique_ptr<Expression> Parser::parseMultiplyExpression() {
   Token token;
 
   auto addOp = [&](const MultiplyExpr::OperatorType &operatorType) {
-    scanner_->parseToken();
+    scanner_->readToken();
     multiExpr->addOperand(parseBaseMathExpression(), operatorType,
                           token.getTokenPos());
   };
@@ -476,12 +511,12 @@ std::unique_ptr<Expression> Parser::parseMultiplyExpression() {
 }
 
 std::unique_ptr<Expression> Parser::parseBaseMathExpression() {
-  bool unaryMathOp = tryToken(Token::Type::Minus);
+  bool unaryMathOp = tryConsumeToken(Token::Type::Minus);
 
   Token token = scanner_->getToken();
   switch (token.getType()) {
   case Token::Type::NumberString:
-    scanner_->parseToken();
+    scanner_->readToken();
     return std::make_unique<BaseMathExpr>(Variable({token.getNumberValue()}),
                                           unaryMathOp);
 
@@ -504,29 +539,31 @@ std::unique_ptr<Expression> Parser::parseBaseMathExpression() {
 
 std::unique_ptr<Expression>
 Parser::parseParentExpression(const bool &unaryMathOp) {
-  scanner_->parseToken();
+  scanner_->readToken();
   std::unique_ptr<BaseMathExpr> ret =
       std::make_unique<BaseMathExpr>(parseOrExpression(), unaryMathOp);
-  expectToken(Token::Type::ParenthesisClose);
+  expectNextToken(Token::Type::ParenthesisClose);
+  scanner_->readToken();
   return ret;
 }
 
 std::unique_ptr<Expression>
 Parser::parseIdentifierValue(const bool &unaryMathOp) {
   Token identifier = scanner_->getToken();
-  scanner_->parseToken();
-  if (tryToken(Token::Type::ParenthesisOpen)) {
+  scanner_->readToken();
+  if (tryConsumeToken(Token::Type::ParenthesisOpen)) {
     // funCall
     return std::make_unique<BaseMathExpr>(parseFunctionCall(identifier),
                                           unaryMathOp);
   } else {
     // variable
     // NOTE : checking of variable existance is done in findVariable
-    if (tryToken(Token::Type::BracketOpen)) {
-      unsigned val;
-      expectToken(Token::Type::NumberString,
-                  [&]() { val = scanner_->getToken().getNumberValue(); });
-      expectToken(Token::Type::BracketClose);
+    if (tryConsumeToken(Token::Type::BracketOpen)) {
+      expectNextToken(Token::Type::NumberString);
+      const auto val = scanner_->getToken().getNumberValue();
+      scanner_->readToken();
+      expectNextToken(Token::Type::BracketClose);
+      scanner_->readToken();
 
       return std::make_unique<BaseMathExpr>(
           currentContext->findVariable(identifier.getLiteral(), identifier),

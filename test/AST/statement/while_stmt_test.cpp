@@ -33,9 +33,9 @@ BOOST_AUTO_TEST_CASE(While_ExecutesAddition) {
   whileStmt.getWhileBody().addInstruction(
       std::make_unique<AssignStatement>(*var1, std::move(addExpr)));
 
-  BOOST_CHECK_EQUAL(true, whileStmt.run().type_ == Return::Type::Noting);
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*var1 == *var2));
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*var1 == Variable({10})));
+  BOOST_CHECK(whileStmt.run().type_ == Return::Type::Noting);
+  BOOST_CHECK(static_cast<bool>(*var1 == *var2));
+  BOOST_CHECK(static_cast<bool>(*var1 == Variable({10})));
 }
 
 BOOST_AUTO_TEST_CASE(While_ExecutesSubstract) {
@@ -55,9 +55,9 @@ BOOST_AUTO_TEST_CASE(While_ExecutesSubstract) {
   whileStmt.getWhileBody().addInstruction(
       std::make_unique<AssignStatement>(*var1, std::move(addExpr)));
 
-  BOOST_CHECK_EQUAL(true, whileStmt.run().type_ == Return::Type::Noting);
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*var1 == *var2));
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*var1 == Variable({1})));
+  BOOST_CHECK(whileStmt.run().type_ == Return::Type::Noting);
+  BOOST_CHECK_EQUAL(*var1, *var2);
+  BOOST_CHECK(static_cast<bool>(*var1 == Variable({1})));
 }
 
 BOOST_AUTO_TEST_CASE(While_BrakesOnReturn) {
@@ -79,8 +79,8 @@ BOOST_AUTO_TEST_CASE(While_BrakesOnReturn) {
 
   whileStmt.getWhileBody().addInstruction(
       std::make_unique<AssignStatement>(*var1, std::move(addExpr)));
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*var1 == Variable({10})));
-  BOOST_CHECK_EQUAL(true, static_cast<bool>(*var2 == Variable({1})));
+  BOOST_CHECK(static_cast<bool>(*var1 == Variable({10})));
+  BOOST_CHECK(static_cast<bool>(*var2 == Variable({1})));
   BOOST_REQUIRE_EQUAL(true, whileStmt.run().type_ == Return::Type::Value);
   BOOST_CHECK_EQUAL(
       true, static_cast<bool>(whileStmt.run().variable_ == Variable({123})));

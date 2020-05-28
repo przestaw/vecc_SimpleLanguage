@@ -67,7 +67,7 @@ namespace vecc::ast {
      * @param idx position
      * @return reference to value
      */
-    [[nodiscard]] int &at(unsigned idx);
+    int &at(unsigned idx);
 
     /**
      * Indexed access operator
@@ -195,7 +195,7 @@ namespace vecc::ast {
      * boolean operator
      * @return boolean value of Variable
      */
-    explicit operator bool() const;
+    operator bool() const;
 
     /**
      * Position of math operation

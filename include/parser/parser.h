@@ -69,19 +69,13 @@ namespace vecc {
         nullptr; //!< Current context [connected with code logic]
 
     /**
-     * Check if next token is of given type and execute action if so
+     * Check if next token is of given type, adn consumes it if so
      * @param type expected Token type
-     * @param ifTrue action if token has been encountered
      * @return true on sucess
      */
-    inline bool
-    tryToken(const Token::Type &type,
-             const std::function<void()> &ifTrue = std::function<void()>()) {
+    inline bool tryConsumeToken(const Token::Type &type) {
       if (scanner_->getToken().getType() == type) {
-        if (ifTrue) {
-          ifTrue();
-        }
-        scanner_->parseToken();
+        scanner_->readToken();
         return true;
       } else {
         return false;
@@ -92,12 +86,9 @@ namespace vecc {
      * Check if next token is of given type and execute action if so.
      * Throws exception if token has not been encountered
      * @param type expected Token type
-     * @param ifTrue action if token has been encountered
      */
-    inline void
-    expectToken(const Token::Type type,
-                const std::function<void()> &ifTrue = std::function<void()>()) {
-      if (!tryToken(type, ifTrue))
+    inline void expectNextToken(const Token::Type type) {
+      if (scanner_->getToken().getType() != type)
         throw error::UnexpectedToken(scanner_->getToken(), {type});
     };
 

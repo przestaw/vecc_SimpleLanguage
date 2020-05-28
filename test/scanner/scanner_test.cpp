@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_CASE(ScannerWithReader_GivenEmptyReturnEoF) {
   std::stringstream stream("");
 
   Scanner scanner(stream);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
 }
 
@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(ScannerWithReader_GivenSpacesReturnEoF) {
   std::stringstream stream("  \t");
 
   Scanner scanner(stream);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
 }
 
@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(ScannerWithReader_GivenEmptyMultilineReturnEoF1) {
   std::stringstream stream("  \n  \r \t");
 
   Scanner scanner(stream);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
 }
 
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(ScannerWithReader_GivenEmptyMultilineReturnEoF2) {
   std::stringstream stream("  \n\r  \t\r\r ");
 
   Scanner scanner(stream);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
 }
 
@@ -58,27 +58,27 @@ BOOST_AUTO_TEST_CASE(ScannerGivenSpecialCharacterString_ReturnsTokens1) {
 
   std::istringstream istream(streamValue);
   Scanner scanner(istream);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::ParenthesisOpen);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::ParenthesisClose);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::BracketOpen);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::BracketClose);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::CurlyBracketOpen);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::CurlyBracketClose);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Comma);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Assignment);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Semicolon);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Negation);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
 }
 
@@ -97,29 +97,29 @@ BOOST_AUTO_TEST_CASE(ScannerGivenSpecialCharacterString_ReturnsTokens2) {
 
   std::istringstream istream(streamValue);
   Scanner scanner(istream);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Equality);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Inequality);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Less);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Greater);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::LessOrEqual);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::GreaterOrEqual);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Plus);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Minus);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Multiply);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Divide);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Modulo);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
 }
 
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE(ScannerGivenCharacterString_ReturnsToken) {
 
   std::istringstream istream("\"" + value + "\"");
   Scanner scanner(istream);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::CharacterString);
   BOOST_CHECK_EQUAL(scanner.getToken().getLiteral(), value);
 }
@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE(ScannerGivenCharacterStringWithNewline_ReturnsToken) {
 
   std::istringstream istream("\"" + value + "\"");
   Scanner scanner(istream);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::CharacterString);
   BOOST_CHECK_EQUAL(scanner.getToken().getLiteral(), value);
 }
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE(ScannerGivenInvalidCharacterString_Throws) {
 
   std::istringstream istream("\"" + value);
   Scanner scanner(istream);
-  BOOST_CHECK_THROW(scanner.parseToken(), NotAToken);
+  BOOST_CHECK_THROW(scanner.readToken(), NotAToken);
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::NaT);
 }
 
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE(ScannerGivenNotDefined_Throws) {
   std::istringstream istream(value);
   Scanner scanner(istream);
   for (auto &it : value) {
-    BOOST_CHECK_THROW(scanner.parseToken(), NotAToken);
+    BOOST_CHECK_THROW(scanner.readToken(), NotAToken);
     BOOST_CHECK(scanner.getToken().getType() == Token::Type::NaT);
     std::string check(1, it);
     BOOST_CHECK_EQUAL(scanner.getToken().getLiteral(), check);
@@ -178,23 +178,23 @@ BOOST_AUTO_TEST_CASE(ScannerGivenKeywords_ReturnsTokens1) {
   std::istringstream istream(streamValue);
   Scanner scanner(istream);
 
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Function);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::If);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::While);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Else);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Return);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Var);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Vec);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Print);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
 }
 
@@ -207,15 +207,15 @@ BOOST_AUTO_TEST_CASE(ScannerGivenWords_ReturnsIdentifierTokens) {
   std::istringstream istream(streamValue);
   Scanner scanner(istream);
 
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Identifier);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Identifier);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Identifier);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Identifier);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
 }
 
@@ -228,30 +228,30 @@ BOOST_AUTO_TEST_CASE(ScannerGivenNumbers_ReturnsNumbersTokens) {
   std::istringstream istream(streamValue);
   Scanner scanner(istream);
 
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
 }
 
   BOOST_AUTO_TEST_CASE(ScannerGivenLargeNumbers_Throws) {
-    std::string streamValue = "10000000000000000 "
-                              "9010203040506 ";
+  std::string streamValue = "10000000000000000 "
+                            "9010203040506 ";
 
-    std::istringstream istream(streamValue);
-    Scanner scanner(istream);
+  std::istringstream istream(streamValue);
+  Scanner scanner(istream);
 
-    BOOST_CHECK_THROW(scanner.parseToken(), InvalidNumberLiteral);
-    BOOST_CHECK_THROW(scanner.parseToken(), InvalidNumberLiteral);
-    scanner.parseToken();
-    BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
-  }
+  BOOST_CHECK_THROW(scanner.readToken(), InvalidNumberLiteral);
+  BOOST_CHECK_THROW(scanner.readToken(), InvalidNumberLiteral);
+  scanner.readToken();
+  BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
+}
 
 BOOST_AUTO_TEST_CASE(ScannerGivenNumbers_ReturnsTokens) {
   std::string streamValue = "(1,"
@@ -262,25 +262,25 @@ BOOST_AUTO_TEST_CASE(ScannerGivenNumbers_ReturnsTokens) {
   std::istringstream istream(streamValue);
   Scanner scanner(istream);
 
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::ParenthesisOpen);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Comma);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Comma);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Comma);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::NumberString);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::ParenthesisClose);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
 }
 
@@ -294,27 +294,27 @@ BOOST_AUTO_TEST_CASE(ScannerGivenKeywords_ReturnsTokens2) {
   std::istringstream istream(streamValue);
   Scanner scanner(istream);
 
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::If);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::While);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::ParenthesisOpen);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Identifier);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::ParenthesisClose);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::CurlyBracketOpen);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::CurlyBracketClose);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Else);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Return);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::Identifier);
-  scanner.parseToken();
+  scanner.readToken();
   BOOST_CHECK(scanner.getToken().getType() == Token::Type::EoF);
 }
 

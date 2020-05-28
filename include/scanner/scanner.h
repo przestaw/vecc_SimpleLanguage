@@ -45,7 +45,7 @@ namespace vecc {
      * Parses next Token and returns it
      * @return next Token
      */
-    Token parseToken();
+    Token readToken();
 
   private:
     std::unique_ptr<Reader> reader_;

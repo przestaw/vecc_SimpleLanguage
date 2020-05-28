@@ -19,7 +19,7 @@ void AdditiveExpr::addOperand(std::unique_ptr<Expression> value,
 Variable AdditiveExpr::calculate() const {
   Variable ret = baseValue->calculate();
 
-  for (auto &&it : multiplyables) {
+  for (const auto &it : multiplyables) {
     ret.setPosition(it.pos_);
     switch (it.operation_) {
     case OperatorType::Add:
