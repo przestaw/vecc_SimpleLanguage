@@ -8,14 +8,12 @@
 
 using namespace vecc;
 
-Scanner::Scanner(std::istream &input, const LogLevel &logLevel,
-                 std::ostream &out)
-    : reader_(std::make_unique<Reader>(input)), logLevel_(logLevel), out_(out) {
+Scanner::Scanner(std::istream &input, error::Logger &logger)
+    : reader_(std::make_unique<Reader>(input)), logger_(logger) {
 }
 
-Scanner::Scanner(std::unique_ptr<Reader> reader, const LogLevel &logLevel,
-                 std::ostream &out)
-    : reader_(std::move(reader)), logLevel_(logLevel), out_(out) {
+Scanner::Scanner(std::unique_ptr<Reader> reader, error::Logger &logger)
+    : reader_(std::move(reader)), logger_(logger) {
 }
 
 Token Scanner::readToken() {
@@ -25,10 +23,9 @@ Token Scanner::readToken() {
   tryToken(); // Note:  Handles EOF as first possible case
 
   if (currentToken.getType() != Token::Type::NaT) {
-    if (logLevel_ >= LogLevel::ParsedTokens) {
-      out_ << FCYN(BOLD("Token Log : \n")) "Parsed token : "
-                  + currentToken.toString() + "\n";
-    }
+    logger_.putLog(LogLevel::ParsedTokens,
+                   FCYN(BOLD("Token Log : \n")) "Parsed token : "
+                       + currentToken.toString() + "\n");
 
     return currentToken;
   } else {
@@ -36,7 +33,9 @@ Token Scanner::readToken() {
   }
 }
 
-Token Scanner::getToken() { return currentToken; }
+Token Scanner::getToken() {
+  return currentToken;
+}
 
 void Scanner::tryToken() {
   while (std::isspace(reader_->peek()) && !reader_->isEoF()) reader_->get();

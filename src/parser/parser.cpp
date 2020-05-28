@@ -21,22 +21,20 @@
 using namespace vecc;
 using namespace vecc::ast;
 
-Parser::Parser(const LogLevel &logLevel, std::ostream &out)
-    : logLevel_(logLevel), out_(out),
-      scanner_(std::unique_ptr<Scanner>(nullptr)),
+Parser::Parser(error::Logger &logger, std::ostream &out)
+    : logger_(logger), out_(out), scanner_(std::unique_ptr<Scanner>(nullptr)),
       currentProgram(std::make_unique<Program>()), currentContext(nullptr) {
 }
 
-Parser::Parser(std::unique_ptr<Reader> source, const LogLevel &logLevel,
+Parser::Parser(std::unique_ptr<Reader> source, error::Logger &logger,
                std::ostream &out)
-    : logLevel_(logLevel), out_(out),
-      scanner_(std::make_unique<Scanner>(std::move(source), logLevel, out)),
+    : logger_(logger), out_(out),
+      scanner_(std::make_unique<Scanner>(std::move(source), logger)),
       currentProgram(std::make_unique<Program>()), currentContext(nullptr) {
 }
 
 void Parser::setSource(std::unique_ptr<Reader> source) {
-  scanner_ =
-      std::make_unique<Scanner>(Scanner(std::move(source), logLevel_, out_));
+  scanner_ = std::make_unique<Scanner>(Scanner(std::move(source), logger_));
 }
 
 void Parser::parse() {
@@ -81,10 +79,9 @@ void Parser::parseFunctionDef() {
 
     parseStatementBlock(funRef->getFunctionBody());
 
-    if (logLevel_ >= LogLevel::CreatedFunctions) {
-      out_ << FCYN(BOLD("Function Log : \n")) "Function : " FCYN(
-          "" + funToken.getLiteral() + "") " has been created \n";
-    }
+    logger_.putLog(LogLevel::CreatedFunctions,
+                   FCYN(BOLD("Function Log : \n")) "Function : " FCYN(
+                       "" + funToken.getLiteral() + "") " has been created \n");
   } else {
     throw error::RedefinedFun(funToken);
   }

@@ -7,6 +7,7 @@
 
 #include "scanner/reader.h"
 #include "scanner/token.h"
+#include <error/logger.h>
 #include <memory>
 #include <vecc_include.h>
 
@@ -19,21 +20,17 @@ namespace vecc {
   public:
     /**
      * @param input input stream
-     * @param logLevel LogLevel determining if anything needs to be logged
-     * @param out log out stream
+     * @param logger logging output
      */
     explicit Scanner(std::istream &input,
-                     const LogLevel &logLevel = LogLevel::NoLog,
-                     std::ostream &out        = std::cout);
+                     error::Logger &logger = error::Logger::noLogger);
 
     /**
      * @param reader Reader
-     * @param logLevel LogLevel determining if anything needs to be logged
-     * @param out log out stream
+     * @param logger logging output
      */
     explicit Scanner(std::unique_ptr<Reader> reader,
-                     const LogLevel &logLevel = LogLevel::NoLog,
-                     std::ostream &out        = std::cout);
+                     error::Logger &logger = error::Logger::noLogger);
 
     /**
      * Obtains current Token
@@ -49,8 +46,7 @@ namespace vecc {
 
   private:
     std::unique_ptr<Reader> reader_;
-    LogLevel logLevel_; //!< Log level
-    std::ostream &out_; //!< output stream for logs
+    error::Logger logger_;
     Token currentToken; //!< Current Token storage
 
     inline void tryToken();

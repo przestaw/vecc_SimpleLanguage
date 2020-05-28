@@ -22,15 +22,16 @@ struct Params {
   LogLevel verbosity             = LogLevel::NoLog; //!< log level
   bool fibLib                    = false;           //!< Fibonacci library
   bool veccLib                   = false;           //!< vecc library
-} params;                                           //!< global Params object
+};                                                  //!< global Params object
 
 /**
  * Function for arguments parsing
  * @param argc arguments count from stdin
  * @param argv arguments array
  */
-inline void parseParams(int argc, char *argv[]) {
+inline Params parseParams(int argc, char *argv[]) {
   try {
+    Params params;
     options_description desc{"Options"};
     desc.add_options()("help,h", "Help screen")(
         "input,i", value<std::vector<std::string>>()->multitoken(),
@@ -68,6 +69,7 @@ inline void parseParams(int argc, char *argv[]) {
         }
       }
     }
+    return params;
   } catch (const boost::program_options::error &ex) {
     std::cerr << ex.what() << " !\n";
   }
@@ -80,17 +82,11 @@ inline void parseParams(int argc, char *argv[]) {
  * @param stream stream to be parsed
  */
 inline void parseStream(Parser &parser, const std::string &name,
-                        std::istream &stream) {
+                        std::istream &stream, Logger &logger) {
   try {
     parser.setSource(std::make_unique<Reader>(stream, name));
     parser.parse();
-  } catch (Exception &error) {
-    if (params.verbosity >= LogLevel::Errors) {
-      std::cerr << error.what() << std::endl;
-    } else {
-      (void)error;
-    }
-  }
+  } catch (Exception &error) { logger.putLog(LogLevel::Errors, error.what()); }
 }
 
 /**
@@ -98,16 +94,15 @@ inline void parseStream(Parser &parser, const std::string &name,
  * @param parser Parser used in the process
  * @param filename name of the file to be parsed
  */
-void parseFile(Parser &parser, const std::string &filename) {
+void parseFile(Parser &parser, const std::string &filename, Logger &logger) {
   std::ifstream file;
   file.open(filename);
 
   if (!file.fail()) {
-    parseStream(parser, filename, file);
+    parseStream(parser, filename, file, logger);
   } else {
-    if (params.verbosity >= LogLevel::Errors) {
-      std::cerr << (FRED(BOLD("ARG ERROR")) " Invalid file : " + filename);
-    }
+    logger.putLog(LogLevel::Errors,
+                  (FRED(BOLD("ARG ERROR")) " Invalid file : " + filename));
   }
 
   file.close();
@@ -123,41 +118,38 @@ int main(int argc, char *argv[]) {
             << "for " BOLD("TKOM ") DIM("[Compilation Techniques]") " classes\n"
             << FBLU(INV("by Stawczyk Przemyslaw")) << std::endl; // flush stream
 
-  parseParams(argc, argv);
+  Params params = parseParams(argc, argv);
   if (params.run) {
-    if (params.verbosity > LogLevel::NoLog) {
-      std::cout << FGRN(BOLD("START\n"));
-    }
+    Logger logger(params.verbosity, std::cout);
+    logger.putLog(LogLevel::Errors, FGRN(BOLD("START\n")));
 
-    Parser parser(params.verbosity, std::cout);
+    Parser parser(logger, std::cout);
 
     // include vecc library
     if (params.veccLib) {
-      if (params.verbosity >= LogLevel::ParsedFiles) {
-        std::cout << FBLU(BOLD("File Log : \n")) "Parse internal lib : " FBLU(
-            "vec lib") "\n";
-      }
+      logger.putLog(LogLevel::ParsedFiles,
+                    FBLU(BOLD("File Log : \n")) "Parse internal lib : " FBLU(
+                        "vec lib") "\n");
+
       std::stringstream str(libraries::veccLibrary);
-      parseStream(parser, "vecc library", str);
+      parseStream(parser, "vecc library", str, logger);
     }
 
     // include fib library
     if (params.fibLib) {
-      if (params.verbosity >= LogLevel::ParsedFiles) {
-        std::cout << FBLU(BOLD("File Log : \n")) "Parse internal lib : " FBLU(
-            "Fibonacci lib") "\n";
-      }
+      logger.putLog(LogLevel::ParsedFiles,
+                    FBLU(BOLD("File Log : \n")) "Parse internal lib : " FBLU(
+                        "Fibonacci lib") "\n");
       std::stringstream str(libraries::fibLibrary);
-      parseStream(parser, "Fibonacci library", str);
+      parseStream(parser, "Fibonacci library", str, logger);
     }
 
     // parse files
     for (auto &it : params.files) {
-      if (params.verbosity >= LogLevel::ParsedFiles) {
-        std::cout << FBLU(BOLD("File Log : \n")) "Parse file : " FBLU(
-            "" + it + "") "\n";
-      }
-      parseFile(parser, it);
+      logger.putLog(
+          LogLevel::ParsedFiles,
+          FBLU(BOLD("File Log : \n")) "Parse file : " FBLU("" + it + "") "\n");
+      parseFile(parser, it, logger);
     }
 
     // save program
@@ -172,11 +164,7 @@ int main(int argc, char *argv[]) {
     try {
       program->run();
     } catch (Exception &error) {
-      if (params.verbosity >= LogLevel::Errors) {
-        std::cerr << error.what() << std::endl;
-      } else {
-        (void)error;
-      }
+      logger.putLog(LogLevel::Errors, error.what());
       return -1;
     }
   }

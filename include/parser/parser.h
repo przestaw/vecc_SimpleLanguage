@@ -25,20 +25,20 @@ namespace vecc {
     /**
      * Constructor without initial source
      * @param logLevel log level
-     * @param out output stream for logs
+     * @param out output stream
      */
-    explicit Parser(const LogLevel &logLevel = LogLevel::NoLog,
-                    std::ostream &out        = std::cout);
+    explicit Parser(error::Logger &logger = error::Logger::noLogger,
+                    std::ostream &out     = std::cout);
 
     /**
      * Constructor with initial source
      * @param source initial source
      * @param logLevel log level
-     * @param out output stream for logs
+     * @param out output stream
      */
     explicit Parser(std::unique_ptr<Reader> source,
-                    const LogLevel &logLevel = LogLevel::NoLog,
-                    std::ostream &out        = std::cout);
+                    error::Logger &logger = error::Logger::noLogger,
+                    std::ostream &out     = std::cout);
 
     /**
      * Sets current source
@@ -58,8 +58,8 @@ namespace vecc {
     std::unique_ptr<ast::Program> getProgram();
 
   private:
-    LogLevel logLevel_; //!< Log level
-    std::ostream &out_; //!< output stream for logs
+    error::Logger &logger_;
+    std::ostream &out_; //!< output stream for print
 
     std::unique_ptr<Scanner>
         scanner_; //!< Internal scanner providing tokens stream
