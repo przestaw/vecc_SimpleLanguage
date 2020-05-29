@@ -84,7 +84,6 @@ BOOST_AUTO_TEST_CASE(GivenVar_MoveConstructionWorks) {
   Variable var({1});
   Variable var3(var);
   Variable var2(std::move(var));
-  BOOST_CHECK((var == Variable()));
   BOOST_CHECK((var2 == var3));
 }
 
@@ -153,6 +152,16 @@ BOOST_AUTO_TEST_CASE(GivenTwoVariables_ModuloWorks) {
 
   BOOST_CHECK_THROW(var1 % var2, MathException);
   BOOST_CHECK((var2 % var1 == Variable({0, 1})));
+}
+
+BOOST_AUTO_TEST_CASE(GivenVariables_ToStringWorks) {
+  Variable var1({2});
+  Variable var2({2, 3});
+  Variable var3({1, 2, 3});
+
+  BOOST_CHECK_EQUAL(var1.toString(), "2");
+  BOOST_CHECK_EQUAL(var2.toString(), "vec(2, 3)");
+  BOOST_CHECK_EQUAL(var3.toString(), "vec(1, 2, 3)");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

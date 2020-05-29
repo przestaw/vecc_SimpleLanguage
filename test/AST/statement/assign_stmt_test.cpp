@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(AssignVal_ToStirngWirks) {
 
   AssignStatement stmt(
       variable, std::make_unique<BaseMathExpr>(BaseMathExpr(Variable({3, 7}))));
-  BOOST_REQUIRE_EQUAL(stmt.toString(), "roman = vec[3, 7]");
+  BOOST_REQUIRE_EQUAL(stmt.toString(), "roman = vec(3, 7)");
 }
 
 BOOST_AUTO_TEST_CASE(AssignValToIndex_ToStirngWirks) {

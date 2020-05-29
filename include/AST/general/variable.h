@@ -16,14 +16,9 @@ namespace vecc::ast {
   public:
     /**
      * Constructor
-     */
-    Variable() = default;
-
-    /**
-     * Constructor
      * @param values values of the variable
      */
-    explicit Variable(std::vector<int> values);
+    explicit Variable(std::vector<int> values = {0});
 
     /**
      * Copy Constructor

@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(GivenVal_ToStringCorrect) {
 
   AndLogicExpr expr(make_unique<BaseMathExpr>(var));
 
-  BOOST_CHECK_EQUAL(expr.toString(), "vec[1, 2]");
+  BOOST_CHECK_EQUAL(expr.toString(), "vec(1, 2)");
 }
 
 BOOST_AUTO_TEST_CASE(GivenThreeVals_ToStringCorrect) {
@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE(GivenThreeVals_ToStringCorrect) {
   expr1.addOperand(make_unique<BaseMathExpr>(falseVar2));
 
   BOOST_CHECK_EQUAL(expr1.toString(),
-                    "(vec[5, 1, 0] and vec[0, 0, 0] and vec[0, 0])");
+                    "(vec(5, 1, 0) and vec(0, 0, 0) and vec(0, 0))");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

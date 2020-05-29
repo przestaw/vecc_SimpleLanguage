@@ -55,8 +55,8 @@ BOOST_AUTO_TEST_CASE(GivenVal_ToStringCorrect) {
   BaseMathExpr expr1(constant, false);
   BaseMathExpr expr2(constant, true);
 
-  BOOST_CHECK_EQUAL(expr1.toString(), "vec[1, 2, 3]");
-  BOOST_CHECK_EQUAL(expr2.toString(), "(-vec[1, 2, 3])");
+  BOOST_CHECK_EQUAL(expr1.toString(), "vec(1, 2, 3)");
+  BOOST_CHECK_EQUAL(expr2.toString(), "(-vec(1, 2, 3))");
 }
 
 BOOST_AUTO_TEST_CASE(GivenVar_ToStringCorrect) {

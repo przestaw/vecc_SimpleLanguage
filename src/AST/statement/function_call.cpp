@@ -35,7 +35,7 @@ std::string FunctionCallStatement::toString() const {
   if (!arguments_.empty()) {
     ret += (*arguments_.begin())->toString();
     for (auto it = ++arguments_.begin(); it != arguments_.end(); ++it) {
-      ret += "," + (*it)->toString();
+      ret += ", " + (*it)->toString();
     }
   }
   return ret + ")";

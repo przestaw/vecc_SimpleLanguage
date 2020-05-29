@@ -6,10 +6,12 @@
 #include <AST/expression/realtion_expr.h>
 #include <boost/test/unit_test.hpp>
 #include <error/exeception.h>
+#include <mock_expr.h>
 
 using namespace vecc;
 using namespace vecc::error;
 using namespace vecc::ast;
+using namespace vecc::test;
 
 using std::make_unique;
 using std::move;
@@ -221,15 +223,6 @@ BOOST_AUTO_TEST_CASE(GivenTwoVecValues_LessOrEqualThrows) {
   BOOST_CHECK_THROW(temp = expr2.calculate(), MathException);
   BOOST_CHECK_THROW(temp = expr3.calculate(), MathException);
 }
-
-class MockExpr : public Expression {
-public:
-  MockExpr(std::string name) : name_(name) {}
-  Variable calculate() const override { return Variable(); }
-  std::string toString() const override { return name_; };
-
-  std::string name_;
-};
 
 BOOST_AUTO_TEST_CASE(GivenTwoVal_ToStringCorrect) {
   auto expr1 = MockExpr("e1");

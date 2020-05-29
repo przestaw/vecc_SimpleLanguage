@@ -6,9 +6,11 @@
 #include <AST/expression/base_math_expr.h>
 #include <boost/test/unit_test.hpp>
 #include <error/exeception.h>
+#include <mock_expr.h>
 
 using namespace vecc;
 using namespace vecc::ast;
+using namespace vecc::test;
 
 using std::make_unique;
 using std::move;
@@ -33,12 +35,6 @@ BOOST_AUTO_TEST_CASE(NegatedBaseLogic_ReturnsNegatedVal) {
 
   BOOST_CHECK(expr.calculate() == !var);
 }
-
-class MockExpr : public Expression {
-public:
-  Variable calculate() const override { return Variable(); }
-  std::string toString() const override { return "expression"; };
-};
 
 BOOST_AUTO_TEST_CASE(GivenExpr_ToStringCorrect) {
   auto expr = MockExpr();

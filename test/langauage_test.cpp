@@ -22,23 +22,7 @@ BOOST_AUTO_TEST_CASE(VeccLibrary_NoThrow) {
   BOOST_CHECK_NO_THROW(program = parser.getProgram());
 }
 
-BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct2_Works_1) {
-  std::stringstream stream;
-  stream << libraries::veccLibrary;
-  stream << "fun main(){"
-            "  return product2(vec(1,2),vec(2,1));"
-            "}";
-
-  Parser parser = Parser(std::make_unique<Reader>(stream));
-
-  std::unique_ptr<Program> program;
-  BOOST_REQUIRE_NO_THROW(parser.parse());
-  BOOST_REQUIRE_NO_THROW(program = parser.getProgram());
-
-  BOOST_CHECK_EQUAL(program->run().variable_, Variable({0, 5}));
-}
-
-BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct2_Works_2) {
+BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct2_Works) {
   std::stringstream stream;
   stream << libraries::veccLibrary;
   stream << "fun main(){"
@@ -54,23 +38,7 @@ BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct2_Works_2) {
   BOOST_CHECK_EQUAL(program->run().variable_, Variable({-5, 10}));
 }
 
-BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct3_Works_1) {
-  std::stringstream stream;
-  stream << libraries::veccLibrary;
-  stream << "fun main(){"
-            "  return product3(vec(1,2,3),vec(1,2,3));"
-            "}";
-
-  Parser parser = Parser(std::make_unique<Reader>(stream));
-
-  std::unique_ptr<Program> program;
-  BOOST_REQUIRE_NO_THROW(parser.parse());
-  BOOST_REQUIRE_NO_THROW(program = parser.getProgram());
-
-  BOOST_CHECK_EQUAL(program->run().variable_, Variable({0, 0, 0}));
-}
-
-BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct3_Works_2) {
+BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct3_Works) {
   std::stringstream stream;
   stream << libraries::veccLibrary;
   stream << "fun main(){"
@@ -86,7 +54,7 @@ BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct3_Works_2) {
   BOOST_CHECK_EQUAL(program->run().variable_, Variable({-2, 4, -2}));
 }
 
-BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct3_Works_3) {
+BOOST_AUTO_TEST_CASE(VeccLibraryTestProduct3vec_Works) {
   std::stringstream stream;
   stream << libraries::veccLibrary;
   stream << "fun main(){"
@@ -112,23 +80,7 @@ BOOST_AUTO_TEST_CASE(FibLibrary_NoThrow) {
   BOOST_CHECK_NO_THROW(program = parser.getProgram());
 }
 
-BOOST_AUTO_TEST_CASE(FibLibraryTestIt_Works_1) {
-  std::stringstream stream;
-  stream << libraries::fibLibrary;
-  stream << "fun main(){"
-            "  return fib_it(10);"
-            "}";
-
-  Parser parser = Parser(std::make_unique<Reader>(stream));
-
-  std::unique_ptr<Program> program;
-  BOOST_REQUIRE_NO_THROW(parser.parse());
-  BOOST_REQUIRE_NO_THROW(program = parser.getProgram());
-
-  BOOST_CHECK_EQUAL(program->run().variable_, Variable({89}));
-}
-
-BOOST_AUTO_TEST_CASE(FibLibraryTestIt_Works_2) {
+BOOST_AUTO_TEST_CASE(FibLibraryTestIt_Works) {
   std::stringstream stream;
   stream << libraries::fibLibrary;
   stream << "fun main(){"
@@ -144,23 +96,7 @@ BOOST_AUTO_TEST_CASE(FibLibraryTestIt_Works_2) {
   BOOST_CHECK_EQUAL(program->run().variable_, Variable({10946}));
 }
 
-BOOST_AUTO_TEST_CASE(FibLibraryTestRec_Works_1) {
-  std::stringstream stream;
-  stream << libraries::fibLibrary;
-  stream << "fun main(){"
-            "  return fib_rec(10);"
-            "}";
-
-  Parser parser = Parser(std::make_unique<Reader>(stream));
-
-  std::unique_ptr<Program> program;
-  BOOST_REQUIRE_NO_THROW(parser.parse());
-  BOOST_REQUIRE_NO_THROW(program = parser.getProgram());
-
-  BOOST_CHECK_EQUAL(program->run().variable_, Variable({89}));
-}
-
-BOOST_AUTO_TEST_CASE(FibLibraryTestRec_Works_2) {
+BOOST_AUTO_TEST_CASE(FibLibraryTestRec_Works) {
   std::stringstream stream;
   stream << libraries::fibLibrary;
   stream << "fun main(){"

@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(GivenVal_ToStringCorrect) {
 
   AdditiveExpr expr(make_unique<BaseMathExpr>(var));
 
-  BOOST_CHECK_EQUAL(expr.toString(), "vec[1, 2]");
+  BOOST_CHECK_EQUAL(expr.toString(), "vec(1, 2)");
 }
 
 BOOST_AUTO_TEST_CASE(GivenAdd_ToStringCorrect) {
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(GivenAdd_ToStringCorrect) {
   expr.addOperand(make_unique<BaseMathExpr>((Variable({-2, 2}))),
                   AdditiveExpr::OperatorType::Add);
 
-  BOOST_CHECK_EQUAL(expr.toString(), "(vec[1, 2]+vec[-2, 2])");
+  BOOST_CHECK_EQUAL(expr.toString(), "(vec(1, 2)+vec(-2, 2))");
 }
 
 BOOST_AUTO_TEST_CASE(GivenMultiple_ToStringCorrect) {
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(GivenMultiple_ToStringCorrect) {
   expr.addOperand(make_unique<BaseMathExpr>((Variable({-2, 2}))),
                   AdditiveExpr::OperatorType::Add);
 
-  BOOST_CHECK_EQUAL(expr.toString(), "(vec[1, 2]-vec[-1, 2]+vec[-2, 2])");
+  BOOST_CHECK_EQUAL(expr.toString(), "(vec(1, 2)-vec(-1, 2)+vec(-2, 2))");
 }
 
 BOOST_AUTO_TEST_CASE(GivenVec3Add_ValueIsCorrect) {
