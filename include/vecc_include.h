@@ -61,7 +61,7 @@ namespace vecc {
         "fun fib_it(n){\n"
         "    var a = 0;\n"
         "    if( n == 0){\n"
-        "        return a;\n"
+        "        return 1;\n"
         "    }\n"
         "    var b = 1;\n"
         "    var c = a + b;\n"
