@@ -14,7 +14,7 @@ Logger::Logger(vecc::LogLevel logLevel, std::ostream& out)
 }
 
 void Logger::putLog(vecc::LogLevel logLevel, const std::string& message) {
-  if (logLevel >= logLevel_) {
+  if (logLevel <= logLevel_) {
     out_ << message;
   }
 }

@@ -22,7 +22,7 @@ struct Params {
   LogLevel verbosity             = LogLevel::NoLog; //!< log level
   bool fibLib                    = false;           //!< Fibonacci library
   bool veccLib                   = false;           //!< vecc library
-};                                                  //!< global Params object
+};
 
 /**
  * Function for arguments parsing
@@ -72,6 +72,9 @@ inline Params parseParams(int argc, char *argv[]) {
     return params;
   } catch (const boost::program_options::error &ex) {
     std::cerr << ex.what() << " !\n";
+    Params params = Params();
+    params.run    = false;
+    return params;
   }
 }
 
