@@ -18,12 +18,14 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules")
 include(CTest)
 enable_testing()
 
+find_package(LATEX)
+find_package(Doxygen)
 find_package(Boost COMPONENTS program_options unit_test_framework REQUIRED)
 set(EXTERNAL_LIBS "Boost::program_options")
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     # using Clang
-    set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   -O0 -g -Wextra-tokens -Wambiguous-member-template -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
+    set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   -O0 -g -Werror -Wextra-tokens -Wambiguous-member-template -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions -fmerge-all-constants -fvectorize -flto")
 
     include(LLVMtoolchain)
@@ -45,7 +47,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     endif()
 
     # using GCC
-    set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   -O0 -Og -g -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
+    set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   -O0 -Og -g -Werror -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions -fdevirtualize -fmerge-constants")
 
     include(GNUtoolchain)
@@ -71,9 +73,6 @@ add_executable(${EXECUTABLE} src/main.cpp)
 add_dependencies(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
-
-find_package(LATEX)
-find_package(Doxygen)
 
 # "all" target
 if(LATEX_FOUND OR DOXYGEN_FOUND)

@@ -5,73 +5,59 @@
 #ifndef VECC_LANG_SCANNER_H
 #define VECC_LANG_SCANNER_H
 
+#include "scanner/reader.h"
+#include "scanner/token.h"
+#include <error/logger.h>
 #include <memory>
 #include <vecc_include.h>
-#include "scanner/token.h"
-#include "scanner/reader.h"
 
 namespace vecc {
 
+  /**
+   * Scanner abstraction providing stream of Tokens from given source
+   */
+  class Scanner {
+  public:
     /**
-     * Scanner abstraction providing stream of Tokens from given source
+     * @param input input stream
+     * @param logger logging output
      */
-    class Scanner {
-    public:
-        /**
-         * Constructor for Scanner with empty Reader
-         * @param logLevel LogLevel determining if anything needs to be logged
-         * @param out log out stream
-         */
-        explicit Scanner(const LogLevel &logLevel = LogLevel::NoLog,
-                         std::ostream &out = std::cout);
+    explicit Scanner(std::istream &input,
+                     error::Logger &logger = error::Logger::noLogger);
 
-        /**
-         *
-         * @param reader initial Reader
-         * @param logLevel LogLevel determining if anything needs to be logged
-         * @param out log out stream
-         */
-        explicit Scanner(std::unique_ptr<Reader> reader,
-                         const LogLevel &logLevel = LogLevel::NoLog,
-                         std::ostream &out = std::cout);
+    /**
+     * @param reader Reader
+     * @param logger logging output
+     */
+    explicit Scanner(std::unique_ptr<Reader> reader,
+                     error::Logger &logger = error::Logger::noLogger);
 
-        /**
-         * Obtains current Token
-         * @return current Token
-         */
-        Token getToken();
+    /**
+     * Obtains current Token
+     * @return current Token
+     */
+    Token getToken();
 
-        /**
-         * Parses next Token and returns it
-         * @return next Token
-         */
-        Token parseToken();
+    /**
+     * Parses next Token and returns it
+     * @return next Token
+     */
+    Token readToken();
 
-        /**
-         * Sets current Reader
-         * @param reader Reader
-         */
-        void setReader(std::unique_ptr<Reader> reader);
+  private:
+    std::unique_ptr<Reader> reader_;
+    error::Logger logger_;
+    Token currentToken; //!< Current Token storage
 
-    private:
-        LogLevel logLevel_;                 //!< Log level
-        std::ostream &out_;                 //!< output stream for logs
+    inline void tryToken();
 
-        std::unique_ptr<Reader> reader_;    //!< Internal reader
-        Token currentToken;                 //!< Current Token storage
+    inline void tryKeywordOrIdentifier(const Position &tokenStartPos);
 
+    inline void tryCharString(const Position &tokenStartPos);
 
-        inline bool canRead(); // use built-in std::unique_ptr check if ptr is "valid" (!= nullptr)
+    inline void tryNumberString(const Position &tokenStartPos);
 
-        inline void tryToken();
-
-        inline void tryKeyword();
-
-        inline void tryCharString();
-
-        inline void tryNumberString();
-
-        inline void tryOperatorOrBracket();
-    };
-}
-#endif //VECC_LANG_SCANNER_H
+    inline void tryOperatorOrBracket(const Position &tokenStartPos);
+  };
+} // namespace vecc
+#endif // VECC_LANG_SCANNER_H

@@ -19,6 +19,6 @@ fun main() {
     }
     print("b = ", b);
 
-    fun(1);
-    fun(fun(2));
+    printAndRet(1);
+    printAndRet(printAndRet(2));
 }

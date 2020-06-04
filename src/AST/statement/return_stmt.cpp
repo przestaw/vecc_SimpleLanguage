@@ -7,12 +7,20 @@ using namespace vecc;
 using namespace vecc::ast;
 
 ReturnStatement::ReturnStatement(std::unique_ptr<Expression> expression)
-        : expression_(std::move(expression)) {}
+    : expression_(std::move(expression)) {
+}
 
 Return ReturnStatement::run() {
-    if (expression_) {
-        return Return(Return::Type::Value, expression_->calculate());
-    } else {
-        return Return(Return::Type::Noting);
-    }
+  if (expression_) {
+    return Return(Return::Type::Value, expression_->calculate());
+  } else {
+    return Return(Return::Type::Noting);
+  }
+}
+std::string ReturnStatement::toString() const {
+  if (expression_) {
+    return "return " + expression_->toString();
+  } else {
+    return "";
+  }
 }

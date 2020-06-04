@@ -5,59 +5,66 @@
 #ifndef VECC_LANG_FUNCTION_H
 #define VECC_LANG_FUNCTION_H
 
+#include <AST/general/return.h>
+#include <AST/general/variable.h>
+#include <AST/statement/statement_block.h>
 #include <string>
 #include <vector>
-#include <AST/general/variable.h>
-#include <AST/general/return.h>
-#include <AST/statement/statement_block.h>
 
 namespace vecc::ast {
+  /**
+   * Class describin Function definition
+   */
+  class Function {
+  public:
     /**
-     * Class describin Function definition
+     * Constructor
+     * @param identifier function name
      */
-    class Function {
-    public:
-        /**
-         * Constructor
-         * @param identifier function name
-         */
-        explicit Function(std::string identifier);
+    explicit Function(std::string identifier);
 
-        /**
-         * Adds function parameter
-         * @param identifier parameter name
-         */
-        void addParameter(const std::string &identifier);
+    /**
+     * Adds function parameter
+     * @param identifier parameter name
+     */
+    void addParameter(const std::string &identifier);
 
-        /**
-         * Returns number of arguments
-         * @return number of arguments
-         */
-        unsigned size() const;
+    /**
+     * Returns number of arguments
+     * @return number of arguments
+     */
+    unsigned size() const;
 
-        /**
-         * Returns function name
-         * @return function name
-         */
-        const std::string &getIdentifier() const;
+    /**
+     * Returns function name
+     * @return function name
+     */
+    const std::string &getIdentifier() const;
 
-        /**
-         * Runs statement
-         * @return return value
-         */
-        Return run(const std::vector<Variable> &parameters = std::vector<Variable>());
+    /**
+     * Runs statement
+     * @return return value
+     */
+    Return
+    run(const std::vector<Variable> &parameters = std::vector<Variable>());
 
-        /**
-         * Returns reference to function body
-         * @return function body reference
-         */
-        StatementBlock &getFunctionBody();
+    /**
+     * Returns reference to function body
+     * @return function body reference
+     */
+    StatementBlock &getFunctionBody();
 
-    private:
-        const std::string identifier_;      //!< function identifier/name
-        std::vector<std::string> names_;    //!< Parameters names
-        StatementBlock functionBody_;       //!< Function Body
-    };
-}
+    /**
+     * Returns simplified AST representation
+     * @return simplified AST
+     */
+    [[nodiscard]] virtual std::string toString() const;
 
-#endif //VECC_LANG_FUNCTION_H
+  private:
+    const std::string identifier_;   //!< function identifier/name
+    std::vector<std::string> names_; //!< Parameters names
+    StatementBlock functionBody_;    //!< Function Body
+  };
+} // namespace vecc::ast
+
+#endif // VECC_LANG_FUNCTION_H

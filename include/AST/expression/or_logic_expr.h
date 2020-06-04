@@ -5,37 +5,43 @@
 #ifndef VECC_LANG_OR_LOGIC_EXP_H
 #define VECC_LANG_OR_LOGIC_EXP_H
 
-#include <memory>
-#include <AST/general/variable.h>
 #include <AST/expression/expression.h>
+#include <AST/general/variable.h>
+#include <memory>
 
 namespace vecc::ast {
+  /**
+   * Class describing Or Logical Expression
+   */
+  class OrLogicExpr : public Expression {
+  public:
     /**
-     * Class describing Or Logical Expression
+     * Constructor
+     * @param value first value of Expression
      */
-    class OrLogicExpr : public Expression {
-    public:
-        /**
-         * Constructor
-         * @param value first value of Expression
-         */
-        explicit OrLogicExpr(std::unique_ptr<Expression> value);
+    explicit OrLogicExpr(std::unique_ptr<Expression> value);
 
-        /**
-         * Adds operand to expression
-         * @param value operand value
-         */
-        void addOperand(std::unique_ptr<Expression> value);
+    /**
+     * Adds operand to expression
+     * @param value operand value
+     */
+    void addOperand(std::unique_ptr<Expression> value);
 
-        /**
-         * Calculate value of Expression
-         * @return Expression value
-         */
-        [[nodiscard]] Variable calculate() const override;
+    /**
+     * Calculate value of Expression
+     * @return Expression value
+     */
+    [[nodiscard]] Variable calculate() const override;
 
-    private:
-        std::vector<std::unique_ptr<Expression>> operands;
-    };
-}
+    /**
+     * Returns simplified AST representation
+     * @return simplified AST
+     */
+    [[nodiscard]] std::string toString() const override;
 
-#endif //VECC_LANG_OR_LOGIC_EXP_H
+  private:
+    std::vector<std::unique_ptr<Expression>> operands;
+  };
+} // namespace vecc::ast
+
+#endif // VECC_LANG_OR_LOGIC_EXP_H
