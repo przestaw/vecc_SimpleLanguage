@@ -160,7 +160,6 @@ int main(int argc, char *argv[]) {
 
     if (params.verbosity > LogLevel::NoLog) {
       std::cout << FRED(BOLD("END\n")) << FBLU(BOLD("RUN : \n"));
-      ;
     }
 
     // run program
